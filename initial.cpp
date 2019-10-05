@@ -1,15 +1,22 @@
 #include <vector>
 #include <iostream>
+#include <queue>
 #include <fstream>
+#include <cmath>
 #include <stdlib.h>  /* rand(), srand() */
 #include <time.h>    /* time() */
 #define INF 987654321
 using namespace std;
  
-#define DEBUG_MODE
+// #define DEBUG_MODE
+
 struct data{
     bool job; //If it is a job: 1, otherwise it is a Vehicle
-    int id=-1;  //Job or vehicle identification
+    int id;  //Job or vehicle identification
+    data(){
+        job=true; //By default, the position is a job.
+        id=-1;
+    }
 };
 
 struct vehicleLoaded{
@@ -227,7 +234,7 @@ vector<data> generateValidRandomConfig(int numTrabalhos, int numVeiculos, const 
 
                 int jobSum = 0;
                 int contJob = j+1;
-                while(configuration[ contJob ].job && contJob < configuration.size() ){
+                while(contJob < configuration.size() && configuration[ contJob ].job ){
 
                     jobSum+= jobSizes[ configuration[contJob].id ];
                     contJob++;
@@ -248,6 +255,115 @@ vector<data> generateValidRandomConfig(int numTrabalhos, int numVeiculos, const 
     return configuration;
 }
 
+vector<data> generateATC( const vector<int> &jobSize, int numTrabalhos, int numVeiculos, const vector<double> &weight, 
+                          const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
+    //Calculating processing time average
+    double procTimeAvg=0;
+    bool success= true; // If we generate a valid configuration
+
+    for(int i=0;i<numTrabalhos;i++){
+    
+        procTimeAvg+=procTime[i];
+    
+    }
+    procTimeAvg /= numTrabalhos;
+
+    //Variables to generate processing order of jobs:
+    vector<data> jobOrder(numTrabalhos);
+    vector<bool> visitedJob(numTrabalhos,false);
+    int acumulatedD=0;
+
+    for(int i=0;i<numTrabalhos;i++){
+
+        //Create priority queue of Dispatching Rule (ATC)
+        priority_queue<pair<double, int> > atc;
+
+        for(int j=0;j<numTrabalhos;j++){
+
+            if(visitedJob[j])
+                continue;
+
+            double atcValue= (weight[j]/procTime[j]) * exp( (-1) * (max( dueDate[j]- procTime[j]- acumulatedD ,0 ))/ procTimeAvg );
+            atc.push( make_pair( atcValue,j) );
+
+        }
+
+        jobOrder[i].id = ( atc.top() ).second;
+        int jobInserted= jobOrder[i].id;
+        visitedJob[ jobInserted ] = true;
+
+        acumulatedD+= procTime[ jobInserted ];
+        
+    }
+
+    // Puting in a greedy way the cars to carry the jobs, choosing the cheaper one.
+    vector<data> vehicleDispatching(numVeiculos);
+        
+    priority_queue<pair<int,int> > vehiclePrice; //We will select the cars in the cheapest order.
+
+    for(int i=0; i<numVeiculos; i++){
+
+        vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
+
+    }
+
+    vector<data> configuration( numTrabalhos + numVeiculos );
+    int configSize = configuration.size();
+    vector<bool> visitedConfig(configSize,false);
+
+    int insertedItems = 0;
+    int jobToInsert=0;
+
+    while(insertedItems<configSize){
+
+        int currentCar = (vehiclePrice.top()).second;
+        configuration[ insertedItems ].job = false;
+        configuration[ insertedItems ].id = currentCar;
+        vehiclePrice.pop();
+        insertedItems++;
+
+        if(insertedItems >= configSize)
+            break;
+
+        int currentVolume=0;
+        while(jobToInsert<numTrabalhos && (currentVolume + jobSize[ jobToInsert ] <= carCap[ currentCar ]) ){
+
+            configuration[ insertedItems ].job = true;
+            configuration[ insertedItems ].id = jobOrder[ jobToInsert ].id;
+            jobToInsert++;
+            insertedItems++;
+
+            currentVolume+= jobSize [ jobToInsert-1 ];
+        }
+
+    }
+
+    return configuration;
+}
+vector<data> generateWMDD( const vector<int> &jobSize, int numTrabalhos, int numVeiculos, const vector<double> &weight, 
+                          const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
+
+}
+
+void printConfig( const vector<data> &config, const vector<int> &carCap, const vector<int> &jobSize){
+    cout<<"------ Printing Configuration ------\n";
+
+    for(int j=0;j<config.size();j++){
+
+
+        if( config[j].job ){
+            cout<<" Job "<<config[j].id<<", with size: "<<jobSize[ config[j].id ]<<"\n";
+        }else{
+            cout<<" Vehicle "<<config[j].id<<" , with cap.: "<<carCap[ config[j].id ]<<"\n";
+        }
+
+    }
+
+
+    cout<<"-------------- Ending --------------\n";
+
+}
+
 int main(){
     srand(time(NULL));
     int numTrabalhos;
@@ -264,12 +380,12 @@ int main(){
     in>>numInstancia>>varMi>>sigmaDois;
     in>>numTrabalhos;
     in>>numVeiculos;
- 
+
     vector<int> F(numVeiculos); //custo do veiculo
     vector<int> Q(numVeiculos); //capacidade do veiculo
  
     //0- Declaracao de variaveis e vetores constantes
-    vector<vector<int> > t(numTrabalhos+1,vector<int>(numTrabalhos+1)); //tempo da viagem
+    vector<vector<int> > t(numTrabalhos+1,vector<int>(numTrabalhos+1,0)); //tempo da viagem
     vector<int> P(numTrabalhos); //tempo de processamento
     vector<double> w(numTrabalhos); //peso da penalidade
     vector<int> d(numTrabalhos); //vencimento
@@ -281,7 +397,6 @@ int main(){
         in>>d[i];
     for(int i=0;i<numTrabalhos;i++)
         in>>s[i];
- 
     for(int i=0;i<numVeiculos;i++)
         in>>Q[i];
     for(int i=0;i<numVeiculos;i++)
@@ -297,16 +412,11 @@ int main(){
  
     //Generating random solution
     vector<data> initialConfig = generateValidRandomConfig(numTrabalhos,numVeiculos,Q,s);
+    printConfig(initialConfig, Q, s);
 
     //Generating info about vehicle transportation
     vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);
     
-    #ifdef DEBUG_MODE //Testing the generated vector of data
-        cout<<"vehicleOrder size: "<<vehicleOrder.size()<<endl;
-        for(int i=0;i<vehicleOrder.size();i++){
-            cout<<"Vehicle: "<<vehicleOrder[i].id<<" inicia em "<<vehicleOrder[i].initialPos<<" e termina em: "<<vehicleOrder[i].finalPos<<endl;
-        }
-    #endif
     //Calculating Delivery time(D) and Starting time(Sk) 
     vector<int> startVehicleTime(numVeiculos,0);
     vector<int> deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
@@ -314,25 +424,38 @@ int main(){
     //Generating Job Tardiness (T) of each job (O(N))
     vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
 
-    #ifdef DEBUG_MODE //Testing the generated vector of data
-        for(int i=0;i<initialConfig.size();i++){
-            if(initialConfig[i].job){
-                cout<<"Job "<<initialConfig[i].id<<endl;
-            }else{
-                cout<<"Car "<<initialConfig[i].id<<endl;
-            }
-        }
-    #endif
 
     #ifdef DEBUG_MODE //Testing the delivery time and the Starting time
+        
+        cout<<"Job sizes: "<<endl;
+        for(int i=0;i<numTrabalhos;i++){
+            cout<<"Job "<<i<<" size: "<<s[i]<<endl;
+        }
+
+        cout<<"Vehicle cap: "<<endl;
+        for(int i=0;i<numVeiculos;i++){
+            cout<<"Vehicle "<<i<<" cap: "<<Q[i]<<endl;
+        }
+
+         cout<<"vehicleOrder size: "<<vehicleOrder.size()<<endl;
+        for(int i=0;i<vehicleOrder.size();i++){
+            cout<<"Vehicle: "<<vehicleOrder[i].id<<" inicia em "<<vehicleOrder[i].initialPos<<" e termina em: "<<vehicleOrder[i].finalPos<<endl;
+        }
+        cout<<"vehicleOrder size: "<<vehicleOrder.size()<<endl;
+        for(int i=0;i<vehicleOrder.size();i++){
+            cout<<"Vehicle: "<<vehicleOrder[i].id<<" inicia em "<<vehicleOrder[i].initialPos<<" e termina em: "<<vehicleOrder[i].finalPos<<endl;
+        }
+
         cout<<"Delivery times: ";
         for(int i=0;i<numTrabalhos;i++){
             cout<<deliveryTime[i]<<" ";
         }
+
         cout<<endl<<"Job Tardiness times: ";
         for(int i=0;i<numTrabalhos;i++){
             cout<<jobTardiness[i]<<" ";
         }
+
         cout<<endl<<"Start vehicle time:\n";
         for(int j=0;j<numVeiculos;j++){
             if(startVehicleTime[j]!=0){
@@ -342,11 +465,24 @@ int main(){
 
             }
         }
-        cout<<endl;
 
-        double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
-        cout<<"Objective Function: "<<resultObjFunction<<endl;
+        cout<<endl;
     #endif
  
+    double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+    cout<<endl<<"Objective Function: "<<resultObjFunction<<endl<<endl;
 
+    vector<data> atcConfig = generateATC(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
+
+    printConfig(atcConfig, Q, s);
+
+    //Reuse of variables to get ATC obj function value
+    vehicleOrder = generateVehicleOrder(atcConfig,numVeiculos);
+    
+    deliveryTime = calculatingDeliveryTime(atcConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+
+    jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+     double resultAtcFunction = objFunction(vehicleOrder,atcConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+     cout<<"Objective Function: "<<resultAtcFunction<<endl<<endl;
 }
