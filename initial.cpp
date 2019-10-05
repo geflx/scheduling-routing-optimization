@@ -343,24 +343,98 @@ vector<data> generateATC( const vector<int> &jobSize, int numTrabalhos, int numV
 vector<data> generateWMDD( const vector<int> &jobSize, int numTrabalhos, int numVeiculos, const vector<double> &weight, 
                           const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
 
+    //Variables to generate processing order of jobs:
+    vector<data> jobOrder(numTrabalhos);
+    vector<bool> visitedJob(numTrabalhos,false);
+    int acumulatedD=0;
+
+    for(int i=0;i<numTrabalhos;i++){
+
+        //Create priority queue of Dispatching Rule (WMDD)
+        priority_queue<pair<double, int> > wmdd;
+
+        for(int j=0;j<numTrabalhos;j++){
+
+            if(visitedJob[j])
+                continue;
+
+            double wmddValue=  (1 /weight[j])* max(procTime[j], dueDate[j] - acumulatedD) ;
+            wmdd.push( make_pair( (-1) * wmddValue,j) );
+
+        }
+
+        jobOrder[i].id = ( wmdd.top() ).second;
+        int jobInserted= jobOrder[i].id;
+        visitedJob[ jobInserted ] = true;
+
+        acumulatedD+= procTime[ jobInserted ];
+        
+    }
+
+    // Puting in a greedy way the cars to carry the jobs, choosing the cheaper one.
+    vector<data> vehicleDispatching(numVeiculos);
+        
+    priority_queue<pair<int,int> > vehiclePrice; //We will select the cars in the cheapest order.
+
+    for(int i=0; i<numVeiculos; i++){
+
+        vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
+
+    }
+
+    vector<data> configuration( numTrabalhos + numVeiculos );
+    int configSize = configuration.size();
+    vector<bool> visitedConfig(configSize,false);
+
+    int insertedItems = 0;
+    int jobToInsert=0;
+
+    while(insertedItems<configSize){
+
+        int currentCar = (vehiclePrice.top()).second;
+        configuration[ insertedItems ].job = false;
+        configuration[ insertedItems ].id = currentCar;
+        vehiclePrice.pop();
+        insertedItems++;
+
+        if(insertedItems >= configSize)
+            break;
+
+        int currentVolume=0;
+        while(jobToInsert<numTrabalhos && (currentVolume + jobSize[ jobToInsert ] <= carCap[ currentCar ]) ){
+
+            configuration[ insertedItems ].job = true;
+            configuration[ insertedItems ].id = jobOrder[ jobToInsert ].id;
+            jobToInsert++;
+            insertedItems++;
+
+            currentVolume+= jobSize [ jobToInsert-1 ];
+        }
+
+    }
+
+    return configuration;
+
 }
 
-void printConfig( const vector<data> &config, const vector<int> &carCap, const vector<int> &jobSize){
-    cout<<"------ Printing Configuration ------\n";
+void printConfig(const char* message, const vector<data> &config, const vector<int> &carCap, const vector<int> &jobSize){
+
+    cout<<"------------ Printing Configuration ------------\n";
+    cout<<"------------ "<<message<<" ------------ "<<endl<<endl;
 
     for(int j=0;j<config.size();j++){
 
 
         if( config[j].job ){
-            cout<<" Job "<<config[j].id<<", with size: "<<jobSize[ config[j].id ]<<"\n";
+            cout<<" Job "<<config[j].id<<", size: "<<jobSize[ config[j].id ]<<"\n";
         }else{
-            cout<<" Vehicle "<<config[j].id<<" , with cap.: "<<carCap[ config[j].id ]<<"\n";
+            cout<<" ---- Vehicle "<<config[j].id<<" , with capacity: "<<carCap[ config[j].id ]<<" ----\n";
         }
 
     }
 
 
-    cout<<"-------------- Ending --------------\n";
+    cout<<"\n------------------ Ending ------------------\n";
 
 }
 
@@ -412,7 +486,7 @@ int main(){
  
     //Generating random solution
     vector<data> initialConfig = generateValidRandomConfig(numTrabalhos,numVeiculos,Q,s);
-    printConfig(initialConfig, Q, s);
+    printConfig("Random version - No DR",initialConfig, Q, s);
 
     //Generating info about vehicle transportation
     vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);
@@ -472,11 +546,12 @@ int main(){
     double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
     cout<<endl<<"Objective Function: "<<resultObjFunction<<endl<<endl;
 
+
+    //ATC Configuration! Dispatching Rule 1:
     vector<data> atcConfig = generateATC(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
 
-    printConfig(atcConfig, Q, s);
+    printConfig("ATC version - DR1",atcConfig, Q, s);
 
-    //Reuse of variables to get ATC obj function value
     vehicleOrder = generateVehicleOrder(atcConfig,numVeiculos);
     
     deliveryTime = calculatingDeliveryTime(atcConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
@@ -485,4 +560,19 @@ int main(){
 
      double resultAtcFunction = objFunction(vehicleOrder,atcConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
      cout<<"Objective Function: "<<resultAtcFunction<<endl<<endl;
+
+    //WMDD Configuration! Dispatching Rule 2:
+    vector<data> wmddConfig = generateWMDD(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
+
+    printConfig("WMDD version - DR2",wmddConfig, Q, s);
+
+    vehicleOrder = generateVehicleOrder(wmddConfig,numVeiculos);
+    
+    deliveryTime = calculatingDeliveryTime(wmddConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+
+    jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+     double resultWMDDFunction = objFunction(vehicleOrder,wmddConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+     cout<<"Objective Function: "<<resultWMDDFunction<<endl<<endl;
+
 }
