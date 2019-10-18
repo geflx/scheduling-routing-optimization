@@ -1,6 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <queue>
+#include <set>
+#include <unordered_set>
 #include <fstream>
 #include <cmath>
 #include <stdlib.h>  /* rand(), srand() */
@@ -438,6 +440,78 @@ void printConfig(const char* message, const vector<data> &config, const vector<i
 
 }
 
+void interLocalSearch( double &currObjValue, vector<data> &configuration, int nbiter, const vector<vector<int>> &time, const vector<vehicleLoaded> &vehicleOrder,
+                        const vector<int> &procTime, int numTrabalhos, int numVeiculos, const vector<double> &weight, const vector<int> &vCost,
+                        const vector<int> &dueDate){
+    /*For this local search in the same car, we need to recalculate
+        the job tardiness and the delivery time due to the new delivery scheme */
+
+    //Saving the initial solution and objetive value
+    vector<data> bestSolution = configuration;
+    double bestObjValue = currObjValue;
+
+    for( int it=0; it<nbiter; it++){
+
+        //Current version: Swapping (0,1*carriedJobs +1) pairs in each car.
+
+        for(int i=0; i< vehicleOrder.size(); i++){
+
+            int finalPos = vehicleOrder[i].finalPos;
+            int initialPos = vehicleOrder[i].initialPos;
+
+            set<pair<int,int>> setSwap;
+
+            if( (finalPos - initialPos) == 0){
+
+                continue; //There is just only one job carried, no need to swap
+
+            }
+            int swapNumber= 0.1 *(vehicleOrder[i].finalPos-vehicleOrder[i].initialPos +1) +1;
+
+            while(swapNumber--){
+                int jobA = (rand()% (finalPos-initialPos)) + initialPos;
+                int jobB = (rand()% (finalPos-initialPos)) + initialPos;
+
+                pair<int,int> verify = make_pair(jobA,jobB);
+
+                if( setSwap.find(verify)!=setSwap.end() ){ //This swap was already made
+
+                    swapNumber++;
+
+                }else{
+
+                    //So we do the swap in the jobs carried by the vehicle
+                    int tempId= configuration[jobA].id;
+                    configuration[jobA].id = configuration[jobB].id;
+                    configuration[jobB].id = tempId;
+
+                    setSwap.insert( verify );
+                    verify = make_pair( jobB, jobA ); //Saving simetric swap
+                    setSwap.insert( verify );
+                }
+
+            }
+
+        }
+
+        vector<int> startVehicleTime(numVeiculos,0);
+        vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,time,procTime,vehicleOrder,numTrabalhos);
+        vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,dueDate);
+        double resultFunction = objFunction(vehicleOrder,configuration,numVeiculos, numTrabalhos, time, weight, jobTardiness, vCost);
+        
+        if( resultFunction < bestObjValue ){ //Saving the best solution
+
+            cout<<" Upgrade! Size of decrease: "<< bestObjValue - resultFunction <<endl;
+            bestSolution = configuration;
+            bestObjValue = resultFunction;
+        }
+
+    }
+    configuration = bestSolution;
+    currObjValue = bestObjValue;
+
+}
+
 int main(){
     srand(time(NULL));
     int numTrabalhos;
@@ -545,7 +619,8 @@ int main(){
  
     double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
     cout<<endl<<"Objective Function: "<<resultObjFunction<<endl<<endl;
-
+    interLocalSearch(resultObjFunction, initialConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
+    cout<<endl<<"New Objetive Function Value: "<< resultObjFunction <<endl<<endl;
 
     //ATC Configuration! Dispatching Rule 1:
     vector<data> atcConfig = generateATC(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
@@ -558,8 +633,10 @@ int main(){
 
     jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
 
-     double resultAtcFunction = objFunction(vehicleOrder,atcConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
-     cout<<"Objective Function: "<<resultAtcFunction<<endl<<endl;
+    double resultAtcFunction = objFunction(vehicleOrder,atcConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+    cout<<"Objective Function: "<<resultAtcFunction<<endl<<endl;
+    interLocalSearch(resultAtcFunction, atcConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
+    cout<<endl<<"New Objetive Function Value: "<< resultAtcFunction <<endl<<endl;
 
     //WMDD Configuration! Dispatching Rule 2:
     vector<data> wmddConfig = generateWMDD(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
@@ -573,6 +650,9 @@ int main(){
     jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
 
      double resultWMDDFunction = objFunction(vehicleOrder,wmddConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
-     cout<<"Objective Function: "<<resultWMDDFunction<<endl<<endl;
+     cout<<"Objective Function Value: "<<resultWMDDFunction<<endl<<endl;
+     interLocalSearch(resultWMDDFunction, wmddConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
+     cout<<endl<<"New Objetive Function Value: "<< resultWMDDFunction <<endl;
+
 
 }
