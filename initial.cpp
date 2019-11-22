@@ -11,10 +11,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <algorithm>
+
+// #define VIEW_OBJ_DECREASE
+// #define VIEW_DECREASE
+// #define PRINT_VND_IMPROVE
+
+
 #define INF 987654321
 using namespace std;
   
-// #define DEBUG_MODE
  
 struct data{
     bool job; //If it is a job: 1, otherwise it is a Vehicle
@@ -67,7 +73,16 @@ double objFunction(const vector<vehicleLoaded> &vehicleOrder, const vector<data>
  
         penaltyCosts+= jobTardiness[i]* weight[i];
     }
- 
+
+  //   cout<<"Job Tardiness: "<<endl;
+  //   for(const int &u: jobTardiness){
+  //   	cout<<u<<" ";
+  //   }cout<<endl;
+ 	// cout<<"Penalty Weight: "<<endl;
+ 	// for(const double &u:weight){
+ 	// 	cout<<u<<" ";
+ 	// }cout<<endl;
+
  	// cout<<"Obj. Travel costs: "<<travelCosts<<endl;
  	// cout<<"Obj. Vehicle costs: "<<vehicleCosts<<endl;
  	// cout<<"Obj. Penalty costs: "<<penaltyCosts<<endl;
@@ -121,11 +136,26 @@ vector<int > calculatingDeliveryTime(const vector<data> &config, vector<int> &st
     vector<int> deliveryTime(numTrabalhos,0);
     int acumulatedProcessTime=0;
  
+    // for(int i=0;i<vehicleOrder.size();i++){
+    // 	cout<<"Vehicle "<<vehicleOrder[i].id<<" carrega: ";
+
+    // 	for(int j=vehicleOrder[i].initialPos;j<=vehicleOrder[i].finalPos;j++){
+    // 		cout<<config[ j ].id<<" ";
+    // 	}
+    // 	cout<<endl;
+    // }
+    // cout<<"Processing time e: ";
+    // for(int u: procTime){
+    // 	cout<<u<<" ";
+    // }cout<<endl;
+
+
     //Calculating the acumulated processing time for jobs and setting the starting time for vehicles.
     for(int i=0;i<vehicleOrder.size();i++){
         int whichCar=vehicleOrder[i].id; // Setting the delivery times by delivery sequence.
         for(int j=vehicleOrder[i].initialPos;j<=vehicleOrder[i].finalPos;j++){
             int whichJob=config[j].id;
+
             acumulatedProcessTime += procTime[ whichJob ];
         }
         startVehicleTime[whichCar]=acumulatedProcessTime;
@@ -145,7 +175,16 @@ vector<int > calculatingDeliveryTime(const vector<data> &config, vector<int> &st
             acumulatedDeliveryTime+= time[ whichJob+1 ][ nextJob+1];
             
         }
+
+        deliveryTime[ config[vehicleOrder[i].finalPos].id  ] = acumulatedProcessTime + acumulatedDeliveryTime;
+
     }
+
+    // cout<<"Delivery time foi: ";
+    // for(int u: deliveryTime){
+    // 	cout<<u<<" ";
+    // }cout<<endl;
+
     return deliveryTime;
 }
  
@@ -565,7 +604,7 @@ void printConfig( double fObj, const char* message, const vector<data> &config, 
         numJobsFixo+=2;
     }
     cout<<setw(13)<<message;
-    cout<<setw(13)<<fObj;
+    cout<<setw(13)<<fObj<<"    ";
  
     int numJobs= jobSize.size();
  
@@ -573,7 +612,7 @@ void printConfig( double fObj, const char* message, const vector<data> &config, 
  
     for(int j=0;j<config.size();j++){
         if( config[j].job ){
-            procOrder+= to_string( config[j].id );
+            procOrder+= to_string( config[j].id +1);
             if(numJobs>1){
                 procOrder+="-";
                 numJobs--;
@@ -585,9 +624,9 @@ void printConfig( double fObj, const char* message, const vector<data> &config, 
     string deliveryOrder;
     for(int i=0;i<config.size();i++){
         if(config[i].job){
-            deliveryOrder+= to_string( config[i].id)+" ";
+            deliveryOrder+= to_string( config[i].id+1)+" ";
         }else{
-            deliveryOrder+= " ["+ to_string(config[i].id) + "] ";
+            deliveryOrder+= " ["+ to_string(config[i].id+1) + "] ";
         }
     }
     for(int i=1; i<deliveryOrder.size()-1;i++){
@@ -595,104 +634,43 @@ void printConfig( double fObj, const char* message, const vector<data> &config, 
             deliveryOrder[i] = '-';
         }
     }
-    cout<<setw(numJobsFixo*(5.5))<<deliveryOrder<<endl;
+    cout<<setw(numJobsFixo*(5.5))<<deliveryOrder<<"\n\n";
 }
  
-void interLocalSearch( double &currObjValue, vector<data> &configuration, int nbiter, const vector<vector<int>> &time, const vector<vehicleLoaded> &vehicleOrder,
-    const vector<int> &procTime, int numTrabalhos, int numVeiculos, const vector<double> &weight, const vector<int> &vCost,
-    const vector<int> &dueDate){
-    /*For this local search in the same car, we need to recalculate
-        the job tardiness and the delivery time due to the new delivery scheme */
- 
-    //Saving the initial solution and objetive value
-    vector<data> bestSolution = configuration;
-    double bestObjValue = currObjValue;
- 
-    for( int it=0; it<nbiter; it++){
- 
-        //Current version: Swapping (0,1*carriedJobs +1) pairs in each car.
- 
-        for(int i=0; i< vehicleOrder.size(); i++){
- 
-            int finalPos = vehicleOrder[i].finalPos;
-            int initialPos = vehicleOrder[i].initialPos;
- 
-            set<pair<int,int>> setSwap;
- 
-            if( (finalPos - initialPos) == 0){
- 
-                continue; //There is just only one job carried, no need to swap
- 
-            }
-            int swapNumber= 0.1 *(vehicleOrder[i].finalPos-vehicleOrder[i].initialPos +1) +1;
- 
-            while(swapNumber--){
-                int jobA = (rand()% (finalPos-initialPos)) + initialPos;
-                int jobB = (rand()% (finalPos-initialPos)) + initialPos;
- 
-                pair<int,int> verify = make_pair(jobA,jobB);
- 
-                if( setSwap.find(verify)!=setSwap.end() ){ //This swap was already made
- 
-                    swapNumber++;
- 
-                }else{
- 
-                    //So we do the swap in the jobs carried by the vehicle
-                    int tempId= configuration[jobA].id;
-                    configuration[jobA].id = configuration[jobB].id;
-                    configuration[jobB].id = tempId;
- 
-                    setSwap.insert( verify );
-                    verify = make_pair( jobB, jobA ); //Saving simetric swap
-                    setSwap.insert( verify );
-                }
- 
-            }
- 
-        }
- 
-        vector<int> startVehicleTime(numVeiculos,0);
-        vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,time,procTime,vehicleOrder,numTrabalhos);
-        vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,dueDate);
-        double resultFunction = objFunction(vehicleOrder,configuration,numVeiculos, numTrabalhos, time, weight, jobTardiness, vCost);
-         
-        if( resultFunction < bestObjValue ){ //Saving the best solution
- 
-            bestSolution = configuration;
-            bestObjValue = resultFunction;
-        }
- 
-    }
-    configuration = bestSolution;
-    currObjValue = bestObjValue;
-}
- 
-bool ls1IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+bool vizi1_FI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
 	const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d){
-    //BEST IMPROVEMENT
-
-	bool generalImprove = false; 
-
+ 
+    /* Change vehicle routing inside a vehicle .*/
 
     vector<int> startVehicleTime(numVeiculos,0);
 	vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
     vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
 	
 
+    
 	for(int i=0;i<vehicleOrder.size();i++){
  
-		double currObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
 		// Calculate the obj function value for each car
 
-		double bestImpObj = currObj;
-		vector<data> bestImpConfig = configuration;
-		bool internalImprove = false;
+		double bestImpObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
 
 		if( vehicleOrder[i].initialPos == vehicleOrder[i].finalPos ){
 			continue; //There is no more than one job in the vehicle
 		}
-		for(int j=vehicleOrder[i].initialPos; j<vehicleOrder[i].finalPos; j++){
+
+
+		vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
+
+		int iniContJob = vehicleOrder[ i ].initialPos;
+
+		for(int u=0;u<randomPos.size();u++){
+			randomPos[ u ] = iniContJob++;
+		}
+		unsigned seed = 0;
+		random_shuffle( randomPos.begin() , randomPos.end());
+
+
+		for(int j: randomPos){
 
 			for(int k= (j+1); k<=vehicleOrder[i].finalPos; k++){
 
@@ -705,10 +683,8 @@ bool ls1IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 
 				if(newObj < bestImpObj){
 
-					bestImpObj = newObj; 
-					bestImpConfig = configuration;
-					generalImprove = true;
-					internalImprove = true;
+					cout<<"VZ1 FI: "<< newObj -  bestImpObj <<endl;
+					return true;
 
 				}
 				//Swap back the jobs
@@ -717,19 +693,88 @@ bool ls1IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 			}
 
 		}
-		if( internalImprove){
-			configuration = bestImpConfig;
-			cout<<"Viz.1. => Melhora de "<< bestImpObj -  currObj <<endl;
-		}
 	}
+	
 
-	return generalImprove;
+
+	return false;
 }
 
-bool ls2InterVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+
+bool vizi1_BI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d){
+    
+    /* Change vehicle routing inside a vehicle .*/
+
+    vector<int> startVehicleTime(numVeiculos,0);
+    vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+    
+
+    vector<data> bestConfig;
+    bool improved = false;
+    double biggestImprove = 0;
+    
+    double initialVObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+    double bestObj = initialVObj;
+
+    for(int i=0;i<vehicleOrder.size();i++){
+ 
+        // Calculate the obj function value for each car
+
+
+    	bool improvedCar = false;
+
+        if( vehicleOrder[i].initialPos == vehicleOrder[i].finalPos ){
+            continue; //There is no more than one job in the vehicle
+        }
+
+        for(int j=vehicleOrder[i].initialPos; j<vehicleOrder[i].finalPos; j++){
+
+            for(int k= (j+1); k<=vehicleOrder[i].finalPos; k++){
+
+                swap( configuration[ j ], configuration[ k ]);
+                
+                deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+                double newObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+                if(newObj < bestObj ){
+
+                    improved = true;
+                    bestObj = newObj;
+                    bestConfig = configuration;
+                }
+                //Swap back the jobs
+                swap( configuration[ j ], configuration[ k ]);
+
+            }
+
+        }
+    }
+
+    if( improved ){
+        configuration = bestConfig;
+
+        #ifdef VIEW_DECREASE
+        cout<<"Vz1. BI: "<<bestObj-initialVObj<<endl;
+        #endif
+
+        #ifdef VIEW_OBJ_DECREASE
+        cout<<"Vz1. BI: "<<bestObj<<endl;
+        #endif
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool vizi2_FI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
 	const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
 
-	//FIRST IMPROVEMENT of BEST IMPROVEMENT in each 2 cars
+	/* Job swap between vehicles. */
 
 	vector<int> currCap( numVeiculos, 0 );
 	for(int i=0;i< vehicleOrder.size(); i++){
@@ -749,46 +794,77 @@ bool ls2InterVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 	for(int i=0; i< vehicleOrder.size()-1; i++){
 
 		
-		double bestObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
-			   bestObj = objFVehicle(i+1, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
 
-		double currObj = bestObj;
 
-		vector<data> bestConfig = configuration;
+		vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
 
-		for(int j= vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++ ){
+		int iniContJob = vehicleOrder[ i ].initialPos;
 
-			for(int k= vehicleOrder[i+1].initialPos; k<= vehicleOrder[i+1].finalPos; k++){
-
-				//Checking if the capacity of each car will be respected
-
-				if( (currCap[ vehicleOrder[ i ].id]- s[ configuration[j].id ]+ s[ configuration[k].id ]) <= Q[ vehicleOrder[i].id]
-					&& (currCap[ vehicleOrder[ i+1 ].id] - s[configuration[k].id]+ s[ configuration[j].id]) <= Q[ vehicleOrder[i+1].id] ){
-
-					swap( configuration[j], configuration[k]);
-
-					deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
-    				T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
-					
-					double newDoubleConfig = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
-			   		newDoubleConfig = objFVehicle(i+1, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
-
-			   		if( newDoubleConfig < bestObj ){
-
-			   			bestObj = newDoubleConfig;
-			   			bestConfig = configuration;
-
-			   		}
-					swap( configuration[j], configuration[k]);
-
-				}
-			}
+		for(int u=0;u<randomPos.size();u++){
+			randomPos[ u ] = iniContJob++;
 		}
-		if (bestObj < currObj){
+		unsigned seed = 0;
+		random_shuffle( randomPos.begin() , randomPos.end());
 
-			configuration = bestConfig;
-			cout<<"Vz.2. => Melhora de "<<bestObj-currObj<<endl;
-			return true;
+
+		for(int j: randomPos){
+
+
+			for(int next= i+1; next<vehicleOrder.size(); next++){
+
+		
+
+				/* Otimizar mais tarde.
+				double bestObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+			    bestObj += objFVehicle(next, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+				*/
+				deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+				T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+				double bestObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F);  
+
+				for(int k= vehicleOrder[next].initialPos; k<= vehicleOrder[next].finalPos; k++){
+
+					//Checking if the capacity of each car will be respected
+
+					if( (currCap[ vehicleOrder[ i ].id]- s[ configuration[j].id ]+ s[ configuration[k].id ]) <= Q[ vehicleOrder[i].id]
+						&& (currCap[ vehicleOrder[ next ].id] - s[configuration[k].id]+ s[ configuration[j].id]) <= Q[ vehicleOrder[next].id] ){
+
+						swap( configuration[j], configuration[k]);
+
+						// deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+						// T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+				
+					
+						deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+					    T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+
+					 	
+					 	/* Otimizar mais tarde.
+						double newDoubleConfig = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+				   		newDoubleConfig += objFVehicle(next, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+						*/
+				   			
+				   		double newDoubleConfig = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F);  
+
+				   		if( newDoubleConfig < bestObj ){
+
+							cout<<"VZ2 FI: "<<newDoubleConfig-bestObj<<endl;
+				   			return true;
+
+
+				   		}
+						swap( configuration[j], configuration[k]);
+
+					}
+				}
+
+			}
+
+			
+
 
 		}
 
@@ -797,10 +873,115 @@ bool ls2InterVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 	return false;
 }
 
-bool ls3IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+bool vizi2_BI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
+
+    /* Job swap between vehicles. */
+
+    vector<int> currCap( numVeiculos, 0 );
+    for(int i=0;i< vehicleOrder.size(); i++){
+
+        int whichVehicle = vehicleOrder[i].id;
+
+        for(int j=vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++){
+            currCap[ whichVehicle ] += s[ configuration[j].id ];
+        }
+
+    }
+
+    vector<int> startVehicleTime(numVeiculos,0);
+    vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+    
+    
+    double bestObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F);  
+    double iniObj = bestObj;
+    bool improved = false;
+    vector<data> bestConfig = configuration;
+
+    for(int i=0; i< vehicleOrder.size()-1; i++){
+
+        
+        for(int j= vehicleOrder[i].initialPos; j<=vehicleOrder[i].finalPos; j++){
+
+
+            for(int next= i+1; next<vehicleOrder.size(); next++){
+
+        
+
+                /* Otimizar mais tarde.
+                double bestObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+                bestObj += objFVehicle(next, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+                */
+                deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+
+                for(int k= vehicleOrder[next].initialPos; k<= vehicleOrder[next].finalPos; k++){
+
+                    //Checking if the capacity of each car will be respected
+
+                    if( (currCap[ vehicleOrder[ i ].id]- s[ configuration[j].id ]+ s[ configuration[k].id ]) <= Q[ vehicleOrder[i].id]
+                        && (currCap[ vehicleOrder[ next ].id] - s[configuration[k].id]+ s[ configuration[j].id]) <= Q[ vehicleOrder[next].id] ){
+
+                        swap( configuration[j], configuration[k]);
+
+                        // deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                        // T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+                
+                    
+                        deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                        T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+
+                        
+                        /* Otimizar mais tarde.
+                        double newDoubleConfig = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+                        newDoubleConfig += objFVehicle(next, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+                        */
+                            
+                        double newDoubleConfig = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F);  
+
+                        if( newDoubleConfig < bestObj ){
+
+                            improved = true;
+                            bestConfig = configuration;
+                            bestObj = newDoubleConfig;
+
+                            // cout<<"VZ2: "<<newDoubleConfig-bestObj<<endl;
+
+
+                        }
+                        swap( configuration[j], configuration[k]);
+
+                    }
+                }
+            }
+        }
+    }
+
+    if( improved ){
+
+    	#ifdef VIEW_DECREASE
+        cout<<"Vz2. BI: "<<bestObj - iniObj<<endl;
+        #endif
+
+        #ifdef VIEW_OBJ_DECREASE
+        cout<<"Vz2. BI: "<<bestObj<<endl;
+        #endif
+
+        configuration = bestConfig;
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool vizi3_FI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
 	const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d){
 
-    //FIRST IMPROVEMENT
+    /* Inserting jobs inside a vehicle */
 
 	vector<int> startVehicleTime(numVeiculos,0);
 	vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
@@ -818,12 +999,20 @@ bool ls3IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 		for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
 				original.push_back( configuration[ k ].id );
 		}
-		// cout<<"original: ";
-		// for(int u:original){
-		// 	cout<<u<<" ";
-		// }
-		// cout<<endl;
-		for(int j= vehicleOrder[i].initialPos; j< vehicleOrder[i].finalPos; j++){
+	
+
+		vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
+
+		int iniContJob = vehicleOrder[ i ].initialPos;
+
+		for(int u=0;u<randomPos.size();u++){
+			randomPos[ u ] = iniContJob++;
+		}
+		unsigned seed = 0;
+		random_shuffle( randomPos.begin() , randomPos.end());
+
+
+		for(int j: randomPos){
 
 			int inserirPraTras = j - vehicleOrder[i].initialPos - 1;
 
@@ -867,7 +1056,7 @@ bool ls3IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 				double newObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
 				if( newObj < bestObj){
 
-					cout<<"Vz.3. => Melhoria de "<<newObj-bestObj<<endl;
+					cout<<"VZ3 FI: "<<newObj-bestObj<<endl;
 					return true;
 				
 				}
@@ -923,7 +1112,7 @@ bool ls3IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 
 				if( newObj < bestObj){
 
-					cout<<"Vz.3. => Melhoria de "<<newObj-bestObj<<endl;
+					cout<<"VZ3 FI: "<<newObj-bestObj<<endl;
 					return true;
 				
 				}
@@ -944,14 +1133,192 @@ bool ls3IntraVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 	return false;
 }
 
-bool ls4InterVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+bool vizi3_BI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d){
+
+    /* Inserting jobs inside a vehicle */
+
+    vector<int> startVehicleTime(numVeiculos,0);
+    vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+    
+
+    double bestImprove = 0;
+    bool improved = false;
+    vector<data> bestConfig = configuration;
+
+   double iniObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+
+    for(int i=0; i< vehicleOrder.size();i++){
+
+        if( vehicleOrder[i].initialPos == vehicleOrder[i].finalPos){
+            continue;
+        }
+        double bestObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+        //Saving the original configuration of jobs in that vehicle
+        vector<int> original;
+        for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                original.push_back( configuration[ k ].id );
+        }
+    
+
+        for(int j= vehicleOrder[i].initialPos; j<=vehicleOrder[i].finalPos; j++){
+
+            int inserirPraTras = j - vehicleOrder[i].initialPos - 1;
+
+            int contUpward = 0; 
+
+            // cout<<"Inserir pra tras: "<<inserirPraTras<<" size: "<<vehicleOrder[i].finalPos-vehicleOrder[i].initialPos<<endl;
+            //Inserting jobs leftward ( except for the immediatly close)
+            while( inserirPraTras-- >0){
+                // cout<<"e eu entrei\n";
+                vector<int> newvector ( vehicleOrder[i].finalPos - vehicleOrder[i].initialPos +1, -1);
+                set<int> jobsIn;
+
+                int contInserir = 0;
+                
+                newvector[ contUpward ] = configuration[j].id; //Inserting job in the required place
+                jobsIn.insert( configuration[j].id );
+                // cout<<"Eu ja!! inseri "<<configuration[j].id<<"na posicao "<<contUpward<<endl;
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                    // cout<<"Posicao "<<k<<" do trabalho "<< configuration[k].id<<" ";
+                    if( jobsIn.find( configuration[k].id ) == jobsIn.end()){
+                        while( contInserir < newvector.size() && newvector[contInserir]!=-1){
+                            contInserir++;
+                        }
+                        // cout<<"e eu ainda nao o inseri\n";
+                        newvector[ contInserir ] = configuration[k].id;
+                        jobsIn.insert( configuration[k].id );
+                    }else{
+                        // cout<<"e eu ja o inseri\n";
+                    }
+                }
+
+                int contCopiar = 0;
+
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                    configuration[ k ].id = newvector[ contCopiar ];
+                    contCopiar++;
+                }
+
+                deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+                double newObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+                if( newObj < bestObj && (newObj-bestObj) < bestImprove) {
+
+                    bestImprove= (newObj-bestObj);
+                    improved = true;
+                    bestConfig = configuration;            
+                }
+
+                contCopiar = 0;
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                    configuration[ k ].id = original[ contCopiar ];
+                    contCopiar++;
+                }
+
+
+                contUpward++;
+            }
+
+            int ondeInserir = j - vehicleOrder[i].initialPos+ 1;
+            int quantosInserir = j + 1 ;
+
+            while(quantosInserir <= vehicleOrder[i].finalPos){
+
+                // cout<<"Entrei pra inserir pra frente\n";
+                vector<int> newvector( vehicleOrder[i].finalPos - vehicleOrder[i].initialPos +1, -1);
+                set<int> jobsIn;
+
+
+                newvector[ ondeInserir ] = configuration[j].id;
+                jobsIn.insert( configuration[ j ].id );
+
+                int contInserirVec = 0;
+
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+
+                    if( jobsIn.find( configuration[k].id ) == jobsIn.end()){
+
+                        while( contInserirVec< newvector.size() && newvector[ contInserirVec]!=-1){
+                            contInserirVec++;
+                        }
+                        newvector[ contInserirVec ] = configuration[k].id;
+                        jobsIn.insert( configuration[k].id );
+                        contInserirVec++;
+                    }
+                }
+
+                int contCopiar=0;
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                    configuration[ k ].id = newvector[ contCopiar ];
+                    contCopiar++;
+                }
+
+
+                deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+                double newObj = objFVehicle(i, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+                 if( newObj < bestObj && (newObj-bestObj) < bestImprove) {
+
+                    bestImprove= (newObj-bestObj);
+                    improved = true;
+                    bestConfig = configuration;            
+                }
+
+
+                contCopiar=0;
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+                    configuration[ k ].id = original[ contCopiar ];
+                    contCopiar++;
+                }
+
+                quantosInserir++;
+                ondeInserir++;
+            }
+
+        }
+    }
+
+    if( improved ){
+
+    	#ifdef VIEW_DECREASE
+        cout<<"Vz3 BI: "<<bestImprove<<endl;
+        #endif
+
+        #ifdef VIEW_OBJ_DECREASE
+        cout<<"Vz3 BI: "<<iniObj + bestImprove<<endl;
+        #endif
+
+        configuration = bestConfig;
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool vizi4_FI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
     const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
+
+    /* Inserting jobs in other vehicles (already in use and the others) */
+
+
 
     //Calculating the current car volume
     vector<int> currCap( numVeiculos, 0 );
+    vector<bool> carInUse( numVeiculos, false); 
+
+
+
     for(int i=0;i< vehicleOrder.size(); i++){
 
         int whichVehicle = vehicleOrder[i].id;
+
+    	carInUse[ whichVehicle ] = true;
 
         for(int j=vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++){
             currCap[ whichVehicle ] += s[ configuration[j].id ];
@@ -959,15 +1326,807 @@ bool ls4InterVehicle(vector<data> &configuration, vector<vehicleLoaded> &vehicle
 
     }
 
+   //Teste
+ 	vector<int> startVehicleTime(numVeiculos,0);
+    vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+    double bestObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+    // bestObj += objFVehicle(tempBefore, vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
     for(int i=0; i<vehicleOrder.size(); i++){
 
-        for(int j= vehicleOrder[i].initialPos; j<= vehicleOrder[j].finalPos; j++){
 
+        int carsBeforeMe = i;
+        int carsAfterMe = vehicleOrder.size() - i - 1;
+
+
+        int tempBefore = carsBeforeMe; 
+        
+        while(tempBefore > 0){
+                
+            --tempBefore;
+
+
+            vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
+
+			int iniContJob = vehicleOrder[ i ].initialPos;
+
+			for(int u=0;u<randomPos.size();u++){
+				randomPos[ u ] = iniContJob++;
+			}
+			unsigned seed = 0;
+			random_shuffle( randomPos.begin() , randomPos.end());
+
+
+			for(int j: randomPos){
+                //For each task in that car
             //continuar
 
+                //IF the car before me can handle carrying this job, we calculate the benefit int puting the job on it
+                if( (currCap[ vehicleOrder[ tempBefore ].id ] + s[ configuration[j].id ]) <= (Q[ vehicleOrder[tempBefore].id] )){
+
+                    int range = vehicleOrder[ tempBefore].finalPos - vehicleOrder[ tempBefore ].initialPos + 2;
+
+                    int idCarInsert = vehicleOrder[ tempBefore ].id;
+                    
+
+
+                    //Trying to put in each space avaiable on the other car
+                    for(int z=0; z < range; z++  ){
+
+                        vector<int> newcarried( range ,-1);
+
+                        newcarried[ z ] = configuration[j].id;
+                        int copy= vehicleOrder[ tempBefore ].initialPos;
+                        for(int u=0; u< range; u++){
+                            if(z==u)
+                                continue;
+                            newcarried[ u ] = configuration[ copy++ ].id ;
+                        }
+                     
+                        vector<data> newconfig( configuration.size());
+
+
+
+                        int copyConfig =0;
+                        int contInsertNew = 0;
+
+                        while( copyConfig < configuration.size()){
+
+                            if( configuration[ copyConfig ].job && configuration[ copyConfig ].id == configuration[j].id){
+                                //Job moved
+                                copyConfig++;
+                                continue;
+                            }
+
+                            if( !configuration[ copyConfig ].job && configuration[ copyConfig ].id == idCarInsert){
+                                newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                                
+                                copyConfig++;
+
+                                contInsertNew++;
+
+                                int insert = range;
+                                int contUpward = 0; 
+
+                                while(insert > 0 ){
+                                    newconfig[ contInsertNew ].job = true;
+                                    newconfig[ contInsertNew ].id = newcarried[ contUpward ];
+                                    contUpward++;
+                                    contInsertNew++;
+
+                                    copyConfig++;
+
+                                    insert--;
+                                }
+                                copyConfig--; //Deleting the extra job inserted
+
+                                continue;
+
+                            }
+
+                            
+                            newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                            contInsertNew++;
+                            copyConfig++;                            
+
+                        }
+
+                        vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newconfig,numVeiculos);//Generating info about vehicle transportation
+                        
+
+                        
+                        //Creating a new configuration
+
+                        vector<int> newStartVehicleTime(numVeiculos,0);
+                        vector<int> newDeliveryTime = calculatingDeliveryTime(newconfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+                        vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+                        double newObj=0;
+                        newObj = objFunction(newVehicleOrder,newconfig, numVeiculos, numTrabalhos,t,w,newT,F); 
+
+                        if(newObj < bestObj && newObj!=0){
+
+                            configuration = newconfig;
+                            vehicleOrder = newVehicleOrder;
+
+
+                            cout<<"VZ4 FI:"<<newObj-bestObj<<endl;
+                            return true;
+                            //Return true
+                        }
+                    }
+                }
+            }
+        }
+
+        int carAhead = i+1 ;
+        
+        while(carAhead < vehicleOrder.size()  ){
+
+            vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
+
+			int iniContJob = vehicleOrder[ i ].initialPos;
+
+			for(int u=0;u<randomPos.size();u++){
+				randomPos[ u ] = iniContJob++;
+			}
+			unsigned seed = 0;
+			random_shuffle( randomPos.begin() , randomPos.end());
+
+
+			for(int j: randomPos){
+                //For each task in that car
+            //continuar
+
+                //IF the car before me can handle carrying this job, we calculate the benefit int puting the job on it
+                if( (currCap[ vehicleOrder[ carAhead ].id ] + s[ configuration[j].id ]) <= (Q[ vehicleOrder[carAhead].id] )){
+
+                    int range = vehicleOrder[ carAhead].finalPos - vehicleOrder[ carAhead ].initialPos + 2;
+
+                    int idCarInsert = vehicleOrder[ carAhead ].id;
+                    
+
+
+                    //Trying to put in each space avaiable on the other car
+                    for(int z=0; z < range; z++  ){
+
+                        vector<int> newcarried( range ,-1);
+
+                        newcarried[ z ] = configuration[j].id;
+                        int copy= vehicleOrder[ carAhead ].initialPos;
+                        for(int u=0; u< range; u++){
+                            if(z==u)
+                                continue;
+                            newcarried[ u ] = configuration[ copy++ ].id ;
+                        }
+
+          
+                        vector<data> newconfig( configuration.size());
+
+
+                        int copyConfig=0;
+                        int contInsertNew = 0;
+
+                        while( copyConfig < configuration.size()){
+
+                            if( configuration[ copyConfig ].job && configuration[ copyConfig ].id == configuration[j].id){
+                                //Job moved
+                                copyConfig++;
+                                continue;
+                            }
+
+                            if( !configuration[ copyConfig ].job && configuration[ copyConfig ].id == idCarInsert){
+                                newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                                
+                                copyConfig++;
+
+                                contInsertNew++;
+
+                                int insert = range;
+                                int contUpward = 0; 
+
+                                while(insert > 0 ){
+                                    newconfig[ contInsertNew ].job = true;
+                                    newconfig[ contInsertNew ].id = newcarried[ contUpward ];
+                                    contUpward++;
+                                    contInsertNew++;
+
+                                    copyConfig++;
+
+                                    insert--;
+                                }
+                                copyConfig--; //Deleting the extra job inserted
+
+                                continue;
+
+                            }
+
+                            
+                            newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                            contInsertNew++;
+                            copyConfig++;                            
+
+                        }
+
+                        vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newconfig,numVeiculos);//Generating info about vehicle transportation
+                        //Creating a new configuration
+
+                        vector<int> newStartVehicleTime(numVeiculos,0);
+                        vector<int> newDeliveryTime = calculatingDeliveryTime(newconfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+                        vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+                        double newObj=0;
+                        newObj = objFunction(newVehicleOrder,newconfig, numVeiculos, numTrabalhos,t,w,newT,F);             
+
+                        if(newObj < bestObj && newObj!=0){
+
+                            configuration = newconfig;
+                            vehicleOrder = newVehicleOrder;
+
+                             cout<<"VZ4_FI: "<<newObj-bestObj<<endl;
+                            return true;
+                        }
+                    }
+                }
+            }
+            ++carAhead;
         }
     }
 
+    
+    for(int j=0; j<numVeiculos; j++){
+
+    	// cout<<"Tentando inserir nos carros vazios\n";
+
+    	if(!carInUse[ j ]){
+
+    		for(int i=0;i<vehicleOrder.size();i++){
+
+		    	vector<int> startVehicleTime(numVeiculos,0);
+		        vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+		        vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+		        double bestObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+
+
+				//For each task in this car...
+
+
+		        vector<int> randomPos (vehicleOrder[i].finalPos - vehicleOrder[i].initialPos + 1);
+
+				int iniContJob = vehicleOrder[ i ].initialPos;
+
+				for(int u=0;u<randomPos.size();u++){
+					randomPos[ u ] = iniContJob++;
+				}
+				unsigned seed = 0;
+				random_shuffle( randomPos.begin() , randomPos.end());
+
+
+				for(int k: randomPos){
+
+					if( Q[ j ]>= s[ configuration[k].id ]){
+
+						vector<data> newConfig ( configuration.size());
+
+						int insert = 0;
+						for(int z=0; z<configuration.size(); z++){
+
+							if( !configuration[z].job && configuration[z].id== j){ //The new car to insert each job
+
+								newConfig[insert++]= configuration[z];
+								newConfig[ insert ].job = true;
+								newConfig[ insert ].id = configuration[k].id;
+								++insert;
+							}else if( configuration[z].job && configuration[z].id == configuration[k].id){
+								continue;
+							}else{
+								newConfig[ insert++ ] = configuration[z];
+							}
+						}
+
+						//Verifying if the obj function does improve with this change
+
+		                vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newConfig,numVeiculos);//Generating info about vehicle transportation
+		    			vector<int> newStartVehicleTime(numVeiculos,0);
+			        	vector<int> newDeliveryTime = calculatingDeliveryTime(newConfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+			        	vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+			        	double newObj = objFunction(newVehicleOrder,newConfig, numVeiculos, numTrabalhos,t,w,newT,F);
+
+			        	if(newObj < bestObj){
+			        		vehicleOrder = newVehicleOrder;
+			        		configuration = newConfig;
+
+			        		// cout<<"CONFIG EMPTY: ";
+			        		// for(data &u:configuration){
+             //                	if(u.job){
+             //                		cout<<"J"<<u.id<<" ";
+             //                	}else{
+             //                		cout<<"V"<<u.id<<" ";
+             //                	}
+             //                }cout<<endl;
+			        		 cout<<"VZ4 FI:"<<newObj-bestObj<<endl;
+			        		return true;
+			        	}
+
+					}
+
+
+    			}
+
+    		}
+
+    	}
+    }
+    
+	
+    return false;
+}
+
+bool vizi4_BI(vector<data> &configuration, vector<vehicleLoaded> &vehicleOrder, int numTrabalhos, int numVeiculos, const vector<double> &w,
+    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
+
+    /* Inserting jobs in other vehicles (already in use and the others) */
+
+
+
+    //Calculating the current car volume
+    vector<int> currCap( numVeiculos, 0 );
+    vector<bool> carInUse( numVeiculos, false); 
+
+ //Teste
+    vector<int> startVehicleTime(numVeiculos,0);
+    vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+	double bestObj = objFunction(vehicleOrder,configuration, numVeiculos, numTrabalhos,t,w,T,F); 
+    double iniObj = bestObj;
+    double improved = false;
+    vector<data> bestConfig = configuration;
+    vector<vehicleLoaded> bestVOrder = vehicleOrder;
+
+    for(int i=0;i< vehicleOrder.size(); i++){
+
+        int whichVehicle = vehicleOrder[i].id;
+
+        carInUse[ whichVehicle ] = true;
+
+        for(int j=vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++){
+            currCap[ whichVehicle ] += s[ configuration[j].id ];
+        }
+
+    }
+
+  
+     
+
+    for(int i=0; i<vehicleOrder.size(); i++){
+
+
+        int carsBeforeMe = i;
+        int carsAfterMe = vehicleOrder.size() - i - 1;
+
+
+        int tempBefore = carsBeforeMe; 
+        
+        while(tempBefore > 0){
+                
+            --tempBefore;
+
+
+            for(int j= vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++){
+                //For each task in that car
+            //continuar
+
+                //IF the car before me can handle carrying this job, we calculate the benefit int puting the job on it
+                if( (currCap[ vehicleOrder[ tempBefore ].id ] + s[ configuration[j].id ]) <= (Q[ vehicleOrder[tempBefore].id] )){
+
+                    int range = vehicleOrder[ tempBefore].finalPos - vehicleOrder[ tempBefore ].initialPos + 2;
+
+                    int idCarInsert = vehicleOrder[ tempBefore ].id;
+                    
+
+
+                    //Trying to put in each space avaiable on the other car
+                    for(int z=0; z < range; z++  ){
+
+                        vector<int> newcarried( range ,-1);
+
+                        newcarried[ z ] = configuration[j].id;
+                        int copy= vehicleOrder[ tempBefore ].initialPos;
+                        for(int u=0; u< range; u++){
+                            if(z==u)
+                                continue;
+                            newcarried[ u ] = configuration[ copy++ ].id ;
+                        }
+                     
+                        vector<data> newconfig( configuration.size());
+
+
+
+                        int copyConfig =0;
+                        int contInsertNew = 0;
+
+                        while( copyConfig < configuration.size()){
+
+                            if( configuration[ copyConfig ].job && configuration[ copyConfig ].id == configuration[j].id){
+                                //Job moved
+                                copyConfig++;
+                                continue;
+                            }
+
+                            if( !configuration[ copyConfig ].job && configuration[ copyConfig ].id == idCarInsert){
+                                newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                                
+                                copyConfig++;
+
+                                contInsertNew++;
+
+                                int insert = range;
+                                int contUpward = 0; 
+
+                                while(insert > 0 ){
+                                    newconfig[ contInsertNew ].job = true;
+                                    newconfig[ contInsertNew ].id = newcarried[ contUpward ];
+                                    contUpward++;
+                                    contInsertNew++;
+
+                                    copyConfig++;
+
+                                    insert--;
+                                }
+                                copyConfig--; //Deleting the extra job inserted
+
+                                continue;
+
+                            }
+
+                            
+                            newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                            contInsertNew++;
+                            copyConfig++;                            
+
+                        }
+
+                        vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newconfig,numVeiculos);//Generating info about vehicle transportation
+                        
+
+                        
+                        //Creating a new configuration
+
+                        vector<int> newStartVehicleTime(numVeiculos,0);
+                        vector<int> newDeliveryTime = calculatingDeliveryTime(newconfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+                        vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+                        double newObj=0;
+                        newObj = objFunction(newVehicleOrder,newconfig, numVeiculos, numTrabalhos,t,w,newT,F); 
+
+                        if(newObj < bestObj && newObj!=0){
+
+
+                            bestConfig = newconfig;
+                            bestVOrder = newVehicleOrder;
+
+                            improved = true;
+                            bestObj = newObj;
+
+                            // cout<<"VZ4_Back:"<<newObj-bestObj<<endl;
+                        }
+                    }
+                }
+            }
+        }
+
+        int carAhead = i+1 ;
+        
+        while(carAhead < vehicleOrder.size()  ){
+
+
+            for(int j= vehicleOrder[i].initialPos; j<= vehicleOrder[i].finalPos; j++){
+                //For each task in that car
+            //continuar
+
+                //IF the car before me can handle carrying this job, we calculate the benefit int puting the job on it
+                if( (currCap[ vehicleOrder[ carAhead ].id ] + s[ configuration[j].id ]) <= (Q[ vehicleOrder[carAhead].id] )){
+
+                    int range = vehicleOrder[ carAhead].finalPos - vehicleOrder[ carAhead ].initialPos + 2;
+
+                    int idCarInsert = vehicleOrder[ carAhead ].id;
+                    
+
+
+                    //Trying to put in each space avaiable on the other car
+                    for(int z=0; z < range; z++  ){
+
+                        vector<int> newcarried( range ,-1);
+
+                        newcarried[ z ] = configuration[j].id;
+                        int copy= vehicleOrder[ carAhead ].initialPos;
+                        for(int u=0; u< range; u++){
+                            if(z==u)
+                                continue;
+                            newcarried[ u ] = configuration[ copy++ ].id ;
+                        }
+
+          
+                        vector<data> newconfig( configuration.size());
+
+
+                        int copyConfig=0;
+                        int contInsertNew = 0;
+
+                        while( copyConfig < configuration.size()){
+
+                            if( configuration[ copyConfig ].job && configuration[ copyConfig ].id == configuration[j].id){
+                                //Job moved
+                                copyConfig++;
+                                continue;
+                            }
+
+                            if( !configuration[ copyConfig ].job && configuration[ copyConfig ].id == idCarInsert){
+                                newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                                
+                                copyConfig++;
+
+                                contInsertNew++;
+
+                                int insert = range;
+                                int contUpward = 0; 
+
+                                while(insert > 0 ){
+                                    newconfig[ contInsertNew ].job = true;
+                                    newconfig[ contInsertNew ].id = newcarried[ contUpward ];
+                                    contUpward++;
+                                    contInsertNew++;
+
+                                    copyConfig++;
+
+                                    insert--;
+                                }
+                                copyConfig--; //Deleting the extra job inserted
+
+                                continue;
+
+                            }
+
+                            
+                            newconfig[ contInsertNew ] = configuration[ copyConfig ];
+                            contInsertNew++;
+                            copyConfig++;                            
+
+                        }
+
+                        vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newconfig,numVeiculos);//Generating info about vehicle transportation
+                        //Creating a new configuration
+
+                        vector<int> newStartVehicleTime(numVeiculos,0);
+                        vector<int> newDeliveryTime = calculatingDeliveryTime(newconfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+                        vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+                        double newObj=0;
+                        newObj = objFunction(newVehicleOrder,newconfig, numVeiculos, numTrabalhos,t,w,newT,F);             
+
+                        if(newObj < bestObj && newObj!=0){
+
+                            bestConfig = newconfig;
+                            bestVOrder = newVehicleOrder;
+                            improved = true;
+                            bestObj = newObj;
+                        }
+                    }
+                }
+            }
+            ++carAhead;
+        }
+    }
+
+    
+    for(int j=0; j<numVeiculos; j++){
+
+        // cout<<"Tentando inserir nos carros vazios\n";
+
+        if(!carInUse[ j ]){
+
+            for(int i=0;i<vehicleOrder.size();i++){
+
+                vector<int> startVehicleTime(numVeiculos,0);
+                vector<int> deliveryTime = calculatingDeliveryTime(configuration,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+                vector<int> T = calculatingJobTardiness(deliveryTime,numTrabalhos,d);
+
+                //For each task in this car...
+
+                for(int k= vehicleOrder[i].initialPos; k<= vehicleOrder[i].finalPos; k++){
+
+                    if( Q[ j ]>= s[ configuration[k].id ]){
+
+                        vector<data> newConfig ( configuration.size());
+
+                        int insert = 0;
+                        for(int z=0; z<configuration.size(); z++){
+
+                            if( !configuration[z].job && configuration[z].id== j){ //The new car to insert each job
+
+                                newConfig[insert++]= configuration[z];
+                                newConfig[ insert ].job = true;
+                                newConfig[ insert ].id = configuration[k].id;
+                                ++insert;
+                            }else if( configuration[z].job && configuration[z].id == configuration[k].id){
+                                continue;
+                            }else{
+                                newConfig[ insert++ ] = configuration[z];
+                            }
+                        }
+
+                        //Verifying if the obj function does improve with this change
+
+                        vector<vehicleLoaded> newVehicleOrder=generateVehicleOrder(newConfig,numVeiculos);//Generating info about vehicle transportation
+                        vector<int> newStartVehicleTime(numVeiculos,0);
+                        vector<int> newDeliveryTime = calculatingDeliveryTime(newConfig,newStartVehicleTime,t,P,newVehicleOrder,numTrabalhos);
+                        vector<int> newT = calculatingJobTardiness(newDeliveryTime,numTrabalhos,d);
+
+                        double newObj = objFunction(newVehicleOrder,newConfig, numVeiculos, numTrabalhos,t,w,newT,F);
+
+                        if(newObj < bestObj){
+
+                            bestConfig = newConfig;
+                            bestVOrder = newVehicleOrder;
+
+                            improved = true;
+                            bestObj = newObj;
+                            // cout<<"VZ4_Empty:"<<newObj-bestObj<<endl;
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+        }
+    }
+    
+    if( bestObj < iniObj){
+
+        configuration = bestConfig;
+        vehicleOrder= bestVOrder;//Generating info about vehicle transportation
+
+        #ifdef VIEW_DECREASE
+        cout<<"Vz4 BI: "<<bestObj-iniObj<<endl;
+        #endif
+
+        #ifdef VIEW_OBJ_DECREASE
+        cout<<"Vz4 BI: "<<bestObj<<endl;
+        #endif
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void VND(int numTrabalhos, int numVeiculos, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t, 
+   const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
+
+   vector<data> initialConfig = generateValidRandomConfig(numTrabalhos,numVeiculos,Q,s);
+
+    vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);//Generating info about vehicle transportation
+    vector<int> startVehicleTime(numVeiculos,0);//Calculating Delivery time(D) and Starting time(Sk)
+    vector<int> deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
+    double iniObj= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+    
+
+    #ifdef PRINT_VND_IMPROVE
+    cout<<"\n Started VND at obj: "<<iniObj<<"\n\n";
+    #endif
+
+    vector<int> neighbors = { 1,2,3,4};
+
+
+    random_shuffle( neighbors.begin(), neighbors.end());
+
+    int it = 0;
+    
+    while( it < 3 ){
+
+    	//1 corrigida, 2 e 3 parecem tb. Analisar a 4
+
+        int whichNeighbor = neighbors[ it ];
+
+        bool improved = false;
+
+        if( whichNeighbor == 1){
+            improved = vizi1_BI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d);
+
+        }else if( whichNeighbor == 2){
+            improved = vizi2_BI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d ,Q, s);
+
+        }else if( whichNeighbor == 3){
+            improved = vizi3_BI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d);
+
+        }else if(whichNeighbor ==4){
+            improved = vizi4_BI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d ,Q, s);
+        }
+
+        if( improved ){
+            it = 0;
+            random_shuffle( neighbors.begin(), neighbors.end());
+        }else{
+            it++;
+        }
+
+    }
+    
+    vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);//Generating info about vehicle transportation
+    deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+    jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
+    
+    double finalObj= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+
+    #ifdef PRINT_VND_IMPROVE
+    cout<<"Finished VND at obj: "<<finalObj<<"\n";
+    #endif
+
+    printConfig(finalObj,"VND - iniRandom",initialConfig, Q, s);
+
+}
+void graspV1(int numTrabalhos, int numVeiculos, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t, 
+	const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int nbiter){
+
+
+		double bestObj;
+		vector<data> bestConfig;
+		int iterBestFound=0;
+		for(int i=0; i< nbiter; i++){
+
+		    vector<data> initialConfig = generateValidRandomConfig(numTrabalhos,numVeiculos,Q,s);
+
+		    vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);//Generating info about vehicle transportation
+		    vector<int> startVehicleTime(numVeiculos,0);//Calculating Delivery time(D) and Starting time(Sk)
+		    vector<int> deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+		    vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
+
+		    double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+
+
+		    if( i == 0 ){
+		    	bestObj = resultObjFunction;
+		    	bestConfig = initialConfig;
+		    	// cout<<" Started with: "<<bestObj<<endl;
+		    }
+
+		    bool generalImprove = true;
+		    while(generalImprove){
+
+		     	bool imp1,imp2,imp3,imp4;
+
+		     	imp1 = vizi1_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d );
+		     	imp2 = vizi2_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d , Q, s);
+		     	imp3 = vizi3_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d );
+		     	imp4 = vizi4_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d , Q, s);
+
+		     	generalImprove = (imp1 || imp2 || imp3 || imp4);
+		    }
+				
+		    vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);//Generating info about vehicle transportation
+		  	deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
+		   	jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
+
+
+		    double newObj= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+		    if( newObj < bestObj){
+		    	iterBestFound = i;
+		    	bestObj = newObj;
+		    	bestConfig = initialConfig;
+		    }
+		}
+
+        printConfig(bestObj,"Grasp rand100x ",bestConfig, Q, s);
+        // cout<<"Stop getting better at: "<<iterBestFound<<" iteration"<<endl<<endl;
 
 }
 int main(){
@@ -1021,7 +2180,8 @@ int main(){
                 in>>t[i][j];
             }
         }
- 
+    
+        /*
    
         //Generating RANDOM solution
         vector<data> initialConfig = generateValidRandomConfig(numTrabalhos,numVeiculos,Q,s);
@@ -1032,76 +2192,46 @@ int main(){
         vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
  
         double resultObjFunction= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
-        printConfig(resultObjFunction,"Random - dr0",initialConfig, Q, s);
-        // interLocalSearch(resultObjFunction, initialConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
-        // cout<<"After local search (route): "<< resultObjFunction <<endl<<endl;
- 
-        int tries=30000;
 
-        while(tries--){
-            bool any = false;
-            if(ls3IntraVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d )
-                || ls1IntraVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d ) 
-                || ls2InterVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d , Q, s)){
-                any=true;
-            }
 
-            if(any)
-                tries=30000;
+        bool imp1 = true;
+         while(imp1){
+             imp1 = vizi1_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d );
+            
+         }
+        bool imp2 = true;
+        while(imp2){
+            imp2 = vizi2_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d ,Q, s);
         }
-        // ls3IntraVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d )<<endl;
-
-        // ls1IntraVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d )<<endl;
-
-        // ls2InterVehicle(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d , Q, s)<<endl;
-
-
-
+        
+        bool imp3 = true;
+        while(imp3){
+            imp3 = vizi3_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d );
+        }
+        
+        bool imp4 = true;
+        while(imp4){
+            imp4 = vizi4_FI(initialConfig, vehicleOrder, numTrabalhos, numVeiculos, w, P, t, F, d , Q, s);
+        }
+        
+ 		
+        vehicleOrder=generateVehicleOrder(initialConfig,numVeiculos);//Generating info about vehicle transportation
       	deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,numTrabalhos);
-       jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
+       	jobTardiness = calculatingJobTardiness(deliveryTime,numTrabalhos,d);//Generating Job Tardiness (T) of each job (O(N))
  
+
         double newObj= objFunction(vehicleOrder,initialConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
+        printConfig(newObj,"Random - dr0",initialConfig, Q, s);
 
-        cout<<"New Obj. F. is "<<newObj<<endl;
+        */
 
+        // graspV1(numTrabalhos, numVeiculos, w, P, t, F, d , Q, s, 100);
 
+        VND(numTrabalhos, numVeiculos, w, P, t, F, d , Q, s);
 
 
         /*
-        #ifdef DEBUG_MODE //Testing the delivery time and the Starting time
-             
-            cout<<"Job sizes: "<<endl;
-            for(int i=0;i<numTrabalhos;i++){
-                cout<<"Job "<<i<<" size: "<<s[i]<<endl;
-            }
- 
-            cout<<"Vehicle cap: "<<endl;
-            for(int i=0;i<numVeiculos;i++){
-                cout<<"Vehicle "<<i<<" cap: "<<Q[i]<<endl;
-            }
- 
-            cout<<"Delivery times: ";
-            for(int i=0;i<numTrabalhos;i++){
-                cout<<deliveryTime[i]<<" ";
-            }
- 
-            cout<<endl<<"Job Tardiness times: ";
-            for(int i=0;i<numTrabalhos;i++){
-                cout<<jobTardiness[i]<<" ";
-            }
- 
-            cout<<endl<<"Start vehicle time:\n";
-            for(int j=0;j<numVeiculos;j++){
-                if(startVehicleTime[j]!=0){
-                    cout<<"(V:"<<j<<","<<startVehicleTime[j]<<")\n";
-                }else{
-                    cout<<"(V:"<<j<<",off"<<")\n";
- 
-                }
-            }
- 
-            cout<<endl;
-        #endif
+       
         //ATC Configuration! Dispatching Rule 1:
         vector<data> atcConfig = generateATC(s, numTrabalhos, numVeiculos, w, P, d, F, Q);
  
@@ -1111,7 +2241,6 @@ int main(){
  
         double resultAtcFunction = objFunction(vehicleOrder,atcConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
         printConfig(resultAtcFunction,"ATC - dr1",atcConfig, Q, s);
-        //interLocalSearch(resultAtcFunction, atcConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
         //cout<<"After local search (route): "<< resultAtcFunction <<endl<<endl;
  
  
@@ -1127,7 +2256,6 @@ int main(){
         double resultWMDDFunction = objFunction(vehicleOrder,wmddConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
  
         printConfig(resultWMDDFunction,"WMDD - dr2",wmddConfig, Q, s);
-        // interLocalSearch(resultWMDDFunction, wmddConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
         // cout<<"After local search (route): "<< resultWMDDFunction <<endl;
  
       //WMDD Configuration! Dispatching Rule 3:
@@ -1140,7 +2268,6 @@ int main(){
         double resultWEDDFunction = objFunction(vehicleOrder,weddConfig,numVeiculos,numTrabalhos,t,w,jobTardiness,F);
  
         printConfig(resultWEDDFunction,"WEDD - dr3",weddConfig, Q, s);
-        //interLocalSearch(resultWEDDFunction, wmddConfig, 200, t, vehicleOrder,P, numTrabalhos, numVeiculos, w,F,d );
         //cout<<"After local search (route): "<< resultWEDDFunction <<endl;
         cout<<endl;
  
