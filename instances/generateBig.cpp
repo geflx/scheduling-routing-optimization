@@ -129,6 +129,13 @@ int main(){
 						}
 						outFile<<endl;
 
+						for(int i=0;i<numTrabalhos;i++){  //8- penalty weight!
+							float penalty=(rand()%41);
+							penalty=penalty/10.0 +1.0;
+							outFile<<penalty;
+							if(i!=numTrabalhos-1) outFile<<" ";
+						}
+						outFile<<endl;
 
 
 
@@ -173,13 +180,7 @@ int main(){
 							if(i!=numVeiculos-1) outFile<<" ";
 						}
 						outFile<<endl;
-						for(int i=0;i<numTrabalhos;i++){  //8- penalty weight!
-							float penalty=(rand()%41);
-							penalty=penalty/10.0 +1.0;
-							outFile<<penalty;
-							if(i!=numTrabalhos-1) outFile<<" ";
-						}
-						outFile<<endl;
+
 
 						for(int i=0;i<=numTrabalhos;i++){ //8 printing - Time![i][j] (s)
 							for(int j=0;j<=numTrabalhos;j++){

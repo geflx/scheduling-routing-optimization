@@ -15,12 +15,10 @@
 #include <unordered_map>
 
 #define EPS 1e-5
-
 /* --- Defines to better a view of decreasing and debugging --- */
-
-#define SHEETS_MODE
-// #define VIEW_ILS_VND_IMPROVE
+// #define SHEETS_MODE
 // #define VIEW_ILS_RVND_IMPROVE
+// #define VIEW_ILS_RVND_CUSTOM_IMPROVE
 // #define VIEW_OBJ_DECREASE
 // #define VIEW_DECREASE
 // #define PRINT_VND_IMPROVE
@@ -37,6 +35,9 @@
 
 #define INF 987654321
 using namespace std;
+const string atc = "atc";
+const string wmdd = "wmdd";
+const string wedd = "wedd";
 
 struct data{
     bool job; //If it is a job: 1, otherwise it is a Vehicle
@@ -53,6 +54,17 @@ struct vehicleLoaded{
     int finalPos;
 };
 
+void lazyprint( const vector<data> &config ){
+    for(data i: config){
+        if(i.job){
+            cout<<"J"<<i.id+1<<" ";
+        }else{
+            cout<<"V"<<i.id+1<<" ";
+        }
+    }
+    cout<<endl;
+    return;
+}
 double objFunction(const vector<vehicleLoaded> &vehicleOrder, const vector<data> &configuration,int ncars, int njobs, const vector<vector<int> > &time,
     const vector<double> &weight,const vector<int> &jobTardiness, const vector<int> &carPrices){
 
@@ -362,7 +374,7 @@ vector<data> generateValidRandomConfig(int njobs, int ncars, const vector<int> &
     return configuration;
 }
 
-vector<data> generateATC( const vector<int> &jobSize, int njobs, int ncars, const vector<double> &weight,
+vector<data> generateGreedy(const string &which, const vector<int> &jobSize, int njobs, int ncars, const vector<double> &weight,
     const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
     //Calculating processing time average
     double procTimeAvg=0;
@@ -375,6 +387,17 @@ vector<data> generateATC( const vector<int> &jobSize, int njobs, int ncars, cons
     }
     procTimeAvg /= njobs;
 
+     /* ------------ debug of parameters readed -------------
+
+    cout<<"Jobs:" <<njobs<<" Cars: "<<ncars<<endl;
+    cout<<"Sizes (P,d): "<<procTime.size()<<" "<<dueDate.size()<<" Sizes(F,Q): "<<carPrices.size()<<" "<<carCap.size()<<endl;
+    cout<<"P: "; for(int i: procTime) cout<<i<<" "; cout<<endl;
+    cout<<"d: "; for(int i: dueDate) cout<<i<<" "; cout<<endl;
+    cout<<"F: "; for(int i: carPrices) cout<<i<<" "; cout<<endl;
+    cout<<"Q: "; for(int i: carCap) cout<<i<<" "; cout<<endl;
+
+     -------------- end of debugging ----------------------*/
+
     //Variables to generate processing order of jobs:
     vector<data> jobOrder(njobs);
     vector<bool> visitedJob(njobs,false);
@@ -383,20 +406,30 @@ vector<data> generateATC( const vector<int> &jobSize, int njobs, int ncars, cons
     // cout<<"numtrbs"<<njobs<<endl;
     for(int i=0;i<njobs;i++){
 
-        //Create priority queue of Dispatching Rule (ATC)
-        priority_queue<pair<double, int> > atc;
+        //Create priority queue of Dispatching Rule
+        priority_queue<pair<double, int> > pq;
 
         for(int j=0;j<njobs;j++){
 
             if(visitedJob[j])
                 continue;
 
-            double atcValue= (weight[j]/procTime[j]) * exp( (-1) * (max( dueDate[j]- procTime[j]- acumulatedD ,0 ))/ procTimeAvg );
-            atc.push( make_pair( atcValue,j) );
+            double value = 0;
+
+            if(which == atc){
+                value= (weight[j]/procTime[j]) * exp( (-1) * (max( dueDate[j]- procTime[j]- acumulatedD ,0 ))/ procTimeAvg );
+                pq.push( make_pair( value,j) );
+            }else if( which == wmdd){
+                value=  (1 /weight[j])* max(procTime[j], dueDate[j] - acumulatedD) ;
+                pq.push( make_pair( (-1) * value,j) );
+            }else if( which == wedd){
+                value=  ( dueDate[j]/weight[j]) ;
+                pq.push( make_pair( (-1) * value,j) );
+            }
 
         }
 
-        jobOrder[i].id = ( atc.top() ).second;
+        jobOrder[i].id = ( pq.top() ).second;
         int jobInserted= jobOrder[i].id;
         // cout<<"inseri "<<jobInserted<<endl;
 
@@ -412,201 +445,57 @@ vector<data> generateATC( const vector<int> &jobSize, int njobs, int ncars, cons
     priority_queue<pair<int,int> > vehiclePrice; //We will select the cars in the cheapest order.
 
     for(int i=0; i<ncars; i++){
-
         vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
 
+    }
+
+
+    vector<int> carbyprice;
+    while( !vehiclePrice.empty()){
+        carbyprice.push_back(vehiclePrice.top().second);
+        vehiclePrice.pop();
+    }
+
+    // cout<<"Job order: ";
+    // for(data i: jobOrder){
+    //     cout<<i.id<<" ";
+    // }
+    // cout<<endl;
+    //
+    // cout<<"Car by price: ";
+    // for(int i: carbyprice){
+    //     cout<<i<<" ";
+    // }
+    // cout<<endl;
+    //Creating adj list of carried job ( sorted by car prices in vector below)
+    vector<vector<int>> adjcarry( ncars );
+
+    int job = 0;
+    for( int i=0; i<ncars; i++){
+        int cap = carCap[ carbyprice[ i ] ]; //getting id and cap
+
+        int accCap = 0;
+        while( job < njobs && (accCap + jobSize[ jobOrder[ job ].id ])<= cap ){
+            adjcarry[ i ].push_back( jobOrder[ job ].id);
+            accCap += jobSize[ jobOrder[ job ].id];
+            job++;
+
+        }
     }
 
     vector<data> configuration( njobs + ncars );
     int configSize = configuration.size();
     // cout<<"configsize "<<configSize<<endl;
-    vector<bool> visitedConfig(configSize,false);
 
-    int insertedItems = 0;
-    int jobToInsert=0;
-
-    while(insertedItems<configSize){
-
-        int currentCar = (vehiclePrice.top()).second;
-        configuration[ insertedItems ].job = false;
-        configuration[ insertedItems ].id = currentCar;
-        vehiclePrice.pop();
-        insertedItems++;
-
-        if(insertedItems >= configSize)
-            break;
-
-        int currentVolume=0;
-        while(insertedItems < configSize && jobToInsert<njobs && (currentVolume + jobSize[ jobOrder[jobToInsert].id ] <= carCap[ currentCar ]) ){
-
-
-            configuration[ insertedItems ].job = true;
-            configuration[ insertedItems ].id = jobOrder[ jobToInsert ].id;
-
-            currentVolume+= jobSize [  jobOrder[jobToInsert].id ];
-            jobToInsert++;
-            insertedItems++;
-            // cout<<"jobToInsert "<<jobToInsert-1<<endl;
-            // cout<<"isnerted itens "<<insertedItems<<endl;
-            // cout<<"capacidade atual"<<currentVolume<<endl;
-            // cout<<"total: "<<carCap[ currentCar]<<endl;
-            // cout<<"vou inserir: "<< jobSize[ jobOrder[jobToInsert].id ]<<" do trabalho: "<<jobOrder[jobToInsert].id<<endl;
+    int insert = 0;
+    for(int i=0; i<adjcarry.size(); i++){
+        configuration[ insert ].job = false;
+        configuration[ insert++ ].id = carbyprice[i];
+        for(int j=0;j<adjcarry[i].size(); j++){
+            configuration[ insert ].job = true;
+            configuration[ insert++ ].id = adjcarry[i][j];
         }
-        // cout<<"deibreak\n";
-
     }
-
-    return configuration;
-}
-
-vector<data> generateWMDD( const vector<int> &jobSize, int njobs, int ncars, const vector<double> &weight,
-    const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
-
-    //Variables to generate processing order of jobs:
-    vector<data> jobOrder(njobs);
-    vector<bool> visitedJob(njobs,false);
-    int acumulatedD=0;
-
-    for(int i=0;i<njobs;i++){
-
-        //Create priority queue of Dispatching Rule (WMDD)
-        priority_queue<pair<double, int> > wmdd;
-
-        for(int j=0;j<njobs;j++){
-
-            if(visitedJob[j])
-                continue;
-
-            double wmddValue=  (1 /weight[j])* max(procTime[j], dueDate[j] - acumulatedD) ;
-            wmdd.push( make_pair( (-1) * wmddValue,j) );
-
-        }
-
-        jobOrder[i].id = ( wmdd.top() ).second;
-        int jobInserted= jobOrder[i].id;
-        visitedJob[ jobInserted ] = true;
-
-        acumulatedD+= procTime[ jobInserted ];
-
-    }
-
-    // Puting in a greedy way the cars to carry the jobs, choosing the cheaper one.
-    vector<data> vehicleDispatching(ncars);
-
-    priority_queue<pair<int,int> > vehiclePrice; //We will select the cars in the cheapest order.
-
-    for(int i=0; i<ncars; i++){
-
-        vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
-
-    }
-
-    vector<data> configuration( njobs + ncars );
-    int configSize = configuration.size();
-    vector<bool> visitedConfig(configSize,false);
-
-    int insertedItems = 0;
-    int jobToInsert=0;
-
-    while(insertedItems<configSize){
-
-        int currentCar = (vehiclePrice.top()).second;
-        configuration[ insertedItems ].job = false;
-        configuration[ insertedItems ].id = currentCar;
-        vehiclePrice.pop();
-        insertedItems++;
-
-        if(insertedItems >= configSize)
-            break;
-
-        int currentVolume=0;
-         while(insertedItems < configSize && jobToInsert<njobs && (currentVolume + jobSize[ jobOrder[jobToInsert].id ] <= carCap[ currentCar ]) ){
-
-
-            configuration[ insertedItems ].job = true;
-            configuration[ insertedItems ].id = jobOrder[ jobToInsert ].id;
-            jobToInsert++;
-            insertedItems++;
-
-            currentVolume+= jobSize [  jobOrder[jobToInsert-1].id ];
-        }
-
-    }
-
-    return configuration;
-}
-
-vector<data> generateWEDD( const vector<int> &jobSize, int njobs, int ncars, const vector<double> &weight,
-    const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
-
-    //Variables to generate processing order of jobs:
-    vector<data> jobOrder(njobs);
-    vector<bool> visitedJob(njobs,false);
-
-    for(int i=0;i<njobs;i++){
-
-        //Create priority queue of Dispatching Rule (WEDD)
-        priority_queue<pair<double, int> > wedd;
-
-        for(int j=0;j<njobs;j++){
-
-            if(visitedJob[j])
-                continue;
-
-            double weddValue=  ( dueDate[j]/weight[j]) ;
-            wedd.push( make_pair( (-1) * weddValue,j) );
-
-        }
-
-        jobOrder[i].id = ( wedd.top() ).second;
-        int jobInserted= jobOrder[i].id;
-        visitedJob[ jobInserted ] = true;
-
-    }
-
-    // Puting in a greedy way the cars to carry the jobs, choosing the cheaper one.
-    vector<data> vehicleDispatching(ncars);
-
-    priority_queue<pair<int,int> > vehiclePrice; //We will select the cars in the cheapest order.
-
-    for(int i=0; i<ncars; i++){
-
-        vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
-
-    }
-
-    vector<data> configuration( njobs + ncars );
-    int configSize = configuration.size();
-    vector<bool> visitedConfig(configSize,false);
-
-    int insertedItems = 0;
-    int jobToInsert=0;
-
-    while(insertedItems<configSize){
-
-        int currentCar = (vehiclePrice.top()).second;
-        configuration[ insertedItems ].job = false;
-        configuration[ insertedItems ].id = currentCar;
-        vehiclePrice.pop();
-        insertedItems++;
-
-        if(insertedItems >= configSize)
-            break;
-
-        int currentVolume=0;
-         while(insertedItems < configSize && jobToInsert<njobs && (currentVolume + jobSize[ jobOrder[jobToInsert].id ] <= carCap[ currentCar ]) ){
-
-
-            configuration[ insertedItems ].job = true;
-            configuration[ insertedItems ].id = jobOrder[ jobToInsert ].id;
-            jobToInsert++;
-            insertedItems++;
-
-            currentVolume+= jobSize [  jobOrder[jobToInsert-1].id ];
-        }
-
-    }
-
     return configuration;
 }
 
@@ -2575,13 +2464,19 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
     unordered_set<int> jobsIn;
     unordered_set<int> carIn;
 
+    lazyprint( config );
+
     for(int i=0; i<config.size(); i++){
-    	if( config[i].id == -1)
+    	if( config[i].id == -1){
+            // cerr<<" del - not valid cause it has '-1' in some position of solution! "<<endl;
     		return false;
+        }
     	if( config[i].job ){
     		if( jobsIn.find( config[i].id )== jobsIn.end() ){
     			jobsIn.insert( config[i].id );
     		}else{
+                // cerr<<" del - not valid cause it has a job repeated at least 2x! "<<endl;
+
     			return false; // job repeated
     		}
     		if( config[i].id<0 || config[i].id >=njobs)
@@ -2590,10 +2485,12 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
     		if( carIn.find( config[i].id )== carIn.end() ){
     			carIn.insert( config[i].id );
     		}else{
+                // cerr<<" del - not valid cause it has a vehicle(id) repeated at least 2x! "<<endl;
     			return false; // car repeated
     		}
 
     		if( config[i].id<0 || config[i].id >= ncars)
+
     			return false;
     	}
     }
@@ -2618,6 +2515,7 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
                 accCap += jobSize[ config[ walkAhead].id ];
 
                 if( accCap > carCapacity){
+                    // cerr<<"del - Invalid because vehicle "<<config[walk].id+1<<" has cap. "<<carCapacity<<" and is carrying until now "<<accCap<<endl;
                     valid=false;
                     break;
                 }
@@ -2971,7 +2869,7 @@ vector<data> perturb ( vector<data> &solution, const vector<int> &capacities, co
     return solution;
 }
 
-pair<double, vector<data>> ILS_VND(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
+pair<double, vector<data>> ils_rvnd(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
     const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int maxIter, int maxIterIls){
 
 
@@ -2979,21 +2877,29 @@ pair<double, vector<data>> ILS_VND(int njobs, int ncars, const vector<double> &w
     vector< vector<data> > validSolutions;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = generateATC(s, njobs, ncars, w, P, d, F, Q);
-    vector<data> weddConfig = generateWEDD(s, njobs, ncars, w, P, d, F, Q);
-    vector<data> wmddConfig = generateWMDD(s, njobs, ncars, w, P, d, F, Q);
+    vector<data> atcConfig = generateGreedy(atc, s, njobs, ncars, w, P, d, F, Q);
+    vector<data> weddConfig = generateGreedy(wedd, s, njobs, ncars, w, P, d, F, Q);
+    vector<data> wmddConfig = generateGreedy(wmdd, s, njobs, ncars, w, P, d, F, Q);
 
     //Danger: Verify ATC!!!
     // Verifying if they are really valid
+
+    // cerr<<" Trying ATC: \n";
     if( validConfig( atcConfig, Q, s, njobs, ncars)){
         validSolutions.push_back( atcConfig );
         nbValidSolutions++;
     }
+    // cerr<<" Trying WMDD: \n";
+
     if( validConfig( wmddConfig, Q, s, njobs, ncars)){
+
         validSolutions.push_back( wmddConfig);
         nbValidSolutions++;
     }
+
+    // cerr<<" Trying WEDD: \n";
     if( validConfig( weddConfig, Q, s, njobs, ncars)){
+
         validSolutions.push_back( weddConfig);
         nbValidSolutions++;
     }
@@ -3034,7 +2940,7 @@ pair<double, vector<data>> ILS_VND(int njobs, int ncars, const vector<double> &w
 
             if( callVnd.first < bestResult){
 
-                #ifdef VIEW_ILS_VND_IMPROVE
+                #ifdef VIEW_ILS_RVND_IMPROVE
                     if(bestResult != INF ) // Printing only the improves caused by ILS
                         cout<<"// ILS_Improve:   "<<callVnd.first-bestResult <<" //\n";
                 #endif
@@ -3052,7 +2958,7 @@ pair<double, vector<data>> ILS_VND(int njobs, int ncars, const vector<double> &w
     	return {-1,bestSolution};
 }
 
-pair<double, vector<data>> ILS_RVND(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
+pair<double, vector<data>> ils_rvnd_custom(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
     const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int maxIter, int maxIterIls){
 
 
@@ -3060,9 +2966,9 @@ pair<double, vector<data>> ILS_RVND(int njobs, int ncars, const vector<double> &
     vector< vector<data> > validSolutions;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = generateATC(s, njobs, ncars, w, P, d, F, Q);
-    vector<data> weddConfig = generateWEDD(s, njobs, ncars, w, P, d, F, Q);
-    vector<data> wmddConfig = generateWMDD(s, njobs, ncars, w, P, d, F, Q);
+    vector<data> atcConfig = generateGreedy(atc, s, njobs, ncars, w, P, d, F, Q);
+    vector<data> weddConfig = generateGreedy(wedd, s, njobs, ncars, w, P, d, F, Q);
+    vector<data> wmddConfig = generateGreedy(wmdd, s, njobs, ncars, w, P, d, F, Q);
 
     //Danger: Verify ATC!!!
     // Verifying if they are really valid
@@ -3121,7 +3027,7 @@ pair<double, vector<data>> ILS_RVND(int njobs, int ncars, const vector<double> &
 
             if( callRVnd.first < bestResult){
 
-                #ifdef VIEW_ILS_RVND_IMPROVE
+                #ifdef VIEW_ILS_RVND_CUSTOM_IMPROVE
                     if(bestResult != INF ) // Printing only the improves caused by ILS
                         cout<<"// ILS_Improve:   "<<callRVnd.first-bestResult <<" //\n";
                 #endif
@@ -3220,6 +3126,7 @@ pair< bool, vector<data> > crossOver( const vector<data> &f1, const vector<data>
     return { isvalid, son};
 }
 
+//method using in G.A. to perform a fast improvement on solutions
 pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, vector<data> &initialConfig){
 
@@ -3244,6 +3151,7 @@ pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, con
     return {finalObj, initialConfig};
 
 }
+
 
 pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
     const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int popSize){
@@ -3377,7 +3285,7 @@ int main(){
     int njobs;
     int ncars;
 
-    //1- Reading data from file
+    // Reading parameters from file
     string fileName;
     float varMi,sigmaUm,sigmaDois;
     int numInstancia;
@@ -3387,27 +3295,27 @@ int main(){
     getline(cin,fileName);
     ifstream in(fileName);
 
-    #ifdef SHEETS_MODE
-    cout<<"Input sheets name to output: ";
-    string sheetsName;
-    cin>>sheetsName;
-    ofstream sheets(sheetsName);
+    //Define to print results in spreadsheet mode
+    #ifdef SPREADSHEET_MODE
+        cout<<"Input sheets name to output: ";
+        string sheetsName;
+        cin>>sheetsName;
+        ofstream sheets(sheetsName);
     #endif
 
+    //Reading all instances in file (Default: 300 by file)
     while(in>>numInstancia){
 
         in>>varMi>>sigmaDois;
         in>>njobs;
         in>>ncars;
-
-
         char instancia[50];
         sprintf(instancia, "%d_%d_%d_%.1lf_%.1lf", numInstancia, njobs, ncars, varMi, sigmaDois);
         cout<<instancia<<endl;
         vector<int> F(ncars); //Car's cost
         vector<int> Q(ncars); //Car's capacity
 
-        // Variables
+        // Reading parameters
         vector<vector<int> > t(njobs+1,vector<int>(njobs+1,0)); //Time travels
         vector<int> P(njobs); //Processing time
         vector<double> w(njobs); //Penalty weight
@@ -3438,47 +3346,46 @@ int main(){
         // pair<double, vector<data>> callVnd = VND(false, njobs, ncars, w, P, t, F, d , Q, s, solution);
 
 
-        // cout<<"Get with vnd"<<callVnd.first<<endl;
-        // ILS_VND( njobs, ncars, w, P, t, F, d, Q, s, 10, 100);
-
-        // cout<<"Delete- Entrei Rvnd..."<<endl;
-        // time_t time1;
-        // time(&time1);
-        // pair<double,vector<data>> ils = ILS_RVND( njobs, ncars, w, P, t, F, d, Q, s, 30, 100);
-        // // cout<<"Delete- Sai da Rvnd..."<<endl;
-        // time_t time1end;
-        // time(&time1end);
-        // double diff1 = difftime(time1end,time1);
-
-        // printConfig( ils.first, "Ils Rvnd", ils.second, Q, s, njobs, ncars, P, t, d, w, F);
-
-        // cout<<"Delete- Entrei vnd..."<<endl;
+        //Calling for ILS Rvnd
         time_t time2;
         time(&time2);
-        pair<double,vector<data>> ils2 = ILS_VND( njobs, ncars, w, P, t, F, d, Q, s, 20, 100);
-        // cout<<"Delete- Sai da vnd..."<<endl;
+        pair<double,vector<data>> ils2 = ils_rvnd( njobs, ncars, w, P, t, F, d, Q, s, 20, 100);
+
         time_t time2end;
         time(&time2end);
         double diff2 = difftime(time2end,time2);
+        printConfig( ils2.first, "ils_rvnd", ils2.second, Q, s, njobs, ncars, P, t, d, w, F);
 
-        printConfig( ils2.first, "Now Ils Vnd", ils2.second, Q, s, njobs, ncars, P, t, d, w, F);
 
+        //Calling for ILS Rvnd Custom ( Intra Route and Inter Route, from article)
+        /*
+        time_t time1;
+        time(&time1);
+        pair<double,vector<data>> ils = ils_rvnd_custom( njobs, ncars, w, P, t, F, d, Q, s, 30, 100);
+        time_t time1end;
+        time(&time1end);
+        double diff1 = difftime(time1end,time1);
+        printConfig( ils.first, "ils_rvnd_custom", ils.second, Q, s, njobs, ncars, P, t, d, w, F);
+
+        //Calling for Genetic Algorithm Version 1
         time_t time3;
         time(&time3);
         pair<double,vector<data>> ga1 = genAlgo1(njobs, ncars, w, P, t, F, d, Q, s, 50);
         time_t time3end;
         time(&time3end);
         double diff3 = difftime(time3end,time3);
-        printConfig( ga1.first, "GA1 ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
+        printConfig( ga1.first, "gen_algo_1 ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
+        */
 
-
-        #ifdef SHEETS_MODE
-        // sheets<<ils.first<<" "<<ils2.first<<" "<<ga1.first<<" "<<diff1<<" "<<diff2<<" "<<diff3<<"\n";
-        sheets<<ils2.first<<" "<<ga1.first<<" "<<diff2<<" "<<diff3<<"\n";
+        #ifdef SPREADSHEET_MODE
+            sheets<<ils.first<<" "<<ils2.first<<" "<<ga1.first<<" "<<diff1<<" "<<diff2<<" "<<diff3<<"\n";
         #endif
 
     }
-    sheets.close();
+
+    #ifdef SPREADSHEET_MODE
+        sheets.close();
+    #endif
     in.close();
 
 }
