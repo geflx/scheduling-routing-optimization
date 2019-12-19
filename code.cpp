@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <unordered_map>
 
+int tries_random_1, tries_random_2;
+
 #define EPS 1e-5
 /* --- Defines to better a view of decreasing and debugging --- */
 // #define SHEETS_MODE
@@ -24,7 +26,7 @@
 // #define PRINT_VND_IMPROVE
 // #define PRINT_RVND_IMPROVE
 // #define DEBUG_MODE
-
+#define VIEW_RANDOM_TRIES
 /*  --- Debugging words used to better found warnings ---
 
     1-Search for "Deletable" to cleanup code
@@ -301,7 +303,10 @@ vector<data> generateValidRandomConfig(int njobs, int ncars, const vector<int> &
     vector<data> configuration (njobs+ (ncars));
     bool validConfig=false;
 
-    while(!validConfig){
+
+    while( !validConfig ){
+
+        tries_random_1++;
 
         validConfig=true;
 
@@ -373,6 +378,134 @@ vector<data> generateValidRandomConfig(int njobs, int ncars, const vector<int> &
     }
     return configuration;
 }
+
+bool validConfig( const vector<data> &config, const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars ){
+
+
+    int walk = 0;
+    bool valid = true;
+
+    unordered_set<int> jobsIn;
+    unordered_set<int> carIn;
+
+
+    ( config );
+
+    for(int i=0; i<config.size(); i++){
+    	if( config[i].id == -1){
+            // cerr<<" del - not valid cause it has '-1' in some position of solution! "<<endl;
+    		return false;
+        }
+    	if( config[i].job ){
+    		if( jobsIn.find( config[i].id )== jobsIn.end() ){
+    			jobsIn.insert( config[i].id );
+    		}else{
+                // cerr<<" del - not valid cause it has a job repeated at least 2x! "<<endl;
+
+    			return false; // job repeated
+    		}
+    		if( config[i].id<0 || config[i].id >=njobs)
+    			return false;
+    	}else{
+    		if( carIn.find( config[i].id )== carIn.end() ){
+    			carIn.insert( config[i].id );
+    		}else{
+                // cerr<<" del - not valid cause it has a vehicle(id) repeated at least 2x! "<<endl;
+    			return false; // car repeated
+    		}
+
+    		if( config[i].id<0 || config[i].id >= ncars)
+
+    			return false;
+    	}
+    }
+
+    while( walk < config.size() && valid){
+
+        int walkAhead = walk;
+        if( config[ walk ].job == false ){
+
+            walkAhead = walk +1;
+
+            if( walkAhead >= config.size() ){
+                break;
+            }
+
+            int carCapacity = capacities[ config[ walk].id ];
+
+            int accCap = 0;
+
+            while( walkAhead<config.size() && config[ walkAhead ].job ){
+
+                accCap += jobSize[ config[ walkAhead].id ];
+
+                if( accCap > carCapacity){
+                    // cerr<<"del - Invalid because vehicle "<<config[walk].id+1<<" has cap. "<<carCapacity<<" and is carrying until now "<<accCap<<endl;
+                    valid=false;
+                    break;
+                }
+
+                ++walkAhead;
+            }
+
+        }
+
+        walk = walkAhead;
+    }
+
+    return valid;
+}
+
+
+vector<data> randomConfigSequential(int njobs, int ncars, const vector<int> &vehicleCap, const vector<int> &jobSizes){
+
+    //Generate a random config based on assigning random jobs to random cars until the last ones are full.
+    bool valid = false;
+    vector<data> solution( njobs + ncars );
+
+    int cont_tries = 0;
+    while( !valid ){
+
+        tries_random_2++;
+
+        //[Random] Shuffled  Jobs and Shuffled Cars
+        vector<int> s_jobs( njobs );
+        vector<int> s_cars( ncars );
+
+        for(int i=0;i<njobs;i++)
+            s_jobs[ i ] = i;
+        for(int i=0;i<ncars;i++)
+            s_cars[ i ] = i;
+
+        random_shuffle( s_jobs.begin(), s_jobs.end() );
+        random_shuffle( s_cars.begin(), s_cars.end() );
+
+        int checkjob = 0;
+        int checkinsert = 0;
+        for(int i=0;i<ncars;i++){
+            solution[ checkinsert ].job = false;
+            solution[ checkinsert++ ].id = s_cars[ i ];
+            int carry = 0;
+            for(int j=checkjob; j<njobs; j++){
+                if( (jobSizes[ s_jobs[ j ]]+carry) > vehicleCap[ s_cars[ i ]]){
+                    break;
+                }else{
+                    solution[ checkinsert ].job = true;
+                    solution[ checkinsert++ ].id = s_jobs[ j ];
+                    carry += jobSizes[ s_jobs[ j ]];
+                    checkjob = j + 1;
+                }
+            }
+
+        }
+
+        valid = validConfig( solution, vehicleCap, jobSizes, njobs, ncars);
+    }
+
+    return solution;
+
+}
+
 
 vector<data> generateGreedy(const string &which, const vector<int> &jobSize, int njobs, int ncars, const vector<double> &weight,
     const vector<int> &procTime, const vector<int> &dueDate, const vector<int> &carPrices, const vector<int> &carCap) {
@@ -2329,7 +2462,7 @@ pair<double, vector<data>> VND(bool reuse, int njobs, int ncars, const vector<do
 
     //Checking if it is needed to generate a new one or if the current solution will be used
     if( !reuse ){
-        initialConfig = generateValidRandomConfig(njobs,ncars,Q,s);
+        initialConfig = randomConfigSequential(njobs,ncars,Q,s);
     }
 
     vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,ncars);//Generating info about vehicle transportation
@@ -2455,81 +2588,6 @@ void graspV1(int njobs, int ncars, const vector<double> &w,const vector<int> &P,
 
 }
 
-bool validConfig( const vector<data> &config, const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars ){
-
-
-    int walk = 0;
-    bool valid = true;
-
-    unordered_set<int> jobsIn;
-    unordered_set<int> carIn;
-
-    lazyprint( config );
-
-    for(int i=0; i<config.size(); i++){
-    	if( config[i].id == -1){
-            // cerr<<" del - not valid cause it has '-1' in some position of solution! "<<endl;
-    		return false;
-        }
-    	if( config[i].job ){
-    		if( jobsIn.find( config[i].id )== jobsIn.end() ){
-    			jobsIn.insert( config[i].id );
-    		}else{
-                // cerr<<" del - not valid cause it has a job repeated at least 2x! "<<endl;
-
-    			return false; // job repeated
-    		}
-    		if( config[i].id<0 || config[i].id >=njobs)
-    			return false;
-    	}else{
-    		if( carIn.find( config[i].id )== carIn.end() ){
-    			carIn.insert( config[i].id );
-    		}else{
-                // cerr<<" del - not valid cause it has a vehicle(id) repeated at least 2x! "<<endl;
-    			return false; // car repeated
-    		}
-
-    		if( config[i].id<0 || config[i].id >= ncars)
-
-    			return false;
-    	}
-    }
-
-    while( walk < config.size() && valid){
-
-        int walkAhead = walk;
-        if( config[ walk ].job == false ){
-
-            walkAhead = walk +1;
-
-            if( walkAhead >= config.size() ){
-                break;
-            }
-
-            int carCapacity = capacities[ config[ walk].id ];
-
-            int accCap = 0;
-
-            while( walkAhead<config.size() && config[ walkAhead ].job ){
-
-                accCap += jobSize[ config[ walkAhead].id ];
-
-                if( accCap > carCapacity){
-                    // cerr<<"del - Invalid because vehicle "<<config[walk].id+1<<" has cap. "<<carCapacity<<" and is carrying until now "<<accCap<<endl;
-                    valid=false;
-                    break;
-                }
-
-                ++walkAhead;
-            }
-
-        }
-
-        walk = walkAhead;
-    }
-
-    return valid;
-}
 
 void printConfig( double fObj, const char* message, const vector<data> &config, const vector<int> &carCap, const vector<int> &jobSize,
                   int njobs, int ncars, const vector<int> &processTime, const vector<vector<int>> &time, const vector<int> &dueDate,
@@ -3152,7 +3210,6 @@ pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, con
 
 }
 
-
 pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
     const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int popSize){
 
@@ -3303,6 +3360,15 @@ int main(){
         ofstream sheets(sheetsName);
     #endif
 
+    int total_random_1 = 0;
+    int total_random_2 = 0;
+
+    #ifdef VIEW_RANDOM_TRIES
+        cout<<"Input random_tries filename to output: ";
+        string triesname;
+        cin>>triesname;
+        ofstream triesfile(triesname);
+    #endif
     //Reading all instances in file (Default: 300 by file)
     while(in>>numInstancia){
 
@@ -3346,17 +3412,31 @@ int main(){
         // pair<double, vector<data>> callVnd = VND(false, njobs, ncars, w, P, t, F, d , Q, s, solution);
 
 
+        tries_random_2 = 0;
+        tries_random_1 = 0;
+
+        /*
         //Calling for ILS Rvnd
         time_t time2;
         time(&time2);
-        pair<double,vector<data>> ils2 = ils_rvnd( njobs, ncars, w, P, t, F, d, Q, s, 20, 100);
+        pair<double,vector<data>> ils2 = ils_rvnd( njobs, ncars, w, P, t, F, d, Q, s, 5, 10);
 
         time_t time2end;
         time(&time2end);
         double diff2 = difftime(time2end,time2);
         printConfig( ils2.first, "ils_rvnd", ils2.second, Q, s, njobs, ncars, P, t, d, w, F);
 
+        */
+        #ifdef VIEW_RANDOM_TRIES
 
+
+        vector<data> random1 = generateValidRandomConfig(njobs, ncars, Q,s);
+        vector<data> random2 = randomConfigSequential(njobs, ncars, Q,s);
+        triesfile<<tries_random_1<<" "<<tries_random_2<<endl;
+
+        total_random_1 += tries_random_1;
+        total_random_2 += tries_random_2;
+        #endif
         //Calling for ILS Rvnd Custom ( Intra Route and Inter Route, from article)
         /*
         time_t time1;
@@ -3386,6 +3466,11 @@ int main(){
     #ifdef SPREADSHEET_MODE
         sheets.close();
     #endif
+    #ifdef VIEW_RANDOM_TRIES
+        triesfile<<"TOTAL: "<<total_random_1<<" "<<total_random_2<<endl;
+        triesfile.close();
+    #endif
+
     in.close();
 
 }
