@@ -400,14 +400,14 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
 
     for(int i=0; i<config.size(); i++){
     	if( config[i].id == -1){
-            // cerr<<" del - not valid cause it has '-1' in some position of solution! "<<endl;
+            // cerr<<" not valid cause it has '-1' in some position of solution! "<<endl;
     		return false;
         }
     	if( config[i].job ){
     		if( jobsIn.find( config[i].id )== jobsIn.end() ){
     			jobsIn.insert( config[i].id );
     		}else{
-                // cerr<<" del - not valid cause it has a job repeated at least 2x! "<<endl;
+                // cerr<<"  not valid cause it has a job repeated at least 2x! "<<endl;
 
     			return false; // job repeated
     		}
@@ -417,7 +417,7 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
     		if( carIn.find( config[i].id )== carIn.end() ){
     			carIn.insert( config[i].id );
     		}else{
-                // cerr<<" del - not valid cause it has a vehicle(id) repeated at least 2x! "<<endl;
+                // cerr<<" not valid cause it has a vehicle(id) repeated at least 2x! "<<endl;
     			return false; // car repeated
     		}
 
@@ -447,7 +447,7 @@ bool validConfig( const vector<data> &config, const vector<int> &capacities, con
                 accCap += jobSize[ config[ walkAhead].id ];
 
                 if( accCap > carCapacity){
-                    // cerr<<"del - Invalid because vehicle "<<config[walk].id+1<<" has cap. "<<carCapacity<<" and is carrying until now "<<accCap<<endl;
+                    // cerr<<"Invalid because vehicle "<<config[walk].id+1<<" has cap. "<<carCapacity<<" and is carrying until now "<<accCap<<endl;
                     valid=false;
                     break;
                 }
@@ -1518,7 +1518,6 @@ bool nbhood6(char bestOrFirst, vector<data> &config, vector<vehicleLoaded> &vehi
     vector<data> bestConfig;
     vector<vehicleLoaded> bestVOrder;
 
-
     //Saving original car positions in the received config
     vector<int> carPos(ncars,-1);
 
@@ -1701,6 +1700,132 @@ bool nbhood6(char bestOrFirst, vector<data> &config, vector<vehicleLoaded> &vehi
 	return false;
 }
 
+//2-opt
+bool nbhood7(char bestOrFirst, vector<data> &config, vector<vehicleLoaded> &vehicleOrder, int njobs, int ncars, const vector<double> &w,
+    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s){
+
+        if( !validConfig ( config,Q,s,njobs,ncars)){
+            return false;
+        }
+        vector<int> startVehicleTime(ncars,0);
+        vector<int> deliveryTime = calculatingDeliveryTime(config,startVehicleTime,t,P,vehicleOrder,njobs);
+        vector<int> T = calculatingJobTardiness(deliveryTime,njobs,d);
+
+        vector<data> bestConfig;
+        bool improved = false;
+        double biggestImprove = 0;
+
+        double initialObj = objFunction(vehicleOrder,config, ncars, njobs,t,w,T,F);
+        double bestObj = initialObj;
+
+        vector<int> carUsed;
+
+        //The position of each car i will be referred to edgesByCar[ i ]
+        vector<vector< pair<int, int>>> edgesByCar( ncars);
+
+        vector<int> jobPos ( njobs );
+        for(int i=0;i<config.size();i++){
+            if( config[i].job){
+                jobPos[ config[i].id ]= i;
+            }
+        }
+
+        //Generating edges
+        for(int i=0; i<vehicleOrder.size(); i++ ){
+            int beg= vehicleOrder[i].initialPos; int end = vehicleOrder[i].finalPos;
+            //Verifying if there is enough edges to do 2-opt in each car
+            if( (end-beg)<=2 ){
+                continue;
+            }
+
+            int carId = vehicleOrder[i].id;
+            carUsed.push_back( carId );
+
+
+            //We will skip the edges that connects to origin (this will be treated in nhood1)
+            // edgesByCar[ carId ].push_back( {0, config[ beg ].id});
+            // edgesByCar[ carId ].push_back( {config[ end ].id, 0});
+
+            for(int j= beg; j< end; j++){
+                edgesByCar[ carId ].push_back( {config[j].id, config[j+1].id});
+            }
+        }
+
+        //Randomizing vehicles
+        random_shuffle( carUsed.begin(), carUsed.end());
+        for(int i=0; i<carUsed.size(); i++){
+
+            int car = carUsed[ i ];
+            random_shuffle( edgesByCar[ car ].begin(), edgesByCar[ car ].end());
+
+            for(int j=0; j<edgesByCar[ car].size()-1; j++){
+
+                for(int k=j+1; k<edgesByCar[ car ].size(); k++){
+                    set<int> points;
+                    int p1= edgesByCar[ car ][j].first;
+                    int p2= edgesByCar[ car ][j].second;
+                    int p3= edgesByCar[ car ][k].first;
+                    int p4= edgesByCar[ car ][k].second;
+                    points.insert(p1 );
+                    points.insert(p2 );
+                    points.insert(p3 );
+                    points.insert(p4 );
+                    if( points.size() < 4){
+                        //Not valid, adjacent edges!
+                        continue;
+                    }
+                    vector<data> newconfig = config;
+
+                    swap( config[ jobPos[ p2 ]], config[ jobPos[ p3 ]] );
+
+                    vector<int> newstartVehicleTime(ncars,0);
+                    vector<int> newdeliveryTime = calculatingDeliveryTime(config,newstartVehicleTime,t,P,vehicleOrder,njobs);
+                    vector<int> newT = calculatingJobTardiness(newdeliveryTime,njobs,d);
+
+                    double newObj = objFunction(vehicleOrder,config, ncars, njobs,t,w,newT,F);
+
+                    if( newObj < bestObj){
+
+                        #ifdef VIEW_DECREASE
+                            cout<<"Vz7: "<<newObj - bestObj<<endl;
+                        #endif
+
+                        #ifdef VIEW_OBJ_DECREASE
+                            cout<<"Vz7: "<<newObj<<endl;
+                        #endif
+
+                        bestObj = newObj;
+                        bestConfig = config;
+                        improved = true;
+                        if( bestOrFirst == 'F'){
+                            return true;
+                        }
+                    }
+                    // undoing
+                    swap( config[ jobPos[ p2 ]], config[ jobPos[ p3 ]] );
+
+                }
+            }
+
+        }
+
+        if( bestOrFirst == 'F'){
+            if(!improved){
+                return false;
+            }
+        }else{
+            if(improved){ // 'B'est improvement
+
+            config = bestConfig;
+            return true;
+
+            }else{
+                return false;
+            }
+        }
+
+}
+
 //pair< ValueObjFunction, validSolution>
 pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, vector<data> &initialConfig){
@@ -1751,6 +1876,10 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
 					continue;
 				}
 				if( nbhood3('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d)){
+
+					continue;
+				}
+                if( nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d,Q,s)){
 
 					continue;
 				}
@@ -1813,14 +1942,14 @@ pair<double, vector<data>> RVND(bool reuse, int njobs, int ncars, const vector<d
     cout<<"\n Started RVND at obj: "<<iniObj<<"\n\n";
     #endif
 
-    vector<int> neighbors = {1,2,3,4,5,6};
+    vector<int> neighbors = {1,2,3,4,5,6,7};
 
 
     random_shuffle( neighbors.begin(), neighbors.end());
 
     int it = 0;
 
-    while( it < 6 ){
+    while( it < 7 ){
 
     	//1 corrigida, 2 e 3 parecem tb. Analisar a 4
 
@@ -1843,6 +1972,8 @@ pair<double, vector<data>> RVND(bool reuse, int njobs, int ncars, const vector<d
             improved = nbhood5('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
         }else if(whichNeighbor == 6){
             improved = nbhood6('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
+        }else if(whichNeighbor == 7){
+            improved = nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d, Q, s);
         }
 
         if( improved ){
@@ -2024,6 +2155,84 @@ vector<int> carryWeight( vector<data> &config, const vector<int> &jobSize, int n
     return carry;
 }
 
+//Soft transformation: swap two jobs between different vehicles
+vector<data> mutation( vector<data> &solution, const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars){
+
+    vector<int> carrying = carryWeight( solution, jobSize, ncars);
+
+    vector<int> jobPos (njobs, -1);
+    for(int i=0; i<solution.size(); i++)
+        if( solution[i].job)
+            jobPos[ solution[i].id ] = i;
+
+    vector<int> dad( njobs, -1 );
+
+    vector<vehicleLoaded> order = generateVehicleOrder( solution, ncars);
+
+    //Saves the position of vehicle in the vehicleOrder array
+    vector<int> posiVehicleOrder (ncars,-1);
+
+    //Getting the car id of each job carried
+    for(int i=0;i< order.size();i++){
+
+        posiVehicleOrder[ order[i].id ]= i;
+
+        for(int j=order[i].initialPos; j<=order[i].finalPos; j++){
+
+        	if( solution[j].job){
+	            int whichJob = solution[j].id;
+	            dad[ whichJob ] = order[i].id;
+	        }
+        }
+    }
+
+    //Variable to not get stuck successivily while trying to move 2 jobs between cars
+    int randomTries = 0;
+
+    while(true){
+
+        if(randomTries > 2*njobs){
+            // cout<<"Caution - Force break!! Tried njobs*2 times to swap between cars and get invalid move. \n";
+            break;
+        }
+        int first = rand()%njobs;
+        int sec = rand()%njobs;
+
+        //Optimize - adding a new data structure
+        while( dad[first] == dad[sec]){
+            first = rand()%njobs;
+        }
+        int posiFirst = jobPos [ first ];
+        int posiSec = jobPos [ sec ];
+
+        int carFirst = dad[ first ];
+        int carSec = dad[ sec ];
+
+
+        if( capacities[carFirst]>= (carrying[carFirst]- jobSize[ first ]+ jobSize[ sec])
+        &&   (capacities[carSec]>= (carrying[carSec]-jobSize[sec]+jobSize[first]) )){
+
+            //Updating car's carried weight
+            carrying[carFirst]= carrying[carFirst]- jobSize[ first ]+ jobSize[ sec];
+            carrying[carSec]= carrying[carSec]- jobSize[ sec ]+ jobSize[ first ];
+
+            //Updating carrying vehicles' id
+            swap( dad[ first ], dad[ sec ]);
+
+            //Swapping and updating
+            swap( solution[ posiFirst ], solution[ posiSec] );
+            swap( jobPos[ first ] , jobPos[ sec]);
+
+            randomTries = 0;
+            break;
+        }else{
+            //Swap again
+            randomTries++;
+        }
+    }
+    return solution;
+}
+
 vector<data> perturb( vector<data> &solution, const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars){
 
     int mode[3] = { 1,2 };
@@ -2072,7 +2281,6 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
             /*Perturbation Swap(1,1) Permutation between a customer k from a route r1 and a customer l, from a route r2
                 Only valid moves are allowed */
 
-
             for(int i=0; i<sizePerturb; i++){
 
                 if(randomTries > 2*njobs){
@@ -2083,7 +2291,14 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
                 int sec = rand()%njobs;
 
                 //Optimize - adding a new data structure
+
+                int changeDadTries = 0;
                 while( dad[first] == dad[sec]){
+
+                    if(changeDadTries>100){ //It means we got stuck because ALL jobs are in just one vehicle
+                       return solution;
+                    }
+                    changeDadTries++;
                     first = rand()%njobs;
                 }
                 int posiFirst = jobPos [ first ];
@@ -2091,6 +2306,7 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
 
                 int carFirst = dad[ first ];
                 int carSec = dad[ sec ];
+
 
 
                 if( capacities[carFirst]>= (carrying[carFirst]- jobSize[ first ]+ jobSize[ sec])
@@ -2128,8 +2344,15 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
                  int sec = rand()%njobs;
 
                  //Optimize - adding a new data structure
+                 int changeDadTries = 0;
                  while( dad[first] == dad[sec]){
+
+                     if(changeDadTries>100){ //It means we got stuck because ALL jobs are in just one vehicle
+                        return solution;
+                     }
+
                      first = rand()%njobs;
+                     changeDadTries++;
                  }
                  // cerr<<"Dad first and sec "<<dad[first]<<" "<<dad[sec]<<endl;
 
@@ -2175,8 +2398,6 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
                     int insertTwo = rand()%sizeSec;
 
 
-
-                    // cerr<<"Fuck\n";
                     //Generating new array of jobs of vehicles!
 
                     jobsFirst[ insertOne ] = sec;
@@ -2186,7 +2407,7 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
                     int in2=0;
                     for(int k=beg1; k<=end1; k++){
 
-                        if( jobsFirst[ in1 ]!= -1)
+                        if(in1<(jobsFirst.size()-1) && jobsFirst[ in1 ]!= -1)
                             in1++;
 
                         if( solution[k].job && solution[k].id==first){
@@ -2198,7 +2419,8 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
 
                     for(int k=beg2; k<=end2; k++){
 
-                        if( jobsSec[ in2 ]!= -1)
+
+                        if( in2<(jobsSec.size()-1) && jobsSec[ in2 ]!= -1)
                             in2++;
 
                         if( solution[k].job && solution[k].id==sec){
@@ -2249,6 +2471,7 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
         // case 3:
 
     }
+
 
     return solution;
 }
@@ -2333,7 +2556,7 @@ pair<double, vector<data>> ils_rvnd(int njobs, int ncars, const vector<double> &
 
                 b=0; //Reseting ILS!!
             }
-            solution = perturb( solution, Q, s, njobs, ncars);
+             solution = perturb( solution, Q, s, njobs, ncars);
         }
     }
  	if( validConfig( bestSolution, Q, s, njobs, ncars))
@@ -2431,7 +2654,6 @@ pair<double, vector<data>> ils_rvnd_custom(int njobs, int ncars, const vector<do
 pair< bool, vector<data> > crossOver( const vector<data> &f1, const vector<data> &f2,const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars){
 
     //generating random interval to 2-point crossOver
-    // cerr<<" Del - Started crossing\n ";
 
     int a = rand()%(f1.size());
     int b = rand() %(f1.size());
@@ -2440,7 +2662,6 @@ pair< bool, vector<data> > crossOver( const vector<data> &f1, const vector<data>
         a = rand()%(f1.size());
         b = rand() %(f1.size());
     }
-    // cout<<"Del - A: "<<a<<" B: "<<b<<endl;
     unordered_set<int> jobsCross;
     unordered_set<int> carsCross;
     for(int i=a; i<=b; i++){ // i <= b?
@@ -2591,10 +2812,12 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                 //When just one son is feasible
                 }else if( son1.first ){
 
+
                     newPop[ newPopSize ] = son1.second;
                     // newPopObj[ newPopSize ] = resSon1;
 
                 }else if( son2.first ){
+
                     newPop[ newPopSize ] = son2.second;
 
                 }else{ //both sons are infeasible
@@ -2611,7 +2834,10 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                         // newPopObj[ newPopSize ] = popObj[ father2 ];
                     }
 
+                    vector<data> afterMutation = mutation( newPop[ newPopSize ], Q, s, njobs, ncars);
                     //Do mutation in father picked
+
+                    newPop[ newPopSize ] = afterMutation;
 
                 }
 
@@ -2759,7 +2985,7 @@ int main(){
         time(&time3end);
         double diff3 = difftime(time3end,time3);
         printConfig( ga1.first, "gen_algo_1 ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
-        */
+*/
 
         #ifdef SPREADSHEET_MODE
             sheets<<ils.first<<" "<<ils2.first<<" "<<ga1.first<<" "<<diff1<<" "<<diff2<<" "<<diff3<<"\n";
