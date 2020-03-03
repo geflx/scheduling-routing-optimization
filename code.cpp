@@ -25,7 +25,7 @@
 // #define VIEW_ILS_RVND_IMPROVE /*                 ''                   */
 // #define VIEW_ILS_RVND_CUSTOM_IMPROVE /*          ''                   */
 // #define DEBUG_MODE    /*                         ''                   */
-//#define VIEW_RANDOM_TRIES /* Generate file divided by two columns showing the number of tries made by the 2 diff. random methods to generate solutions */
+#define VIEW_RANDOM_TRIES /* Generate file divided by two columns showing the number of tries made by the 2 diff. random methods to generate solutions */
 
 /*  --- Debugging words used to better found warnings ---
 
@@ -2238,7 +2238,7 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
     int mode[3] = { 1,2 };
     double intensity[11]= { 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
 
-    double sizePerturb = njobs * intensity[ rand()%11 ];
+    double sizePerturb = ncars * intensity[ rand()%11 ];
 
     //rand()%3
     int whichMode = mode[ rand()%2 ];
@@ -2936,10 +2936,8 @@ int main(){
         }
 
         // graspV1(njobs, ncars, w, P, t, F, d , Q, s, 100);
-
         // vector<data> solution;
         // pair<double, vector<data>> callRvnd = RVND(false, njobs, ncars, w, P, t, F, d , Q, s, solution);
-
 
         tries_random_2 = 0;
         tries_random_1 = 0;
@@ -2958,17 +2956,17 @@ int main(){
 
         #ifdef VIEW_RANDOM_TRIES
 
-
         vector<data> random1 = generateValidRandomConfig(njobs, ncars, Q,s);
         vector<data> random2 = randomConfigSequential(njobs, ncars, Q,s);
         triesfile<<tries_random_1<<" "<<tries_random_2<<endl;
 
         total_random_1 += tries_random_1;
         total_random_2 += tries_random_2;
+
         #endif
 
         //Calling for ILS Rvnd Custom ( Intra Route and Inter Route, from article)
-        /*
+
         time_t time1;
         time(&time1);
         pair<double,vector<data>> ils = ils_rvnd_custom( njobs, ncars, w, P, t, F, d, Q, s, 30, 100);
@@ -2985,7 +2983,7 @@ int main(){
         time(&time3end);
         double diff3 = difftime(time3end,time3);
         printConfig( ga1.first, "gen_algo_1 ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
-*/
+
 
         #ifdef SPREADSHEET_MODE
             sheets<<ils.first<<" "<<ils2.first<<" "<<ga1.first<<" "<<diff1<<" "<<diff2<<" "<<diff3<<"\n";
