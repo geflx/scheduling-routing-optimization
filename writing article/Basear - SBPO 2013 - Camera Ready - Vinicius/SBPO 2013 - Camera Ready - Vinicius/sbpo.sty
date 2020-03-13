@@ -1,0 +1,210 @@
+% LaTeX definitions for SBPO
+%
+% Updated by Bruno Menegola, April 2012.
+% Updated by Fabio Lima, April 2009.
+% Adapted from SBC 2001 style Fabio Lima.
+% Created by Jomi Hubner & Rafael Bordini, June 2001.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sbpo}[2012/04/25]
+
+%==============================================================================
+% Main definitions
+%==============================================================================
+\RequirePackage[english,brazil]{babel}
+\RequirePackage{indentfirst}
+\RequirePackage[a4paper,top=3.3cm,left=2.9cm,right=2.9cm,bottom=2.5cm]{geometry}
+\RequirePackage[active]{srcltx }
+\parindent 1.27cm
+\parskip   6pt
+
+%==============================================================================
+% Captions
+%==============================================================================
+%\RequirePackage[bf,sf,footnotesize,indent]{caption2}
+\RequirePackage[bf,sf,footnotesize,indent]{caption}
+\setlength{\captionmargin}{0.8cm}
+\renewcommand{\captionfont}{\sffamily\footnotesize\bfseries}
+%\renewcommand{\captionlabeldelim}{.}
+
+%==============================================================================
+% Font
+%==============================================================================
+\RequirePackage{times}
+\renewcommand{\normalsize}{\@setfontsize\normalsize\@xiipt\@xivpt}
+\newcommand{\XIIIPT}{\@setfontsize\xiiipt{13}{17}}
+\newcommand{\XVIPT}{\@setfontsize\xvipt{16}{20}}
+
+%==============================================================================
+% New commands
+%==============================================================================
+\newcommand{\email}[1]{\texttt{#1}}
+\renewcommand{\and}{, }
+\newcommand{\sbpoauthor}[4]{\normalsize \textbf{#1}\\#2\\#3\\#4\par\vspace{1em}}
+\newcommand{\areaprincipal}[1]{\gdef\resumoarea{#1}}
+\newcommand{\mainarea}[1]{\gdef\abstractarea{#1}}
+\newif\if@showauthors
+\@showauthorstrue
+\newcommand{\hideauthors}{\@showauthorsfalse}
+
+%==============================================================================
+% Keywords definition (max. 10)
+%==============================================================================
+\newcounter{pccounter}
+\newcommand{\palavrachave}[1]{
+        \addtocounter{pccounter}{1}
+        \expandafter\gdef\csname pc\alph{pccounter}\endcsname{#1}
+}
+\newcommand{\@resumopc}{%
+        \@ifundefined{pca}{}{\pca}%
+        \@ifundefined{pcb}{}{, \pcb}%
+        \@ifundefined{pcc}{}{, \pcc}%
+        \@ifundefined{pcd}{}{, \pcd}%
+        \@ifundefined{pce}{}{, \pce}%
+        \@ifundefined{pcf}{}{, \pcf}%
+        \@ifundefined{pcg}{}{, \pcg}%
+        \@ifundefined{pch}{}{, \pch}%
+        \@ifundefined{pci}{}{, \pci}%
+        \@ifundefined{pcj}{}{, \pcj}%
+}
+
+\newcounter{kwcounter}
+\newcommand{\keyword}[1]{
+        \addtocounter{kwcounter}{1}
+        \expandafter\gdef\csname keyw\alph{kwcounter}\endcsname{#1}
+}
+\newcommand{\@abstractkw}{%
+        \@ifundefined{keywa}{}{\keywa}%
+        \@ifundefined{keywb}{}{, \keywb}%
+        \@ifundefined{keywc}{}{, \keywc}%
+        \@ifundefined{keywd}{}{, \keywd}%
+        \@ifundefined{keywe}{}{, \keywe}%
+        \@ifundefined{keywf}{}{, \keywf}%
+        \@ifundefined{keywg}{}{, \keywg}%
+        \@ifundefined{keywh}{}{, \keywh}%
+        \@ifundefined{keywi}{}{, \keywi}%
+        \@ifundefined{keywj}{}{, \keywj}%
+}
+
+%==============================================================================
+% Bibliography
+%==============================================================================
+% to avoid [...] in the bibliography
+% \item[] instead of \item[\@biblabel{#1}\hfill]
+\def\@lbibitem[#1]#2{\item[]\if@filesw
+      {\let\protect\noexpand
+       \immediate
+       \write\@auxout{\string\bibcite{#2}{#1}}}\fi\ignorespaces}
+\renewenvironment{thebibliography}[1]
+     {\section*{\refname
+        \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            %% changed!
+               \itemindent -\leftmargin
+               \itemsep 6pt
+            %%%%%%%%%%%
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\RequirePackage{natbib}
+\renewcommand\cite{\citep}
+\setlength{\bibsep}{0.0pt}
+
+%==============================================================================
+% Itens
+%==============================================================================
+\setlength\leftmargini   {1.27cm}
+\setlength\leftmargin    {\leftmargini}
+\setlength\leftmarginii  {\leftmargini}
+\setlength\leftmarginiii {\leftmargini}
+\setlength\leftmarginiv  {\leftmargini}
+\setlength  \labelsep    {.5em}
+\setlength  \labelwidth  {\leftmargini}
+\addtolength\labelwidth  {-\labelsep}
+\def\@listI{\leftmargin\leftmargini
+            \parsep 0\p@ \@plus1\p@ \@minus\p@
+            \topsep 0\p@ \@plus2\p@ \@minus4\p@
+            \itemsep0\p@}
+\let\@listi\@listI
+\@listi
+\def\@listii {\leftmargin\leftmarginii
+              \labelwidth\leftmarginii
+              \advance\labelwidth-\labelsep
+              \topsep    0\p@ \@plus2\p@ \@minus\p@}
+\def\@listiii{\leftmargin\leftmarginiii
+              \labelwidth\leftmarginiii
+              \advance\labelwidth-\labelsep
+              \topsep    0\p@ \@plus\p@\@minus\p@
+              \parsep    \z@
+              \partopsep \p@ \@plus\z@ \@minus\p@}
+
+%==============================================================================
+% Sections
+%==============================================================================
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+                       {-6\p@ \@plus -4\p@ \@minus -4\p@}%
+                       {0\p@ \@plus 4\p@ \@minus 4\p@}%
+                       {\normalfont\XIIIPT\bfseries\boldmath
+                        \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+                       {-6\p@ \@plus -4\p@ \@minus -4\p@}%
+                       {0\p@ \@plus 4\p@ \@minus 4\p@}%
+                       {\normalfont\normalsize\bfseries\boldmath
+                        \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+
+\RequirePackage{titlesec}
+\titlelabel{\thetitle\hspace{1ex}}
+\renewcommand\@seccntformat[1]{%
+    \@ifundefined{#1@cntformat}%
+    {\csname the#1\endcsname}%
+    {\csname #1@cntformat\endcsname}}
+\newcommand{\section@cntformat}{\thesection.\hspace{1ex}}
+\newcommand{\subsection@cntformat}{\thesubsection.\hspace{1ex}}
+\newcommand{\subsubsection@cntformat}{\thesubsubsection.\hspace{1ex}}
+
+%==============================================================================
+% First page
+%==============================================================================
+\pagestyle{empty}
+\newcommand{\authortag}[1]{$^{#1}$}
+\def\address#1{\gdef\@address{#1}}
+
+\def\@maketitle{\newpage
+    \begin{center}
+        \vspace*{-.7cm}
+        {\normalsize\bf\@title\par}
+        \vglue 6pt plus 3pt minus 3pt
+        \if@showauthors
+            {\normalsize\@author\par}
+            \vglue 6pt plus 3pt minus 3pt
+        \fi
+    \end{center}\par
+}
+\let\maketitleOLD\maketitle
+\renewcommand{\maketitle}{\maketitleOLD\thispagestyle{empty}}
+
+\newenvironment{resumo}{%
+    \begin{otherlanguage}{brazil}
+        \begin{center}\bfseries RESUMO\end{center}\par}%
+        {\\~\\{\bfseries PALAVRAS CHAVE. \@resumopc%
+         \@ifundefined{resumoarea}{}{, \resumoarea}.}\par\vspace{0.5cm}
+    \end{otherlanguage}}
+
+\renewenvironment{abstract}{%
+      \begin{center}\bfseries ABSTRACT\end{center}\par}%
+      {\\~\\{\bfseries KEYWORDS. \@abstractkw%
+        \@ifundefined{abstractarea}{}{, \abstractarea}.}}
+
