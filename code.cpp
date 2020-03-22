@@ -1876,11 +1876,9 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
 					continue;
 				}
 				if( nbhood3('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d)){
-
 					continue;
 				}
-                if( nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d,Q,s)){
-
+        if( nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d,Q,s)){
 					continue;
 				}
 				break;
