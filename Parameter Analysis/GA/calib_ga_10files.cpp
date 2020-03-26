@@ -2806,7 +2806,7 @@ pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, con
 }
 
 pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
-    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int popSize, int maxIter){
+    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int popSize, int K){
 
 
         vector< double > popObj( popSize , -1);
@@ -2826,6 +2826,7 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                 bestConfig = pop[ i ];
             }
         }
+        int maxIter = (njobs+ncars)*K;
 
         int contIter = 0;
         while( contIter++ < maxIter){
@@ -3037,8 +3038,8 @@ int main(){
             tries_random_1 = 0;
 
             //Calling for GA
-            vector<int> popSize{20,30,50};
-            vector<int> maxIter{50,70,100};
+            vector<int> popSize{30, 50, 70, 100};
+            vector<int> maxIter{4,6,8,10};
 
             cout<<"Executing instance "<<contInstancia++<<"/60 and printing into files.\n";
             int contParameterInstance = 1;
