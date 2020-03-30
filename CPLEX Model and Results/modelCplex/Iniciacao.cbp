@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DIL_STD" />
 					<Add directory="../../../Documents/cplex_instalation/cplex/include" />
 					<Add directory="../../../Documents/cplex_instalation/concert/include" />
 				</Compiler>

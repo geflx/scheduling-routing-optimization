@@ -25,10 +25,10 @@ int main(){
     char name[10];
     //cin>>fileName;
     //ifstream in(fileName);
-    ifstream in ("8jobs.txt"); //abre arquivo
+    ifstream in (".txt"); //abre arquivo
     ofstream myfile;
 
-    myfile.open("Resultados_8jobs.txt");
+    myfile.open("Resultado_Chosen.txt");
 
     float varMi,delta;
     int numInstancia; //,constanteVeiculo;
@@ -507,7 +507,7 @@ int main(){
                     }
                 }
             }
-            //cout<<firstTerm<<endl;
+            cout<<"First Obj. F. Therm: "<<firstTerm<<endl;
 
             //cout<<"2o Termo: ";
             long long int secondTerm=0;
@@ -515,31 +515,32 @@ int main(){
                 secondTerm += F[k] * cplex1.getValue(Y[k]);
             }
 
-            //cout<<secondTerm<<endl;
+            cout<<"Second Obj. F. Therm: "<<secondTerm<<endl;
 
             //cout<<"3o Termo: ";
             double thirdTerm = 0.0;
             for(int i=1;i<=numTrabalhos;i++){
                 thirdTerm += w[i] * cplex1.getValue(T[i]);
             }
-            //cout<<thirdTerm<<"\n\n\n";
-            //            for(IloInt i = 1 ; i <= numTrabalhos; i++){
-            //                cout<<"C["<<i<<"] = "<<cplex1.getValue(Ct[i])<<endl;
-            //            }
-            //
-            /*
+            cout<<"Third Obj. F. Therm: "<<thirdTerm<<"\n\n\n";
+
+           for(IloInt i = 1 ; i <= numTrabalhos; i++){
+                cout<<"C["<<i<<"] = "<<cplex1.getValue(Ct[i])<<endl;
+            }
+
+
              for(IloInt k=0;k<numVeiculos;k++){
              cout<<"S["<<k<<"] = "<<cplex1.getValue(S[k])<<endl;
              }
-             */
-            //
-            //            for(IloInt i = 1 ; i <= numTrabalhos; i++){
-            //                cout<<"D["<<i<<"] = "<<cplex1.getValue(D[i])<<endl;
-            //            }
-            //
-            //            for(IloInt i = 1 ; i <= numTrabalhos; i++){
-            //                cout<<"T["<<i<<"] = "<<cplex1.getValue(T[i])<<endl;
-            //            }
+
+
+            for(IloInt i = 1 ; i <= numTrabalhos; i++){
+                cout<<"D["<<i<<"] = "<<cplex1.getValue(D[i])<<endl;
+            }
+
+            for(IloInt i = 1 ; i <= numTrabalhos; i++){
+                cout<<"T["<<i<<"] = "<<cplex1.getValue(T[i])<<endl;
+            }
 
 
             /*
