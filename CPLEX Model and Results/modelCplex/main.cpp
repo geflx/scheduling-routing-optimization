@@ -25,7 +25,7 @@ int main(){
     char name[10];
     //cin>>fileName;
     //ifstream in(fileName);
-    ifstream in (".txt"); //abre arquivo
+    ifstream in ("New chosen instance for article.txt"); //abre arquivo
     ofstream myfile;
 
     myfile.open("Resultado_Chosen.txt");
