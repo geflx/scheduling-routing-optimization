@@ -1834,16 +1834,16 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
         initialConfig = generateValidRandomConfig(njobs,ncars,Q,s);
     }
 
-	vector<int> interRoute = { 2, 4, 5, 6};
+	vector<int> interRoute = {2, 4, 5, 6};
 	random_shuffle( interRoute.begin(), interRoute.end());
 	int it=0;
 
-	vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,ncars);//Generating info about vehicle transportation
-    vector<int> startVehicleTime(ncars,0);//Calculating Delivery time(D) and Starting time(Sk)
-    vector<int> deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder,njobs);
-    vector<int> jobTardiness = calculatingJobTardiness(deliveryTime,njobs,d);//Generating Job Tardiness (T) of each job (O(N))
+	vector<vehicleLoaded> vehicleOrder = generateVehicleOrder(initialConfig, ncars);//Generating info about vehicle transportation
+    vector<int> startVehicleTime(ncars, 0);//Calculating Delivery time(D) and Starting time(Sk)
+    vector<int> deliveryTime = calculatingDeliveryTime(initialConfig, startVehicleTime, t, P, vehicleOrder, njobs);
+    vector<int> jobTardiness = calculatingJobTardiness(deliveryTime, njobs, d);//Generating Job Tardiness (T) of each job (O(N))
 
-    double bestObj = objFunction(vehicleOrder,initialConfig,ncars,njobs,t,w,jobTardiness,F);
+    double bestObj = objFunction(vehicleOrder, initialConfig, ncars, njobs, t, w, jobTardiness, F);
     double iniOfEverything = bestObj;
     bool generalImprove = false;
 
@@ -1860,17 +1860,14 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
             	improved = nbhood2('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d, Q, s);
 			case 4:
             	improved = nbhood4('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d ,Q, s);
-
 			case 5:
             	improved = nbhood5('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
 			case 6:
             	improved = nbhood6('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
 		}
 
-
 		if( improved ){
 			generalImprove = true;
-
 			while( true ){ //intra route
 				if( nbhood1('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d)){
 					continue;
@@ -1878,14 +1875,13 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
 				if( nbhood3('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d)){
 					continue;
 				}
-        if( nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d,Q,s)){
+                if( nbhood7('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d,Q,s)){
 					continue;
 				}
 				break;
 			}
 
-
-			//Caution: it is needed to recalculate vehicleORder? I guess not.
+			//Caution: it is needed to recalculate vehicleOrder? I guess not.
 			#ifdef PRINT_RVND_IMPROVE
 				vector<int> newstartVehicleTime(ncars,0);//Calculating Delivery time(D) and Starting time(Sk)
 	    		vector<int> newdeliveryTime = calculatingDeliveryTime(initialConfig,newstartVehicleTime,t,P,vehicleOrder,njobs);
@@ -1895,7 +1891,6 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int njobs, int ncars, const v
 	    		cout<< newObj - bestObj;
 	    		bestObj = newObj;
     		#endif
-
 
 			bestConfig = initialConfig;
 			it = 0;
@@ -1957,13 +1952,10 @@ pair<double, vector<data>> RVND(bool reuse, int njobs, int ncars, const vector<d
 
         if( whichNeighbor == 1){
             improved = nbhood1('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
-
         }else if( whichNeighbor == 2){
             improved = nbhood2('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d ,Q, s);
-
         }else if( whichNeighbor == 3){
             improved = nbhood3('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
-
         }else if(whichNeighbor ==4){
             improved = nbhood4('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d ,Q, s);
         }else if(whichNeighbor == 5){
