@@ -2324,6 +2324,8 @@ vector<data> perturb( vector<data> &solution, const vector<int> &capacities, con
             }
 
          case 2:
+
+         	/* Perturbation mode 2: Insert Jobs in other vehicles */
              for(int i=0; i<sizePerturb; i++){
 
                  if(randomTries > 2*njobs){
