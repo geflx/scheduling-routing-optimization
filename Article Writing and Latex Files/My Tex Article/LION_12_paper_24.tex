@@ -1,4 +1,5 @@
 \documentclass[citeauthoryear]{llncs}
+\newcommand{\keywords}[1]{\textbf{Keywords:}\quad #1}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -7,9 +8,9 @@
 %\graphicspath{ {images/} }
 \renewcommand{\tabcolsep}{3mm}
 
-\title{AHeurísticas para Agendamento de Produção de uma Máquina Linear e Roteamento de Entrega com Frota Heterogênea de Veículos}
-\author{Gabriel de Paula Félix  \and José E. C. Arroyo }
-\providecommand{\keywords}[1]{\textbf{\text{Keywords:}} #1}
+\title{Heurísticas para Agendamento de Produção de uma Máquina Linear e Roteamento de Entrega com Frota Heterogênea de Veículos
+}
+\author{Gabriel de Paula Felix  \and José E. C. Arroyo \ }
 \institute{Department of Computer Science, Universidade Federal de Viçosa,\\ Vi\c{c}osa - MG, 36570-900, Brazil\\
 gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 
@@ -18,10 +19,11 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 \maketitle
 \begin{abstract}
 This paper presents a  simple and effective iterated greedy heuristic to minimize the total tardiness in a single-machine scheduling problem. In this problem the jobs are classified in families and setup times are required between the processing of two jobs of different families.  Each job requires a certain amount of resource that is supplied through upstream processes. The total resource consumed must not exceed the resource supply up. Therefore, jobs may have to wait and the machine has to be idle due to an insufficient availability of the resource.
-The iterated greedy heuristic is tested over an extensive computational experience on benchmark
-of instances from the literature and randomly generated in this work. Results show that the developed heuristic significantly outperforms a state-of-the-art heuristic in terms of solution quality.\newline
 
-\keywords{Single machine scheduling, family setup-times, resource constraints, total tardiness, meta-heuristics.}
+The iterated greedy heuristic is tested over an extensive computational experience on benchmark
+of instances from the literature and randomly generated in this work. Results show that the developed heuristic significantly outperforms a state-of-the-art heuristic in terms of solution quality. 
+
+\keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
 \end{abstract}
 
 \section{Introduction}
@@ -74,9 +76,6 @@ where $i$ is the job processed before $j$.
 Then, the tardiness of any job $j$ is
 \begin{equation}
 T_j = \max\{0, C_j - d_j\}
-\end{equation}
-\begin{equation}
-S_{i} = O \rightarrow  C_{j_{1}}\rightarrow  C_{{j_{2}}}\rightarrow ... \rightarrow  C_{j_{|N_{i}|}}\rightarrow  O
 \end{equation}
 Therefore, the total tardiness of all the jobs is  $TT = \sum\limits_{j \in J}T_j$
 
