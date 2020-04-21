@@ -4,7 +4,12 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{multirow}
-\usepackage{algorithm,algorithmic}
+%\usepackage{algorithm,algorithmic}
+\usepackage[ruled]{algorithm2e}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+
 %\graphicspath{ {images/} }
 \renewcommand{\tabcolsep}{3mm}
 
@@ -21,7 +26,7 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 Este artigo aborda um problema de programação multiobjetivo do sequenciamento de produção de uma máquina linear integrado ao roteamento de veículos para entrega. Nesta abordagem as tarefas possuem penalidades de atraso, datas de vencimento e são caracterizadas por diferentes volumes, com uma frota heterogênea e limitada de veículos (HFVRP). Os critérios a serem minimizados são referentes ao atraso total ponderado e também aos custos de transporte e entrega, incluindo rotas escolhidas e veículos utilizados. 
 
 O problema é classificado como NP-Difícil no senso comum, portanto heurísticas eficientes são necessárias para obter soluções próximas da ótima em tempo computacional razoável.
-Neste trabalho são propostas duas heurísticas baseadas em Iterated Local Search e um Algoritmo Genético (AG). Instâncias para o problema são geradas com base em trabalhos anteriores e os resultados obtidos são comparados com o solver de otimização CPLEX. Os resultados mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software.
+Neste trabalho são propostas duas heurísticas baseadas em Iterated Local Search e um Algoritmo Genético (AG). Instâncias para o problema são geradas com base em trabalhos anteriores e os resultados obtidos são comparados aos do solver de otimização CPLEX. Os resultados mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software a medida em que o número de clientes aumenta.
 
 
 \keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
@@ -118,14 +123,14 @@ Quando não tratado o Problema de Minimização de Atraso, resta o Problema de R
 \section{Representação de Solução}\label{solutionrepresentation}
 
 
-A representação de uma solução é disposta linearmente, de modo que tarefas e veículos sigam acompanhados de seus respectivos códigos de identificação. O conjunto de tarefas $N$ do problema será dividido em $K$ subconjuntos, sendo cada subconjunto destinado à um veículo específico. O tempo de ínicio de funcionamento de um veículo, $S$, é dado pela soma dos tempos de processamento $P$ destas tarefas mais o somatório acumulado das tarefas processadas anteriormente (tendo início em $t=0$).
-Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido por um veículo. Seja $R$ uma solução viável, $k$ $\in$ $K$ um veículo e $S_k$ sua rota completa, sua representação é dada por:
+A representação de uma solução é disposta linearmente, de modo que tarefas e veículos sigam acompanhados de seus respectivos códigos de identificação. O conjunto de tarefas $N$ do problema será dividido em $K$ subconjuntos, sendo cada subconjunto destinado à um veículo específico. O tempo de ínicio de funcionamento de um veículo $k$, denotado por $S_k$, é dado pela soma dos tempos de processamento $P$ destas tarefas somado ao tempo acumulado das tarefas processadas anteriormente (a partir de $t=0$).
+Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido por um veículo. Seja $R$ uma solução viável, $k$ $\in$ $K$ um veículo e $R_k$ sua rota, a representação deste trajeto é dada por:
 
 \begin{equation}
-S_{i} = O \rightarrow  C_{j_{1}}\rightarrow  C_{{j_{2}}}\rightarrow ... \rightarrow  C_{j_{|N_{i}|}}\rightarrow  O
+R_{k} = O \rightarrow  J_1\rightarrow  J_2\rightarrow ... \rightarrow  J_{|N_{k}|}\rightarrow  O
 \end{equation}
 
-Neste contexto, $J$ $\in$ $N$ é o conjunto de tarefas carregadas pelo veículo $k$ e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. Em Figura \ref{fig:solutionrep} é apresentada a representação visual de uma solução.
+Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N_k|$ $\in$ $N$  e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. Em Figura \ref{fig:solutionrep} é apresentada a representação visual de uma solução.
 
 \begin{figure}[ht]
 	\centering
@@ -136,7 +141,6 @@ Neste contexto, $J$ $\in$ $N$ é o conjunto de tarefas carregadas pelo veículo 
 
 Um subconjunto de tarefas pode não possuir tarefas e ser designado à um veículo $w$, indicando que este não está em uso e portanto $|N_{w}|=0$.
 Um caso hipotético de rede de transporte é descrito abaixo, no qual a origem e seis clientes ($C_1$ à $C_6$) são dispostos cartesianamente, sendo a distância entre eles representada pelas distâncias euclidianas dos pontos (Tabela \ref{table:ed}). 
-
 
 \begin{table}
 \centering
@@ -157,9 +161,9 @@ $C_{6}$                      & 90    & 105 & 175 & 307 & 231 & 198 & 0    \\
 \label{table:ed}
 \end{table}
 
-A descrição da Frota de Veículos é descrita na Tabela \ref{table:vehicle}, onde três veículos heterogêneos($V_1$, $V_2$ e $V_3$) são disponibilizados para transportar as tarefas. Estas informações são fundamentais para a integração do problema de HFVRP durante as entregas, uma vez que os veículos possuem capacidades e custos distintos.
+A Frota de Veículos é descrita na Tabela \ref{table:vehicle}, onde três veículos heterogêneos($V_1$, $V_2$ e $V_3$) são disponibilizados para transportar as tarefas. Nela, os preços $F$ dos veículos são diretamente proporcionais às suas capacidades de transporte.
 
-\begin{table}[]
+\begin{table}
 \centering
 \caption{Vehicles information: costs and capacities.}
 \begin{tabular}{@{}lll@{}}
@@ -173,121 +177,325 @@ $V_{3}$      & 160         & 960       \\
 \label{table:vehicle}
 \end{table}
 
+Por último, as informações sobre as tarefas para a o problema de agendamento de produção são apontadas na Tabela \ref{table:jobparam}, com estas informações a instância se completa.
 
-A complete MIP model  for  problem under study is presented by Herr and Goel (\cite{herr2016minimising}). The problem can be described as follows. Let  $J$ the set of $n$ jobs to be processed on a single machine. Each job $j$ has a processing time $p_j$, a due date $d_j$ and a quantity $q_j$ representing the amount of resource required from the machine when the job $j$  is processed. It is assumed that the resource is consumed at a constant rate of $q_j/p_j$. Also, each job belongs to a setup family $f_j$. For any pair of jobs $i, j \in J$, if $i$ is scheduled before $j$ and $f_i \neq f_j$, a setup time of duration $s_{ij}>0$ is required between processing the jobs. Otherwise, $s_{ij}=0$. 
+\begin{table}[]
+\centering
+\caption{Jobs' detailed parameters.}
+\begin{tabular}{@{}llllll@{}}
+\hline\noalign{\smallskip}
+Job & Customer & Processing Time (P) & Due date (d) & Penalty weight (w) & Job size (s) \\ 
+\hline
+$J_{1}$ & $C_{1}$      & 25                  & 266           & 1.8                & 20            \\
+$J_{2}$  & $C_{2}$       & 49                  & 347          & 2.3                  & 31            \\
+$J_{3}$ & $C_{3}$      & 36                  & 303          & 4.3                & 25           \\
+$J_{4}$  & $C_{4}$       & 96                  & 431           & 4                & 86            \\
+$J_{5}$ & $C_{5}$      & 52                  & 177           & 2                & 33            \\
+$J_{6}$  & $C_{6}$       & 43                  & 315           & 4.6                & 42         \\ 
+\hline\noalign{\smallskip}
+\end{tabular}
+\label{table:jobparam}
+\end{table}
 
-The single machine can process only one job at a time without preemption. Initially the machine has a resource amount $r^*$ and it is supplied at a constant rate $r$ per unit of time. In order to prevent that the cumulative demand of a job surpasses the cumulative supply of the machine, the machine has to remain idle and the starting of the job has to be delayed. This idle time must be sufficient so the delayed job can be processed without resource constraints. Whether in case of setup time or idle time, the machine cannot process any other job. The goal of the problem is to find a schedule (processing sequence of the jobs) that minimizes the total tardiness.
+A Figura \ref{fig:ganttchart1} descreve visualmente a solução ótima para a instância. Neste caso hipotético, todos os três veículos foram utilizados durante a entrega, possuindo tempos
+de início $S_1$,$S_2$ e $S_3$ iguais a 180, 301 e 88, respectivamente. Dentre as seis tarefas, apenas $J_6$ foi entregue sem atrasos.
 
-Following the MIP model of Herr and Goel (\cite{herr2016minimising}),  we assume the processing of a job may be delayed for any period of time due unavailability of resource. For a job $j$ in a  sequence, let  $Q_j$ denotes the cumulative demand of resources of all jobs up to $j$. The tardiness of a job $j$ is computed as follows. 
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{VISUAL_REP} 
+    \caption[]{Gráfico de Gantt com a descrição visual da solução.}
+  	\label{fig:ganttchart1}
+\end{figure}
 
-The completion time of the first job $i$ in the sequence is 
-\begin{equation}
-C_i = \max\{p_i, \frac{Q_i - r^*}{r}\}
-\end{equation}
-The completion times of the other jobs $j$ is  computed as 
-\begin{equation}
-C_j = \max\{C_i + s_{ij} + p_j, \frac{Q_j - r^*}{r}\}
-\end{equation}
-where $i$ is the job processed before $j$. 
-Then, the tardiness of any job $j$ is
-\begin{equation}
-T_j = \max\{0, C_j - d_j\}
-\end{equation}
-Therefore, the total tardiness of all the jobs is  $TT = \sum\limits_{j \in J}T_j$
 
-\section{Solution Approach}\label{solutionapproach}
- Herr and Goel (\cite{herr2016minimising}) showed that solving instances of the problem under study with a large number of jobs using a MIP solver is inefficient in terms of computational time. Even if all the jobs belonged to a same family and the initial amount of resource was sufficiently large the problem would be reduced to the problem studied by Du and Leung (\cite{du1990minimizing}), which is proven to be NP-hard. Therefore, the problem studied in this paper is also NP-hard.
+As informações sobre a configuração obtida na resposta e sua distribuição temporal são descritas na Tabela \ref{table:jobtimes}. 
 
-In this study we developed an iterated greedy (IG) algorithm to tackle the problem. The IG algorithm was first used in scheduling problems by Ruiz and Stützle (\cite{ruiz2007simple}) to solve a permutation flow shop scheduling problem, and since then has been applied to others types of scheduling problems (see e.g. Ying et al. \cite{ying2009sequencing}, and Fanjul-Peyro and Ruiz, \cite{fanjul2010iterated}). A typical IG algorithm has few control parameters and is simple to implement. 
+\begin{table}
+\centering
+\caption{Optimal Solution Settings.}
+\begin{tabular}{@{}lllll@{}}
+\hline\noalign{\smallskip}
+Job & Customer & Completion time.(C) & Dest. Time (T) & Tardiness (T)  \\ 
+\hline
+$J_{1}$ & $C_{1}$      & 276                  & 328           & 62  \\
+$J_{2}$  & $C_{2}$       & 180                  & 445          & 98  \\
+$J_{3}$ & $C_{3}$      & 88                  & 378          & 75      \\
+$J_{4}$  & $C_{4}$       & 301                 & 565           & 134  \\
+$J_{5}$ & $C_{5}$      & 52                  & 200           & 23       \\
+$J_{6}$  & $C_{6}$       & 137                  & 270           & 0      \\ 
+\hline\noalign{\smallskip}
+\end{tabular}
+\label{table:jobtimes}
+\end{table}
 
-The general scheme of the proposed IG heuristic is presented in Algorithm \ref{alg:ig}.
-Our algorithm has two input parameters:  $\alpha$ (destruction level)   and $nIter$ (maximum number of  consecutive iterations of the algorithm without improvements of the best solution).
-The algorithm begins generating an initial solution (Step 1). This initial solution is generated by using the earliest due date (EDD) greedy rule. That is,  an initial sequence is obtained by sorting the jobs  in non decreasing order of their due dates.
- %A counter variable is also set so it can counts the number of iterations reached so far by the algorithm. 
- 
+O resultado ótimo da função objetivo possui valor absoluto $6127.5$, sendo este composto por três partes integrantes do problema. A primeira, é dada pelos custos de trajeto dos três veículos, que é calculado em $DC = (112+178+253) + (90+175+260) + (27+237+254) = 1586$. 
+
+A segunda parte é definida pelos custos de utilização de veículo, que neste contexto será total, uma vez que todos veículos foram utilizados. Desta forma, $VC =  1224+1116+960 = 3300$.
+
+Os atrasos $T$ serão multiplicados por suas respectivas penalidades $w$.
+Isto posto, o custo total de atrasos ponderados é $TC = (62*1.8) + (98*2.3) + (75*4.3) + (134*4) + (23*2) + (0*4.6) = 1241.5$.
+
+Portanto, ao combinar as três parcelas da função objetivo, é obtido o valor final $DC + VC + TC = 6127.5$ na solução ótima da instância. 
+
+\section{Abordagem de Solução}\label{solutionapproach}
+
+São tratadas no artigo três abordagens para solucionar o Problema de Sequenciamento de Produção e Entrega, sendo duas versões da metaheurística Iterated Local Search (ILS) e um Algoritmo Genético (G.A.). Ullrich (2013) mostrou que a aplicação do Algoritmo Genético na variação do problema com mais de uma máquina possibilita bons resultados. 
+
+O método de busca local aplicado junto aos algoritmos é o procedimento VND (Mladenovic and Hansen 1997), com ordenação aleatória de vizinhanças (RVND). São descritas duas versões de RVND neste trabalho. Em uma das versões, uma técnica de aprimoramento interno de rotas é aplicada. 
+
+A estrutura de ambas Iterated Local Search são similares, diferenciando-se somente na chamada dos métodos de busca local RVND. O Algoritmo Genético (G.A.) desenvolvido utiliza técnicas de Torneio Binário e 2-point Crossover. 
+
+\subsection{Soluções Iniciais}\label{initialsolutions}
+
+A qualidade de um ótimo local obtido por método de busca local depende da solução inicial trabalhada (El-Ghazali Talbi, 2009). As regras para a criação de soluções iniciais utilizadas aqui originam-se do problema de Permutation Flow Shop, sendo elas Apparent Tardiness Cost, Weighted Modified Due Date e Weighted Earliest Due Date ( L. P. Molina-Sánchez, Eliana María, 2015).
+
+O conjunto de regras têm por objetivo designar uma ordem favorável para o sequenciamento de tarefas. Por se tratar de uma Frota Heterogênea de Veículos, a ordem gerada pelas regras pode ou não ser atendida devido à restrições de capacidade dos veículos. Caso nenhuma das três consigam ser atendidas, uma solução inicial aleatória é utilizada.
+
+\subsection{Operadores de Vizinhança}\label{nboperators}
+
+O processo de busca local de uma solução visa aprimorar a atual ao considerar soluções similares do problema que seguem operações de vizinhança definidas. Neste trabalho, são consideradas apenas soluções viáveis em todo o processo. Matematicamente, uma solução $S$ é descartada se:
+\begin{equation}\\
+ \label{eq:invalidsol}
+Q_{k} < \sum\limits_{i=1}^{|N_k|} s_{i};  \forall k \in K;
+\end{equation} 
+
+Para constituir o conjunto de vizinhanças de uma solução, estas foram subdivididas em dois subconjuntos: vizinhanças Intra-Rota e Inter-Rota. 
+
+
+\subsection{Vizinhanças Intra-Rota}\label{intraroutenb}
+Neste subconjunto, as operações aplicadas para diversificação da solução são restritas a alterações internas de um veículo, influenciando somente na ordem de entrega das tarefas carregadas por este. São definidas as operações:
+
+\begin{itemize}
+  \item \textbf{Swap-Adj-Job}($S_{i}$) — Troca de posição duas tarefas adjacentes na rota $S_{i}$. \\
+  
+  \item \textbf{Insert-Job}($S_{i}$) — Insere uma tarefa nas demais posições da rota $S_{i}$.\\
+  
+  \item \textbf{2-opt}($S_{i}$) — Realiza a operação de 2-opt em todas combinações de arcos distintos da rota $S_{i}$, i.e., selecionar dois arcos distintos, removê-los e reconectar os clientes de forma que a rota se diferencie e permaneça interligada.
+\end{itemize}
+
+\subsection{Vizinhanças Inter-Rota}\label{interroutenb}
+
+As operações de vizinhança do tipo Inter-Rota consideram duas ou mais rotas durante sua aplicação, realizando alterações em mais de uma rota ao mesmo tempo. Durante o processo, as operações aplicadas podem gerar soluções inviáveis (por exemplo, ao inserir alguma tarefa em um veículo cheio), porém estas não serão consideradas aqui, para que os algoritmos lidem somente com soluções viáveis.
+
+Seja $S$ uma solução viável para o problema e $S_{i}$ e $S_{w}$ as rotas completas realizadas pelos veículos $i$,$w$ $\in$ $K$. São definidas as operações:
+\begin{itemize}
+\item \textbf{Swap-Job}($S_{i}$, $S_{w}$) — Trocam de posição duas tarefas $a$ $\in$ $S_{i}$ e $b$ $\in$ $S_{w}$ entre as duas rotas, de forma que $a$ receberá a posição antiga de $b$ na nova rota e vice-versa.\\ 
+
+\item \textbf{Insert-Job}($S_{i}$, $S_{w}$) — Insere uma tarefa $a$ $\in$ $S_{i}$ nas demais posições da rota $S_{w}$.\\
+
+\item \textbf{Swap-Adj-Vehicle}($S_{i}$, $S_{w}$) — Trocam de posição na solução dois veículos adjacentes $i$ e $w$ carregando consigo todas suas tarefas designadas, i.e., caso o veículo $i$ parta agora após o veículo $w$, o primeiro deverá esperar todas as tarefas do segundo serem processadas para que as suas tomem início.\\
+
+\item \textbf{Insert-Vehicle}($S_{i}$) — Insere um veículo $i$ juntamente com suas tarefas designadas nas demais posições da solução.\\
+\end{itemize}
+
+\subsection{Abordagens de RVND}\label{rvndapproaches}
+
+O processo de busca local é realizado por VND (Mladenovic and Hansen 1997), utilizando os sete operadores de vizinhança implementados e ordenação aleatória de vizinhanças (RVND). São empregadas duas versões de RVND, com técnicas diferentes de chamada aos operadores.
+
+A primeira versão, descrita em Algorithm \ref{algo:rvnd}, define-se em caminhar pelo conjunto de vizinhanças NeighborhoodSet à procura de melhorias na solução atual, e em seguida reiniciar este procedimento quando alguma melhora é alcançada. Do contrário, caso nenhuma melhoria seja obtida na execução, a busca local é encerrada.
+
 \begin{algorithm}
-\caption{Iterated Greedy $(\alpha, nIter)$}
-\label{alg:ig}
-\begin{algorithmic}[1]
-\STATE $S_{\mbox{best}} \gets \mbox{InitialSolution()}$
-\STATE $S \gets S_{\mbox{best}}$
-\STATE $k \gets 0$
-
-\WHILE{$k < nIter$}
-\STATE $S_{\mbox{partial}} \gets \mbox{Destruction($S, \alpha$)}$
-\STATE $S \gets \mbox{Reconstruction($S_{\mbox{partial}}$)}$
-\STATE $S \gets \mbox{LocalSearch($S, nIter$)}$
-
-\IF{$\mbox{$TT(S)< TT(S_{\mbox{best}})$}$}
-\STATE $S_{\mbox{best}} \gets S$
-\STATE $k \gets 0$
-\ELSE
-\STATE $k \gets k+1$
-\ENDIF
-\ENDWHILE
-\RETURN $S_{\mbox{best}}$
-\end{algorithmic}
+\label{algo:rvnd}
+\AlFnt \small
+\LinesNumbered
+\Input{Solution $S$}
+\Output{Better or equal $S*$ solution}
+  \caption{RVND-Custom($S$)}
+  
+  $S* \gets S;$\;
+  $InterRoute \gets$\textup{Random Order($Inter$-$Route$ $Neighborhoods$);}\\
+  \For{$i \gets$ \textup{1 to} $InterRoute$}{
+         $currInter \gets InterRoute[i];$ \tcp{Get inter-route neighborhood}
+         $S' \gets$ \textup{currInter(S)}; \tcp{Apply neighborhood local search}
+         \If{\textup{f($S'$) $\leq$ f($S$)}}{
+                {$S \gets S';$\\
+                $IntraRoute \gets$\textup{$Intra$-$Route$ $Neighborhoods$;}\\
+                 \For{$j \gets$ \textup{1 to} $IntraRoute$}{
+                    $currIntra \gets IntraRoute[j];$\\
+                    $S \gets currIntra(S);$\\
+                     \If{\textup{f($S$) $\leq$ f($S'$)}}{
+                        $S' \gets S;$\\
+                        $j \gets 1;$ \tcp{Restarting Intra-Route local search}
+                     }
+                 }
+                }
+                $i \gets 1;$\\
+                $InterRoute \gets$\textup{Random Order($Inter$-$Route$ $Neighborhoods$);}\\
+            }
+         \If{\textup{f($S'$) $\leq$ f($S*$)}}{
+                {$S* \gets S'$;\\}
+            }
+    }
+  \Output{$S*$}
 \end{algorithm}
 
-
- 
- The iterations of the algorithm are computed in Steps 4 to 14 until the maximum number of consecutive iterations without improvements is reached. 
-In the destruction  phase (Step 5), $\alpha \times n$  jobs  are randomly selected and removed from the sequence. In the  reconstruction phase, the jobs are greedily reinserted (Step 6). For each job removed, it is tentatively reinserted in all positions of the sequence and then put in the  position that gives the lowest total tardiness of the partial solution. 
-Afterwards, a local search (LS) procedure is performed in order to improve the new constructed solution (Step 7). A counter $k$ is used to  get the maximum number of consecutive iterations without improvements.
-If the solution returned by the local search procedure improves the current best solution,  the best solution obtained so far is updated (Step 9), and the counter $k$  is set to zero (Step 10). If the best solution is not improved, the counter $k$ is incremented (Step 12). 
-The IG algorithm returns the best solution found (Step 15).
-
-The next subsection provides an explanation of the local search procedure used in the IG algorithm.
-
-\subsection{Local Search Procedure}
-
-A local search  (LS) procedure based on six neighborhood operators is performed to improve the solution given by the  reconstruction phase.  
-At each iteration of the LS  procedure, a random neighbor solution is generated from the general current  solution, then its total tardiness is computed. If neighbor solution improves the general solution, the general solution is updated and a  counter variable is reset. Otherwise, the counter variable is incremented.  The LS procedure ends when  the current  solution is not improved during  $nIter$ consecutive iterations.
-
-The  pseudocode of the LS procedure is given in Algorithm \ref{alg:ls}. The used neighborhood operators are described in next subsection.
+A segunda versão, RVND-Custom,  é baseada na técnica de aprimoramento interno de rota publicada por  (P.H.V. Penna, L. S. Ochi, 2013), onde as vizinhanças externas à uma rota Inter-Route Neighborhoods são analisadas, e em seguida, ao obter melhora na solução, as vizinhanças internas Intra-Route Neighborhoods são acionadas para aprimorar ainda mais a solução obtida. A aplicação é descrita em Algorithm \ref{algo:rvnd2}. 
 
 \begin{algorithm}
-\caption{Local Search ($S, nIter$)}
-\label{alg:ls}
-\begin{algorithmic}[1]
-\STATE $k \gets 0$
-\WHILE{$k < nIter$}
-\STATE Select at random a neighborhood operator
-\STATE $S_{\mbox{neighbor}} \gets \mbox{RandomNeighbor($S$)}$
-\IF{$\mbox{$TT(S_{\mbox{neighbor}}) < TT(S)$}$}
-\STATE $S \gets S_{\mbox{neighbor}}$
-\STATE $k \gets 0$
-\ELSE
-\STATE $k \gets k+1$
-\ENDIF
-\ENDWHILE
-\RETURN $S$
-
-\end{algorithmic}
+\label{algo:rvnd2}
+\AlFnt \small
+\LinesNumbered
+\Input{Solution $S$}
+\Output{Better or equal $S*$ solution}
+  \caption{RVND-Custom($S$)}
+  
+  $S* \gets S;$\\
+  $InterRoute \gets$\textup{Random Order($Inter$-$Route$ $Neighborhoods$);}\\
+  \For{$i \gets$ \textup{1 to} $InterRoute$}{
+         $currInter \gets InterRoute[i];$ \tcp{Get inter-route neighborhood}
+         $S' \gets$ \textup{currInter(S)}; \tcp{Apply neighborhood local search}
+         \If{\textup{f($S'$) $\leq$ f($S$)}}{
+                {$S \gets S';$\\
+                $IntraRoute \gets$\textup{$Intra$-$Route$ $Neighborhoods$;}\\
+                 \For{$j \gets$ \textup{1 to} $IntraRoute$}{
+                    $currIntra \gets IntraRoute[j];$\\
+                    $S \gets currIntra(S);$\\
+                     \If{\textup{f($S$) $\leq$ f($S'$)}}{
+                        $S' \gets S;$\\
+                        $j \gets 1;$ \tcp{Restarting Intra-Route local search}
+                     }
+                 }
+                }
+                $i \gets 1;$\\
+                $InterRoute \gets$\textup{Random Order($Inter$-$Route$ $Neighborhoods$);}\\
+            }
+         \If{\textup{f($S'$) $\leq$ f($S*$)}}{
+                {$S* \gets S'$;\\}
+            }
+    }
+  \Output{$S*$}
 \end{algorithm}
 
-\subsection{Neighborhood Operators}\label{neighoper}
-%In family  scheduling problems, a subset of jobs within a same family processed consecutively in a sequence can be grouped as a batch. For generating random neighbors solutions in the local search procedure our solution approach randomly uses neighborhood operators based on the same six different operators used by Herr and Goel (\cite{herr2016minimising}) in their ILS algorithm. Two of them are job-based and the rest are batch-based. Such batch-based operators have the advantage of maintaining some structural properties of the solution and avoiding unnecessary setup times (Herr and Goel, \cite{herr2016minimising}, Sect. 4.2).
+Neste algoritmo, a solução atual $S$ analisa as vizinhanças externas às rotas (InterRoute) em uma ordem aleatória, comparando seus vizinhos, e caso algum destes possua importância superior à sua, este vizinho torna-se a solução atual $S$ e em seguida verifica as vizinhanças internas às rotas da solução (IntraRoute) sequencialmente. A melhor solução encontrada durante o processo é retornada.
+
+\subsection{Iterated Local Search}
+
+Ao se gerar variados ótimos locais, utilizar a Iterated Local Search torna-se possível obter aprimoramento da qualidade da solução (Talbi, 2009). Neste artigo em específico, as aplicações de Iterated Local Search utilizam duas versões de busca local RVND.
+
+Os métodos de perturbação do algoritmos descritos em seguida utilizam os operadores de vizinhança Inter-Rota Swap-Job($S_{i}$, $S_{w}$) e Insert-Job($S_{i}$). É realizada uma quantidade $\alpha$ de perturbações, sendo $\alpha$ estatisticamente definido na Seção ‘Calibração de Parâmetros’.
+
+\subsection{ILS RVND}
+O esquema geral da heurística ILS proposta é apresentado em Algoritmo \ref{algo:ilsrvnd}. Existem três parâmetros: $\alpha$ (número de perturbações), $MaxIter$ (quantidade de reinícios de solução) e $MaxIterILS$ (máximo de iterações consecutivas para o algoritmo). Inicialmente, a variável de melhor solução global é inicializada (Passo 1). 
+
+A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) utilizando as regras descritas na Seção 3.1, e em seguida é feito uma busca local em $S$ (Passo 4). Após sua possível melhora, o processo de Perturbação é inicializado (Passos 5-12), perturbando a solução atual $S’$ com intensidade $\alpha$  (Passo 10), aplicando busca local (Passo 11) e atualizando a melhor solução encontrada durante este processo (Passos 6-9).
+
+\begin{algorithm}
+\label{algo:ilsrvnd}
+\AlFnt \small
+\LinesNumbered
+\Input{Parameters of max. iterations numbers}
+\Output{Best solution $S*$}
+  \caption{ILS-RVND ($ \alpha, MaxIter,MaxIterILS$)}
+  
+  $S* \gets$ Initialize($S*$);\\
+  
+  \For{$i \gets$ \textup{1 to} $MaxIter$}{
+  
+         $S \gets $ \textup {GenerateInitialSolution();}\\
+         $S' \gets$ \textup{RVND($s$)};\\
+         
+        \For{$j \gets$ \textup{1 to} $MaxIterILS$}{
+         
+            
+            \If{\textup{f($S$) $\leq$ f($S'$)}}{
+                {$S'\gets S$;\\
+                $j \gets 1;$ \tcp{Restart Perturbing Process}}
+            }
+            
+            $S' \gets $\textup{Perturb($S'$, $\alpha$)};\\
+            $S' \gets $\textup{RVND($S'$)}; \tcp{Local Search on Perturbed S'}
+         }
+         
+         \If{\textup{f($S'$) $\leq$ f($S*$)}}{
+                {$S* \gets S'$;\\}
+            }
+    }
+  \Output{$S*$}
+\end{algorithm}
+
+Caso alguma melhora em $S’$ em  relação à solução inicial $S$ seja obtida, o Processo de Perturbação é reiniciado (Passo 8). Por último, a solução $S’$ obtida é comparada a melhor solução global $S*$ e então se inicia a próxima iteração do algoritmo. O ILS-RVND  retorna a melhor solução encontrada $S*$ no seu fim.
+
+\subsection{ILS-RVND com Aprimoramento de Rota Interna}\label{ilsrvnd2}
+
+P.H.V. Penna, L. S. Ochi, 2013, desenvolveram o primeiro modelo de Iterated Local Search com RVND para o Problema de Roteamento de Frota Heterogênea de Veículos (HFVRP) em um ambiente com até cem clientes, e produziram resultados competitivos com aos da literatura. Sua abordagem específica em lidar com a entrega de mercadorias serviu de inspiração para esta combinação ILS-RVND.
+
+O diferencial desta versão de Iterated Local Search está na busca local RVND-Custom (Figura \ref{fig:ilsdif}) descrita anteriormente, que utiliza a técnica de aprimoramento interno de rotas.
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[scale=0.072]{ILS_DIF} 
+    \caption[]{Mudança entre acionamentos de RVND.}
+  	\label{fig:ilsdif}
+\end{figure}
+
+Nesta técnica, assim que uma solução atual é aperfeiçoada utilizando operadores externos às rotas, como realizar intercâmbio de tarefas entre veículos, os operadores internos às rotas são chamados.
+
+\subsection{Genetic Algorithm}\label{genalgo}
+
+Algoritmos Genéticos foram desenvolvidos por J. Holland em meados dos anos 70 (University of Michigan, USA)  para entender o processo adaptativo de sistemas naturais (Talbi, 2009). Nesta abordagem de Algoritmo Genético são utilizadas técnicas de Torneio Binário para seleção de soluções e 2-point Crossovers para diversificação da prole. O esquema geral do algoritmo GA é descrito em Algorithm \ref{algo:genalgo}.
+
+Existem dois parâmetros: PopSize (quantidade de de indivíduos na população) e MaxIter (número de iterações em que serão geradas novas populações. O algoritmo é iniciado no Passo 1 ao gerar uma população aleatória P, seguido de uma busca local RVND (Passo 2). A melhor solução da população $P$ será armazenada em $P*$ (Passo 3) para ser utilizada posteriormente. 
+
+A cada iteração uma nova solução é inserida em $P$ até que o limite de $PopSize-1$ indivíduos (Passos 6-22) seja atingido. Para gerar cada prole, são escolhidas duas soluções ‘pai’ por Torneios Binários (Passos 7-8), e em seguida são geradas duas mutações destas soluções (Passos 9-10). 
 
 
-The neighborhood operators are algorithmic objects for modifying a solution (schedule or sequence). Each operator modifies a sequence in a specific way. The operators used in our heuristic are the same six operators used by Herr and Goel (\cite{herr2016minimising}). Some of those operators regards the fact that in family scheduling problems a subset of jobs within a same family processed consecutively in a sequence can be grouped as a batch. Such batch-based operators have the advantage of maintaining some structural properties of the solution and avoiding unnecessary setup times (Herr and Goel, \cite{herr2016minimising}).
+\begin{algorithm}
+\label{algo:genalgo}
+\AlFnt \small
+\LinesNumbered
+\Input{Population size and max. iteration number}
+\Output{Best solution $P*$ in $MaxIter$ populations}
+  \caption{Genetic Algorithm ($PopSize,MaxIter$)}
+  
+  $P \gets$ \textup{Generate random population($PopSize$);}\\
+  $P \gets$ \textup{ RVND($P$);} \tcp{Apply local search to new population P}
+  $P* \gets$ \textup{Best($P$);} \tcp{Save best solution of P}
+  
+  \For{$i \gets$ \textup{1 to} $MaxIter$}{
+        $P'  \gets$ \text {\O;}\\
+          
+        \For{$j \gets$ \textup{1 to} $(PopSize-1)$}{
+          
+            $Parent1 \gets$ \textup{Binary Tournament(random($P$), random($P$));}\\
+            $Parent2 \gets$ \textup{Binary Tournament(random($P$), random($P$));}\\
+         
+            $Offspring1  \gets$ \textup {Crossover($first, second$); }\\
+            $Offspring2 \gets$ \textup {Crossover($first, second$); }\\
+         
+            \eIf{ \textup{Feasible($Offspring1$) and Feasible($Offspring2$) } }{
+          
+                \textup{$P' \gets P'$ + BinaryTournament($Offspring1,Offspring2$);}
+                
+            }{\eIf{ \textup{Feasible($Offspring1$) or  Feasible($Offspring2$)} }{
+          
+                \textup{$ P' \gets P'$ + Feasible from($Offspring1,Offspring2$);}
+                
+            }{ 
+                \If{\textup{!Feasible($Offspring1$) and !Feasible($Offspring2$) } }{
+              
+                    \textup{ $P' \gets P'$ + Mutation(random($Parent1,Parent2$));\\}
+                    
+                }
+            }
+            }
+        }
+        $ P' \gets$ P' + P*; \tcp{Include best solution to P'}
+        $ P' \gets$ \textup{ Fast Local Search($P'$);}\\
+        \If{  \textup{f($P'$) $\leq$ f(Best($P'$))} }{
+            \textup{$P' \gets P*$;\\}
+        }
+        
+        $ P \gets$ \text { $P';$} \\
+  }
+  \Output{$P*$}
+\end{algorithm}
 
-The Batch Move and Job Move operators select a batch and a job, respectively, and move them to another position in the schedule. The Batch Exchange and Job Exchange operators select two different batches and two different jobs, respectively, and swap them. The Batch Break operator selects a batch, sorts it by the the due dates of its jobs and breaks it in the position with the largest due date difference. After that, the two batches are inserted in different positions in the schedule. The Batch Combine operator selects two batches of the same family and bind them, then insert the combined batch in the schedule.
-
-\section{Implemented Algorithms from Literature}\label{implementedliterature}
-To the best of our knowledge, there is only one paper that studies the addressed problem. Herr and Goel (\cite{herr2016minimising}) proposed an iterated local search (ILS)  heuristic to solve the problem. In this work,  we re-implemented this ILS heuristic according to the original paper in order to evaluate the efficiency and effectiveness of our IG algorithm.
-
-The ILS implementation can be described as follows.
-Each neighborhood operator described in Section \ref{neighoper} was implemented as a first-improvement local search procedure. An initial solution is generated by using the EDD rule. Then, at each iteration the local search procedures are randomly sorted and consecutively applied to the incumbent solution. The stopping criterion of each local search operator is whether a local minimum was found. 
-
-The perturbation approach used in the ILS algorithm calculates a promising position for each job in the sequence in terms of total tardiness minimisation (Herr and Goel, \cite{herr2016minimising}). The promising position is calculated based on the lateness of each job. Positive lateness suggests a shifting of the job towards the beginning of the sequence, whereas negative lateness suggests a shifting of the job towards the ending of the sequence.
-As in Herr and Goel (\cite{herr2016minimising}), the maximum number of iterations  used in the ILS heuristic was $3$.
+O processo de mutação Crossover pode produzir soluções inviáveis, dessa forma a escolha de uma nova solução para a população $P’$ precisa ser refinada (e então viável). No primeiro caso, em que as duas novas mutações são viáveis, estas participam de um Torneio Binário (Passo 12) e a escolhida será adicionada à população. No segundo caso, onde apenas uma das soluções é viável, a única prole viável será inserida na população $P’$ (Passo 15).  No último caso, se as duas mutações geradas são inviáveis (Passo 17), uma escolha aleatória entre as soluções ‘pai’ é feita e sofrerá uma nova mutação Crossover (Passo 18), sendo adicionada em seguida.
+	Após a obtenção de $PopSize-1$ indivíduos em $P’$, é inserida também a melhor solução $P*$ encontrada até o momento (Passo 23). Com a população completa, é realizada uma busca local rápida (Passo 24) em todos os indivíduos. Este método é descrito na Seção 3.4.1.
+Por fim, a melhor solução $S*$ é atualizada (Passos 25-26) e a população $P’$ torna-se a população atual $P$, para a futura criação de novos indivíduos (Passo 25).
 
 \section{Computational Experiments}\label{experiments}
-In this section we describe the computational experiments carried out in order to study the performance of our IG algorithm. We compare the IG algorithm against the ILS algorithm
-proposed by Herr and Goel (\cite{herr2016minimising}). 
- First, we ensure that the results of our ILS implementation are at least as good as the results presented by Herr and Goel (\cite{herr2016minimising}). 
- We also compare several configurations of the IG algorithm with different parameters settings. 
+
 
 All the heuristic algorithms were coded in C++ and executed on a PC machine IntelR Core TM i7-4790K CPU @ 4.00GHz x 8 with 32GB RAM, running Ubuntu 14.04 LTS 64 bits. The quality of the solutions were measured by the relative percentage deviation (RPD) from the best known solution (reference solution). The RPD measure represents the percentage of how much experimental results differs from a reference value, and is calculated following the equation: 
 \begin{equation}\label{eq:rpd}
@@ -296,266 +504,13 @@ RPD(\%)= 100 \times \frac{TT_{\mbox{experimental}} - TT_{\mbox{reference}}}{TT_{
 where $TT_{\mbox{reference}}$ is the value of the reference solution, and $TT_{\mbox{experimental}}$ is the obtained solution by  a given heuristic. 
 
 
-The performance of the heuristic algorithms are tested on 80 small instances provided by Herr and Goel (\cite{herr2016minimising}),  and 30 large instances randomly generated in this paper  according to (Herr and Goel, \cite{herr2016minimising}).
-The factors of the small instances are: number of jobs  $n \in \{ 8, 10, 12, 15, 20, 30, 40, 50\}$ and number of families $\in \{1, 2, 3, 4, 5\}$. 
-The factors of the large instances are: number of jobs  $n \in \{100, 150, 200\}$ and number of families $\in \{5, 6, 7\}$. 
-
-
-\subsection{ILS Effectiveness}
-
-In this subsection we analize the performance of the ILS algorithm of Herr and Goel (\cite{herr2016minimising}). We denote by ILS\_I the ILS algorithm implemented in this paper, and by ILS\_L the ILS algorithm implemented by Herr and Goel (\cite{herr2016minimising}).   
-
-The ILS\_I algorithm was ran on the instances  provided by Herr and Goel (\cite{herr2016minimising})   and the obtained results are compared with the results of the  ILS\_L algorithm available in the literature.
-The performance of each ILS algorithm is measured
-by RPD determined by  equation (\ref{eq:rpd}), where $TT_{\mbox{reference}}$ is the minimum \textit{TT} value found for the instance, and $TT_{\mbox{experimental}}$ is the minimum \textit{TT} value found  by a given ILS algorithm. Therefore, we are able to determine whether ILS\_I is able to found results at least as low as the presented in the literature.
-
-The results of the experiment were analyzed by means of Kruskal-Wallis statistical test by using the RPD measure as response variable. In this test two hypothesis are tested: the null hypothesis states that the performance of all the implementations tested are statically similar; and the alternative hypothesis states at least one implementation performance is significantly different. Figure \ref{fig:ils} shows the mean plot and confidence intervals at a 95\% confidence level. Overlapping intervals suggest that could be no difference between implementations. Since there are no overlapping intervals, the ILS\_I presents the lowest mean, and the calculated P-value = $0.000 \leq 0.05$ suggests the null hypothesis can be rejected. We can conclude that the implemented ILS\_I  is effective enough to represent the implemented one in literature. Table \ref{table:ils} shows how the ILS implementations perform as the number of jobs increases.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=1\textwidth]{ILS} 
-    \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS\_L vs.\ ILS\_I experiment.}
-  	\label{fig:ils}
-\end{figure}
-
-\begin{table}
-\centering
-\caption{RPD of ILS implementations on literature instances per number of jobs.}
-\begin{tabular}{ccccccccc}
-	\hline\noalign{\smallskip}
-	& \multicolumn{8}{c}{Number of jobs} \\
-	\cline{2-9}\noalign{\smallskip}
-	Implementation & 8 & 10 & 12 & 15 & 20 & 30 & 40 & 50 \\
-	\hline\noalign{\smallskip}
-	ILS\_L & 0.00 & 0.00 & 0.00 & 0.42 & 0.24 & 2.32 & 0.86 & 2.95
- \\
-	\noalign{\smallskip}
-	ILS\_I & 0.00 & 0.17 & 0.00 & 0.31 & 0.00 & 0.00 & 0.00 & 0.00
- \\
-	\noalign{\smallskip}\hline
-\end{tabular}
-\label{table:ils}
-\end{table}
-
-\subsection{IG Parameter Setting}\label{ig_param_set}
-The developed IG depends only on two parameters: the number of jobs to be randomly removed in the destruction phase ($\alpha \times n$), and the maximum number of iterations of the algorithm ($nIter$). Preliminary tests were conducted to determine the parameters calibrations. Each parameter was tested at three levels: $\alpha \in \{0.10, 0.15, 0.20\}$ and $nIter \in \{100, 200, 300\}$. We carried out a full factorial experiment with the levels to be tested, resulting in 9 versions of our IG algorithm. Each instance was solved 30 times  by all the 9 versions of the algorithm. 
-
-The results were analyzed by means of Kruskal-Wallis using the RPD as response variable. Following equation (\ref{eq:rpd}), $TT_{\mbox{experimental}}$ was made as the average \textit{TT} value found for the instance by a given IG version, and $TT_{\mbox{reference}}$ was made as smallest \textit{TT} value found for the instance among all the versions. Fig. \ref{fig:all_ig} shows the mean plot and confidence intervals at a 95\% confidence level. We can see that almost every version interval overlaps with one another as the P-value $= 0.085 > 0.05$ from the test indicates that the null hypothesis assumption is the most likely to be correct.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=1\textwidth]{ALL_IG} 
-    \caption[]{Mean plot and confidence intervals at 95\% confidence level for IG calibration experiment.}
-  	\label{fig:all_ig}
-\end{figure}
-
-Although no significant difference level is indicated by the test, some conclusions can be derived from Figure \ref{fig:all_ig} about the IG parameters. We can see that as the number of iterations $nIter$ grows the means turn lower, and as the $\alpha$ value increases the intervals turn wider. Thus, we are prone to chose an algorithm version with a large $nIter$. Among the largest $nIter$ values, the IG with $\alpha = 0.15$ and $nIter=300$ outstands for bearing the lowest RPD. Therefore, this configuration is the chosen one to be used in the next experiments.
-
-\subsection{ILS vs.\ IG}
-In this section we present the comparison of solution quality generated by the algorithms ILS\_I and IG. Two experiments are performed.
- In the first experiment, the algorithms are compared on the 80 small instances provided by Herr and Goel (\cite{herr2016minimising}). In the second experiment, the algorithms are compared on the 30 large instances generated in this paper.    The performance of each algorithm is also measured by RPD determined by equation (\ref{eq:rpd}), where $TT_{\mbox{reference}}$ is the best known solution obtained among the two algorithms.
-
-\subsubsection{Results on small instances:}
-These experimental results were analyzed by means of Kruskal-Wallis test. The obtained P-value $=0.034 \leq 0.05$ indicates that the null hypothesis can be rejected, i.e., one algorithm is significant different. Figure \ref{fig:ils_ig_small} shows, for the two heuristics, the mean plot and confidence intervals with 95\% confidence level. Since there are no overlapping intervals and the IG holds the lowest RPD, it is safe to conclude that the IG outperforms the ILS on small instances. Table \ref{table:small_rpds} shows how the heuristic algorithms perform as the number of jobs increases.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=1\textwidth]{ILS_IG_SMALL} 
-    \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS vs.\ IG experiment on small instances.}
-    \label{fig:ils_ig_small}
-\end{figure}
-
-\begin{table}
-\centering
-\caption{Average RPD of the heuristics on small instances per number of jobs.}
-\begin{tabular}{ccccccccc}
-	\hline\noalign{\smallskip}
-	& \multicolumn{8}{c}{Number of jobs ($n$)} \\
-	\cline{2-9}\noalign{\smallskip}
-	Heuristic& 8 & 10 & 12 & 15 & 20 & 30 & 40 & 50 \\
-	\hline\noalign{\smallskip}
-	ILS & 0.00 & 0.17 & 0.00 & 0.31& 0.48 & 0.99 & 1.48 & 2.36 \\
-	\noalign{\smallskip}
-	IG & 0.00 & 0.09 & 0.00 & 0.00 & 0.01 & 0.00 & 0.05 & 0.64 \\
-	\noalign{\smallskip}\hline
-\end{tabular}
-\label{table:small_rpds}
-\end{table}
-
-\subsubsection{Results on large instances:}
-
-The results for large instances are presented in Table  \ref{table:large_rpds}  and  Figure \ref{fig:ils_ig_large}.
-Figure \ref{fig:ils_ig_large} shows the means plot and confidence intervals at 95\% confidence level. Overlapping intervals indicates that no statistically significant difference exists among the
-overlapped means, i.e. the algorithms are statistically equivalent.
- Although, submitting the results for testing by means of Kruskal-Wallis test, the calculated P-value $=0.012 \leq 0.05$ and the IG lowest RPD prones us to conclude that the IG heuristic also outperforms the ILS on large instances in this experiment. Table \ref{table:large_rpds} shows how the heuristics perform as the number of jobs increases.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=1\textwidth]{ILS_IG_LARGE} 
-    \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS vs.\ IG experiment on large instances.}
-    \label{fig:ils_ig_large}
-\end{figure}
-
-\begin{table}
-\centering
-\caption{Average RPD of the heuristics on large instances per number of jobs.}
-\begin{tabular}{cccc}
-	\hline\noalign{\smallskip}
-	& \multicolumn{3}{c}{Number of jobs} \\
-	\cline{2-4}\noalign{\smallskip}
-	Heuristic& 100 & 150 & 200 \\
-	\hline\noalign{\smallskip}
-	ILS & 2.61 & 1.50 & 1.82 \\
-	\noalign{\smallskip}
-	IG & 1.31 & 1.12 & 1.68 \\
-	\noalign{\smallskip}\hline
-\end{tabular}
-\label{table:large_rpds}
-\end{table}
-
 \section{Conclusions}\label{conclusions}
-In this study we consider a single-machine scheduling problem with family setups and resource constraints with the goal of minimizing the total tardiness.
-For the best of our knowledge this problem has not been fully exploited in the literature, consequently, methods for solving this problem are so far in shortage. Since the problem is NP-hard and exact methods are time inefficient, heuristic methods are required to solve the problem. We presented a simple and effective iterated greedy algorithm which uses a local search procedure based on six neighborhood operators. Two set of instances were used to analyze the performance of the IG algorithm:  small instances provided by Herr and Goel (\cite{herr2016minimising}), and  large instances generated in this paper.
-Extensive computational experiments have shown that the performance of our IG algorithm increases as the number of iterations increases as well. Computational experiments demonstrated the effectiveness of our IG algorithm. It outperforms the ILS algorithm of Herr and Goel (\cite{herr2016minimising}). The obtained results have been statistically tested.
-
-Future research is to extend our approach for other manufacturing environments, such as parallel processing machines.
 
 
 \subsubsection*{Acknowledgments.}
 The authors thanks the financial support of FAPEMIG, CAPES and CNPq, Brazilian research agencies.
 
-
-\begin{thebibliography}{}
-
-
-
-
-\bibitem[2008]{allahverdi2008survey}
-Allahverdi, A., Ng, C., Cheng, T. E., Kovalyov, M. Y.: 
-A survey of scheduling problems with setup times or costs.
-European journal of operational research, 187(3), 985--1032 (2008)
-
-\bibitem[2008]{bigras2008time}
-Bigras, L.-P., Gamache, M., Savard, G.: 
-The time-dependent traveling salesman problem and single machine scheduling problems with sequence dependent setup times. 
-Discrete Optimization, 5(4), 685--699 (2008)
-
-\bibitem[2010]{briskorn2010complexity}
-Briskorn, D., Choi, B.-C., Lee, K., Leung, J., Pinedo, M.:
-Complexity of single machine scheduling subject to nonnegative inventory constraints.
-European Journal of Operational Research, 207(2), 605--619 (2010)
-
-\bibitem[2013]{briskorn2013exact}
-Briskorn, D., Jaehn, F., Pesch, E.:
-Exact algorithms for inventory constrained scheduling on a single machine. 
-Journal of scheduling, 16(1), 105--115 (2013)
-
-\bibitem[1990]{du1990minimizing}
-Du, J., Leung, J. Y.-T.: 
-Minimizing total tardiness on one machine is np-hard. 
-Mathematics of operations research, 15(3), 483--495 (1990)
-
-\bibitem[1969]{emmons1969one}
-Emmons, H.: 
-One-machine sequencing to minimize certain functions of job tardiness. 
-Operations Research, 17(4), 701--715 (1969)
-
-\bibitem[2010]{fanjul2010iterated}
-Fanjul-Peyro, L., Ruiz, R.: 
-Iterated greedy local search methods for unrelated parallel machine scheduling. 
-European Journal of Operational Research, 207(1), 55--69 (2010)
-
-\bibitem[2008]{gupta2008single}
-Gupta, J. N., Chantaravarapan, S.:
-Single machine group scheduling with family setups to minimize total tardiness.
-International Journal of Production Research, 46(6), 1707--1722 (2008)
-
-\bibitem[2006]{gupta2006algorithms}
-Gupta, S. R., Smith, J. S.: 
-Algorithms for single machine total tardiness scheduling with sequence dependent setups. 
-European Journal of Operational Research, 175(2), 722--739 (2006)
-
-\bibitem[2016]{herr2016minimising}
-Herr, O., Goel, A.: 
-Minimising total tardiness for a single machine scheduling problem with family setups and resource constraints. 
-European Journal of Operational Research, 248(1), 123--135 (2016)
-
-\bibitem[2010]{koulamas2010single}
-Koulamas, C.: 
-The single-machine total tardiness scheduling problem: review and extensions. 
-European Journal of Operational Research, 202(1), 1--7 (2010)
-
-\bibitem[1977]{lawler1977pseudopolynomial}
-Lawler, E. L.:
-A “pseudopolynomial” algorithm for sequencing jobs to minimize total tardiness. 
-Annals of discrete Mathematics, 1, 331--342 (1977)
-
-\bibitem[2007]{liao2007ant}
-Liao, C.-J., Juan, H.-C.:
-An ant colony optimization for single-machine tardiness scheduling with sequence-dependent setups.
-Computers \& Operations Research, 34(7), 1899--1909 (2007)
-
-\bibitem[2008]{lin2008hybrid}
-Lin, S., Ying, K.: 
-A hybrid approach for single-machine tardiness problems with sequence-dependent setup times. 
-Journal of the Operational Research Society, 59(8), 1109--1119 (2008)
-
-\bibitem[2000]{potts2000scheduling}
-Potts, C. N., Kovalyov, M. Y.:
-Scheduling with batching: A review.
-European journal of operational research, 120(2), 228--249 (2000)
-
-\bibitem[1992]{potts1992integrating}
-Potts, C. N., Van Wassenhove, L. N.:
-Integrating scheduling with batching and lot-sizing: a review of algorithms and complexity.
-Journal of the Operational Research Society, 43(5), 395–406 (1992)
-
-\bibitem[2007]{ruiz2007simple}
-Ruiz, R., Stützle, T.:
-A simple and effective iterated greedy algorithm for the permutation flowshop scheduling problem. 
-European Journal of Operational Research, 177(3), 2033--2049 (2007)
-
-\bibitem[2007]{schaller2007scheduling}
-Schaller, J.: 
-Scheduling on a single machine with family setups to minimize total tardiness. 
-International Journal of Production Economics, 105(2), 329–344 (2007)
-
-\bibitem[2008]{schaller2008single}
-Schaller, J. E., Gupta, J. N.: 
-Single machine scheduling with family setups to minimize total earliness and tardiness.
-European Journal of Operational Research, 187(3), 1050–1068 (2008)
-
-\bibitem[2003]{sen2003static}
-Sen, T., Sulek, J. M., Dileepan, P.: 
-Static scheduling research to minimize weighted and unweighted tardiness: a state-of-the-art survey.
-International Journal of Production Economics, 83(1), 1--12 (2003)
-
-\bibitem[2012]{sioud2012hybrid}
-Sioud, A., Gravel, M., Gagné, C.: 
-A hybrid genetic algorithm for the single machine scheduling problem with sequence-dependent setup times.
-Computers \& Operations Research, 39(10), 2415--2424 (2012)
-
-\bibitem[2014]{subramanian2014iterated}
-Subramanian, A., Battarra, M., Potts, C. N.:
-An iterated local search heuristic for the single machine total weighted tardiness scheduling problem with sequence-dependent setup times. 
-International Journal of Production Research, 52(9), 2729--2742 (2014)
-
-\bibitem[2013]{tanaka2013exact}
-Tanaka, S., Araki, M.: 
-An exact algorithm for the single-machine total weighted tardiness problem with sequence-dependent setup times. 
-Computers \& Operations Research, 40(1), 344–352 (2013)
-
-\bibitem[2016]{vilar2016ils}
-Vilar Jacob, V., Arroyo, J. E. C.: 
-Ils heuristics for the single-machine scheduling problem with sequence-dependent family setup times to minimize total tardiness. 
-Journal of Applied Mathematics, 2016 (2016)
- 
-\bibitem[2009]{ying2009sequencing}
-Ying, K.-C., Lin, S.-W., Huang, C.-Y.: 
-Sequencing single-machine tardiness problems with sequence dependent setup times using an iterated greedy heuristic. 
-Expert Systems with Applications, 36(3), 7087--7092 (2009)
-
-
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{citations}
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  20 APR 2020 20:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  21 APR 2020 18:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -535,32 +535,60 @@ Package: multirow 2016/11/25 v2.2 Span multiple rows of a table
 \multirow@dima=\skip49
 \bigstrutjot=\dimen136
 )
-(/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithm.sty
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
+(/usr/share/texlive/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+Package: algorithm2e 2017/07/18 v5.2 algorithms environments
+\c@AlgoLine=\count128
 
-(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count128
-\float@exts=\toks26
-\float@box=\box56
-\@float@everytoks=\toks27
-\@floatcapt=\box57
-)
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks28
-\c@algorithm=\count129
+\algocf@hangindent=\skip50
+
+(/usr/share/texlive/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
+\c@checkoddpage=\count129
 )
-(/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithmic.sty
-Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
-\c@ALC@unique=\count130
-\c@ALC@line=\count131
-\c@ALC@rem=\count132
-\c@ALC@depth=\count133
-\ALC@tlm=\skip50
-\algorithmicindent=\skip51
+(/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2013/03/29 ver 4.1
+)
+\skiptotal=\skip51
+\skiplinenumber=\skip52
+\skiprule=\skip53
+\skiphlne=\skip54
+\skiptext=\skip55
+\skiplength=\skip56
+\algomargin=\skip57
+\skipalgocfslide=\skip58
+\algowidth=\dimen137
+\inoutsize=\dimen138
+\inoutindent=\dimen139
+\interspacetitleruled=\dimen140
+\interspacealgoruled=\dimen141
+\interspacetitleboxruled=\dimen142
+\algocf@ruledwidth=\skip59
+\algocf@inoutbox=\box56
+\algocf@inputbox=\box57
+\AlCapSkip=\skip60
+\AlCapHSkip=\skip61
+\algoskipindent=\skip62
+\algocf@nlbox=\box58
+\algocf@hangingbox=\box59
+\algocf@untilbox=\box60
+\algocf@skipuntil=\skip63
+\algocf@capbox=\box61
+\algocf@lcaptionbox=\skip64
+\algoheightruledefault=\skip65
+\algoheightrule=\skip66
+\algotitleheightruledefault=\skip67
+\algotitleheightrule=\skip68
+\c@algocfline=\count130
+\c@algocfproc=\count131
+\c@algocf=\count132
+\algocf@algoframe=\box62
+\algocf@algobox=\box63
 )
 (./LION_12_paper_24.aux
 
@@ -575,31 +603,31 @@ LaTeX Warning: Label `eq:obj' multiply defined.
 )
 \openout1 = `LION_12_paper_24.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count134
-\scratchdimen=\dimen137
-\scratchbox=\box58
-\nofMPsegments=\count135
-\nofMParguments=\count136
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count137
-\MPscratchDim=\dimen138
-\MPnumerator=\count138
-\makeMPintoPDFobject=\count139
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count133
+\scratchdimen=\dimen143
+\scratchbox=\box64
+\nofMPsegments=\count134
+\nofMParguments=\count135
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count136
+\MPscratchDim=\dimen144
+\MPnumerator=\count137
+\makeMPintoPDFobject=\count138
+\everyMPtoPDFconversion=\toks27
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -662,84 +690,121 @@ e
 <SOL_REP.png, id=22, 1747.52875pt x 379.4175pt>
 File: SOL_REP.png Graphic file (type png)
 <use SOL_REP.png>
-Package pdftex.def Info: SOL_REP.png  used on input line 132.
+Package pdftex.def Info: SOL_REP.png  used on input line 137.
 (pdftex.def)             Requested size: 347.12354pt x 75.36688pt.
  [4]
+Overfull \hbox (0.66748pt too wide) in paragraph at lines 164--165
+[]\OT1/cmr/m/n/10 A Frota de Ve^^S^^Pculos ^^Se de-scrita na Tabela 2[], onde t
+r^es ve^^S^^Pculos het-erog^eneos($\OML/cmm/m/it/10 V[]$\OT1/cmr/m/n/10 ,
+ []
+
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 162.
+               Default added (so using `htbp') on input line 182.
 
-[5 <./SOL_REP.png (PNG copy)>] [6]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7]
-[8] [9]
-<ILS.png, id=49, 781.7205pt x 520.344pt>
-File: ILS.png Graphic file (type png)
-<use ILS.png>
-Package pdftex.def Info: ILS.png  used on input line 316.
-(pdftex.def)             Requested size: 347.12354pt x 231.06404pt.
-
-Overfull \hbox (1.8031pt too wide) in paragraph at lines 324--338
+Overfull \hbox (50.48524pt too wide) in paragraph at lines 185--198
  [][] 
  []
 
-[10]
-<ALL_IG.png, id=55, 781.7205pt x 519.74174pt>
-File: ALL_IG.png Graphic file (type png)
-<use ALL_IG.png>
-Package pdftex.def Info: ALL_IG.png  used on input line 347.
-(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
- [11 <./ILS.png>]
-<ILS_IG_SMALL.png, id=60, 781.7205pt x 519.74174pt>
-File: ILS_IG_SMALL.png Graphic file (type png)
-<use ILS_IG_SMALL.png>
-Package pdftex.def Info: ILS_IG_SMALL.png  used on input line 363.
-(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
- [12 <./ALL_IG.png>]
-<ILS_IG_LARGE.png, id=65, 781.7205pt x 520.94624pt>
-File: ILS_IG_LARGE.png Graphic file (type png)
-<use ILS_IG_LARGE.png>
-Package pdftex.def Info: ILS_IG_LARGE.png  used on input line 394.
-(pdftex.def)             Requested size: 347.12354pt x 231.33148pt.
+[5 <./SOL_REP.png (PNG copy)>]
+<VISUAL_REP.png, id=33, 1803.73875pt x 775.89874pt>
+File: VISUAL_REP.png Graphic file (type png)
+<use VISUAL_REP.png>
+Package pdftex.def Info: VISUAL_REP.png  used on input line 205.
+(pdftex.def)             Requested size: 347.12354pt x 149.31657pt.
+ [6 <./VISUAL_REP.png (PNG copy)>] [7]
+Underfull \hbox (badness 10000) in paragraph at lines 269--270
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ []
 
- [13 <./ILS_IG_SMALL.png>] [14 <./ILS_IG_LARGE.png>] [15] [16] (./LION_12_paper
-_24.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 271--272
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 282--283
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 284--285
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 286--287
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
+
+ []
+
+[8] [9] [10]
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 380.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 416.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 416.
+
+<ILS_DIF.png, id=54, 1666.225pt x 382.42876pt>
+File: ILS_DIF.png Graphic file (type png)
+<use ILS_DIF.png>
+Package pdftex.def Info: ILS_DIF.png  used on input line 426.
+(pdftex.def)             Requested size: 119.97827pt x 27.53717pt.
+[11] [12 <./ILS_DIF.png (PNG copy)>]
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 493.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 493.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 494.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 495.
+
+[13] (./LION_12_paper_24.bbl) [14] (./LION_12_paper_24.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3164 strings out of 494789
- 40048 string characters out of 6177365
- 109055 words of memory out of 5000000
- 6446 multiletter control sequences out of 15000+600000
- 8541 words of font info for 31 fonts, out of 8000000 for 9000
+ 3852 strings out of 494789
+ 51969 string characters out of 6177365
+ 136283 words of memory out of 5000000
+ 7128 multiletter control sequences out of 15000+600000
+ 9017 words of font info for 33 fonts, out of 8000000 for 9000
  83 hyphenation exceptions out of 8191
- 41i,9n,25p,987b,492s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,23n,42p,794b,629s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmti10.pfb>
-Output written on LION_12_paper_24.pdf (16 pages, 477280 bytes).
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on LION_12_paper_24.pdf (14 pages, 466266 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 92 compressed objects within 1 object stream
+ 125 PDF objects out of 1000 (max. 8388607)
+ 87 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

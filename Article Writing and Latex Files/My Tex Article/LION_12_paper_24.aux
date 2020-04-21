@@ -1,4 +1,5 @@
 \relax 
+\providecommand \oddpage@label [2]{}
 \@writefile{toc}{\contentsline {title}{Heur\IeC {\'\i }sticas para Agendamento de Produ\IeC {\c c}\IeC {\~a}o de uma M\IeC {\'a}quina Linear e Roteamento de Entrega com Frota Heterog\IeC {\^e}nea de Ve\IeC {\'\i }culos }{1}}
 \@writefile{toc}{\authcount {2}}
 \@writefile{toc}{\contentsline {author}{Gabriel de Paula Felix \and Jos\IeC {\'e} E. C. Arroyo \ }{1}}
@@ -12,92 +13,51 @@
 \newlabel{eq:obj}{{4}{4}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Representa\IeC {\c c}\IeC {\~a}o de Solu\IeC {\c c}\IeC {\~a}o}{4}}
 \newlabel{solutionrepresentation}{{3}{4}}
-\citation{herr2016minimising}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces }}{5}}
 \newlabel{fig:solutionrep}{{1}{5}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Euclidian distance (ED) between two points in the network.}}{5}}
 \newlabel{table:ed}{{1}{5}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Vehicles information: costs and capacities.}}{5}}
 \newlabel{table:vehicle}{{2}{5}}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{du1990minimizing}
-\citation{ruiz2007simple}
-\citation{ying2009sequencing}
-\citation{fanjul2010iterated}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Solution Approach}{6}}
-\newlabel{solutionapproach}{{4}{6}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Iterated Greedy $(\alpha , nIter)$}}{7}}
-\newlabel{alg:ig}{{1}{7}}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Local Search Procedure}{8}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Local Search ($S, nIter$)}}{8}}
-\newlabel{alg:ls}{{2}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Neighborhood Operators}{8}}
-\newlabel{neighoper}{{4.2}{8}}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Implemented Algorithms from Literature}{9}}
-\newlabel{implementedliterature}{{5}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Computational Experiments}{9}}
-\newlabel{experiments}{{6}{9}}
-\newlabel{eq:rpd}{{9}{9}}
-\citation{herr2016minimising}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}ILS Effectiveness}{10}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces RPD of ILS implementations on literature instances per number of jobs.}}{10}}
-\newlabel{table:ils}{{3}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}IG Parameter Setting}{10}}
-\newlabel{ig_param_set}{{6.2}{10}}
-\citation{herr2016minimising}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces }}{11}}
-\newlabel{fig:ils}{{2}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}ILS vs.\ IG}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Jobs' detailed parameters.}}{6}}
+\newlabel{table:jobparam}{{3}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces }}{6}}
+\newlabel{fig:ganttchart1}{{2}{6}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Optimal Solution Settings.}}{7}}
+\newlabel{table:jobtimes}{{4}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Abordagem de Solu\IeC {\c c}\IeC {\~a}o}{7}}
+\newlabel{solutionapproach}{{4}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Solu\IeC {\c c}\IeC {\~o}es Iniciais}{7}}
+\newlabel{initialsolutions}{{4.1}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Operadores de Vizinhan\IeC {\c c}a}{7}}
+\newlabel{nboperators}{{4.2}{7}}
+\newlabel{eq:invalidsol}{{6}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Vizinhan\IeC {\c c}as Intra-Rota}{8}}
+\newlabel{intraroutenb}{{4.3}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Vizinhan\IeC {\c c}as Inter-Rota}{8}}
+\newlabel{interroutenb}{{4.4}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Abordagens de RVND}{9}}
+\newlabel{rvndapproaches}{{4.5}{9}}
+\newlabel{algo:rvnd}{{1}{9}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces RVND-Custom($S$)}}{9}}
+\newlabel{algo:rvnd2}{{2}{10}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces RVND-Custom($S$)}}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Iterated Local Search}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}ILS RVND}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8}ILS-RVND com Aprimoramento de Rota Interna}{11}}
+\newlabel{ilsrvnd2}{{4.8}{11}}
+\newlabel{algo:ilsrvnd}{{3}{12}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces ILS-RVND ($ \alpha , MaxIter,MaxIterILS$)}}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces }}{12}}
-\newlabel{fig:all_ig}{{3}{12}}
-\@writefile{toc}{\contentsline {subsubsection}{Results on small instances:}{12}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Average RPD of the heuristics on small instances per number of jobs.}}{12}}
-\newlabel{table:small_rpds}{{4}{12}}
-\citation{herr2016minimising}
-\citation{herr2016minimising}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces }}{13}}
-\newlabel{fig:ils_ig_small}{{4}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{Results on large instances:}{13}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Average RPD of the heuristics on large instances per number of jobs.}}{13}}
-\newlabel{table:large_rpds}{{5}{13}}
-\bibcite{allahverdi2008survey}{2008}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces }}{14}}
-\newlabel{fig:ils_ig_large}{{5}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{14}}
-\newlabel{conclusions}{{7}{14}}
-\bibcite{bigras2008time}{2008}
-\bibcite{briskorn2010complexity}{2010}
-\bibcite{briskorn2013exact}{2013}
-\bibcite{du1990minimizing}{1990}
-\bibcite{emmons1969one}{1969}
-\bibcite{fanjul2010iterated}{2010}
-\bibcite{gupta2008single}{2008}
-\bibcite{gupta2006algorithms}{2006}
-\bibcite{herr2016minimising}{2016}
-\bibcite{koulamas2010single}{2010}
-\bibcite{lawler1977pseudopolynomial}{1977}
-\bibcite{liao2007ant}{2007}
-\bibcite{lin2008hybrid}{2008}
-\bibcite{potts2000scheduling}{2000}
-\bibcite{potts1992integrating}{1992}
-\bibcite{ruiz2007simple}{2007}
-\bibcite{schaller2007scheduling}{2007}
-\bibcite{schaller2008single}{2008}
-\bibcite{sen2003static}{2003}
-\bibcite{sioud2012hybrid}{2012}
-\bibcite{subramanian2014iterated}{2014}
-\bibcite{tanaka2013exact}{2013}
-\bibcite{vilar2016ils}{2016}
-\bibcite{ying2009sequencing}{2009}
+\newlabel{fig:ilsdif}{{3}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9}Genetic Algorithm}{12}}
+\newlabel{genalgo}{{4.9}{12}}
+\newlabel{algo:genalgo}{{4}{13}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Genetic Algorithm ($PopSize,MaxIter$)}}{13}}
+\bibstyle{plain}
+\bibdata{citations}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Computational Experiments}{14}}
+\newlabel{experiments}{{5}{14}}
+\newlabel{eq:rpd}{{7}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{14}}
+\newlabel{conclusions}{{6}{14}}
