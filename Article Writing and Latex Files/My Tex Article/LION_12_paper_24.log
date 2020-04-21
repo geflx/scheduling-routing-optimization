@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  18 APR 2020 11:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  20 APR 2020 20:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -562,7 +562,17 @@ Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 \ALC@tlm=\skip50
 \algorithmicindent=\skip51
 )
-(./LION_12_paper_24.aux)
+(./LION_12_paper_24.aux
+
+LaTeX Warning: Label `eq:obj' multiply defined.
+
+
+LaTeX Warning: Label `eq:obj' multiply defined.
+
+
+LaTeX Warning: Label `eq:obj' multiply defined.
+
+)
 \openout1 = `LION_12_paper_24.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
@@ -577,8 +587,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
-
-(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+ (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count134
 \scratchdimen=\dimen137
@@ -649,74 +658,88 @@ e
 ))
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (0.25201pt too wide) in paragraph at lines 50--51
-\OT1/cmr/m/n/10 single-machine schedul-ing prob-lems with sequence-dependent se
-tup times. Gupta
- []
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+<SOL_REP.png, id=22, 1747.52875pt x 379.4175pt>
+File: SOL_REP.png Graphic file (type png)
+<use SOL_REP.png>
+Package pdftex.def Info: SOL_REP.png  used on input line 132.
+(pdftex.def)             Requested size: 347.12354pt x 75.36688pt.
+ [4]
 
-[2] [3] [4] [5] [6] [7]
-<ILS.png, id=37, 781.7205pt x 520.344pt>
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `htbp') on input line 162.
+
+[5 <./SOL_REP.png (PNG copy)>] [6]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
+[8] [9]
+<ILS.png, id=49, 781.7205pt x 520.344pt>
 File: ILS.png Graphic file (type png)
 <use ILS.png>
-Package pdftex.def Info: ILS.png  used on input line 200.
+Package pdftex.def Info: ILS.png  used on input line 316.
 (pdftex.def)             Requested size: 347.12354pt x 231.06404pt.
 
-Overfull \hbox (1.8031pt too wide) in paragraph at lines 208--222
+Overfull \hbox (1.8031pt too wide) in paragraph at lines 324--338
  [][] 
  []
 
+[10]
+<ALL_IG.png, id=55, 781.7205pt x 519.74174pt>
+File: ALL_IG.png Graphic file (type png)
+<use ALL_IG.png>
+Package pdftex.def Info: ALL_IG.png  used on input line 347.
+(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
+ [11 <./ILS.png>]
+<ILS_IG_SMALL.png, id=60, 781.7205pt x 519.74174pt>
+File: ILS_IG_SMALL.png Graphic file (type png)
+<use ILS_IG_SMALL.png>
+Package pdftex.def Info: ILS_IG_SMALL.png  used on input line 363.
+(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
+ [12 <./ALL_IG.png>]
+<ILS_IG_LARGE.png, id=65, 781.7205pt x 520.94624pt>
+File: ILS_IG_LARGE.png Graphic file (type png)
+<use ILS_IG_LARGE.png>
+Package pdftex.def Info: ILS_IG_LARGE.png  used on input line 394.
+(pdftex.def)             Requested size: 347.12354pt x 231.33148pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [8 <./ILS.png>]
-<ALL_IG.png, id=44, 781.7205pt x 519.74174pt>
-File: ALL_IG.png Graphic file (type png)
-<use ALL_IG.png>
-Package pdftex.def Info: ALL_IG.png  used on input line 231.
-(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
- [9]
-<ILS_IG_SMALL.png, id=48, 781.7205pt x 519.74174pt>
-File: ILS_IG_SMALL.png Graphic file (type png)
-<use ILS_IG_SMALL.png>
-Package pdftex.def Info: ILS_IG_SMALL.png  used on input line 247.
-(pdftex.def)             Requested size: 347.12354pt x 230.79662pt.
- [10 <./ALL_IG.png>]
-<ILS_IG_LARGE.png, id=53, 781.7205pt x 520.94624pt>
-File: ILS_IG_LARGE.png Graphic file (type png)
-<use ILS_IG_LARGE.png>
-Package pdftex.def Info: ILS_IG_LARGE.png  used on input line 278.
-(pdftex.def)             Requested size: 347.12354pt x 231.33148pt.
- [11 <./ILS_IG_SMALL.png>] [12 <./ILS_IG_LARGE.png>] [13] [14] (./LION_12_paper
+ [13 <./ILS_IG_SMALL.png>] [14 <./ILS_IG_LARGE.png>] [15] [16] (./LION_12_paper
 _24.aux)
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3149 strings out of 494789
- 39864 string characters out of 6177365
- 110975 words of memory out of 5000000
- 6432 multiletter control sequences out of 15000+600000
+ 3164 strings out of 494789
+ 40048 string characters out of 6177365
+ 109055 words of memory out of 5000000
+ 6446 multiletter control sequences out of 15000+600000
  8541 words of font info for 31 fonts, out of 8000000 for 9000
  83 hyphenation exceptions out of 8191
- 41i,8n,25p,1360b,492s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,9n,25p,987b,492s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-sy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on LION_12_paper_24.pdf (14 pages, 368998 bytes).
+t/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmti10.pfb>
+Output written on LION_12_paper_24.pdf (16 pages, 477280 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 138 PDF objects out of 1000 (max. 8388607)
+ 92 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

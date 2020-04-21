@@ -18,46 +18,162 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 
 \maketitle
 \begin{abstract}
-This paper presents a  simple and effective iterated greedy heuristic to minimize the total tardiness in a single-machine scheduling problem. In this problem the jobs are classified in families and setup times are required between the processing of two jobs of different families.  Each job requires a certain amount of resource that is supplied through upstream processes. The total resource consumed must not exceed the resource supply up. Therefore, jobs may have to wait and the machine has to be idle due to an insufficient availability of the resource.
+Este artigo aborda um problema de programação multiobjetivo do sequenciamento de produção de uma máquina linear integrado ao roteamento de veículos para entrega. Nesta abordagem as tarefas possuem penalidades de atraso, datas de vencimento e são caracterizadas por diferentes volumes, com uma frota heterogênea e limitada de veículos (HFVRP). Os critérios a serem minimizados são referentes ao atraso total ponderado e também aos custos de transporte e entrega, incluindo rotas escolhidas e veículos utilizados. 
 
-The iterated greedy heuristic is tested over an extensive computational experience on benchmark
-of instances from the literature and randomly generated in this work. Results show that the developed heuristic significantly outperforms a state-of-the-art heuristic in terms of solution quality. 
+O problema é classificado como NP-Difícil no senso comum, portanto heurísticas eficientes são necessárias para obter soluções próximas da ótima em tempo computacional razoável.
+Neste trabalho são propostas duas heurísticas baseadas em Iterated Local Search e um Algoritmo Genético (AG). Instâncias para o problema são geradas com base em trabalhos anteriores e os resultados obtidos são comparados com o solver de otimização CPLEX. Os resultados mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software.
+
 
 \keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
 \end{abstract}
 
-\section{Introduction}
-This paper considers a single-machine scheduling problem with the goal of minimizing the total tardiness of the jobs. For each job is given a processing time and a due date, and it belongs to a given family. The machine processes only one job at a time without preemption. A setup time is required between the processing of two jobs of different families and during this time the machine cannot process any other job. 
-A resource constraint is also considered in the problem. Each job requires a certain amount of a common resource provided by the machine, which is supplied by upstream processes. At any time, the cumulative resource consumption must not overcome the cumulative resource supply. Thus, jobs may have to wait and the machine has to be idle due to an insufficient availability of the resource.
+\section{Introdução}\label{introduction}
 
-This studied problem has practical applications in many industries. For example, it
-arises in the continuous casting stage of steel production (Herr and Goel, \cite{herr2016minimising}). Ladles with liquid steel of certain grades are fed to a continuous casting machine, and each ladle contains allocated orders to it that determine a due date. Whenever two ladles of similar steel grades (within the same setup family) are consecutively processed no setup work is needed. Still, if a change of ladles of different steel grades occurs, a setup process is required. The liquid steel is supplied by the blast furnace at a constant rate. At any time of the casting is not allowed to consume more liquid steel than the supplied by the blast furnace.
+O processo de agendamento de produção e roteamento de veículos é uma tarefa que está presente em manufaturas, e possui grande importância econômica por conta dos prazos impostos, custos de entrega e manuseio do tempo gasto. Separadamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990).  Estudos são realizados na área de pesquisa operacional para integrar os dois problemas. (Mohammad Tamannaei, Morteza Rasti-Barzoki), estudaram o problema minimizando o atraso total e os custos de transporte utilizando tarefas com tamanhos iguais e custos iguais para todos veículos. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
 
-Similar situations also occur in many multi-stage production processes where upstream work systems supply a common resource that is consumed in downstream tasks executed on a machine, as in assembly lines where different products are assembled by their component parts provided by an upstream stage.
+Este trabalho ao buscar uma representação realista da integração entre o processo de agendamento de produção de uma máquina linear e roteamento de veículos, considera tarefas de diferentes volumes e uma frota heterogênea e limitada de veículos, i.e., possuem capacidades e custos variados. (Christian Ullrich, 2013) desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
 
-Since this problem has not been thoroughly exploited, our contribution with this work is providing a distinct and effective heuristic method for solving it.
+As aplicações para este problema possuem grande abrangência de setores industriais (como o setor quimico, metalúrgico e têxtil), e a crescente pressão nos mercados globais força as empresas à manusearem seus recursos de forma adequada para garantir um bom funcionamento. Há pouco tempo, Hassanzadeh and RastiBarzoki (2017) estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
 
-The remainder of this paper is organized as follows. Section \ref{literaturereview} gives a literature review of related works. Section \ref{problemdescription} describes the problem under study. Our solution approach based on an iterated greedy (IG) algorithm is described in Section \ref{solutionapproach}. Section \ref{implementedliterature} presents the implementation of a heuristic algorithm proposed in the literature for the same problem. In Section \ref{experiments}, the computational experiments and results are showed. Finally, the conclusions
-of this paper are presented in Section  \ref{conclusions}.
+Nas últimas décadas, o problema do estudo de roteamento de veículos tornou-se uma questão de foco na literatura acadêmica (Braekers, Ramaekers e Van Nieuwenhuyse, 2016). Na abordagem deste artigo, uma vez que os veículos por possuem diferentes custos e capacidades, apresentam uma concepção desafiadora de utilização dos recursos, tornando cruciais as decisões de quais veículos utilizar. 
+M. Gendreau, G. Laporte and C. Musaragayi (1999), propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
+Condotta, Knust, Meier, and Shakhlevich (2013) estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
+
+Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamento em uma máquina simples e roteamento com veículos de capacidades e custos variáveis,  tarefas de diferentes tamanhos, e  com o objetivo de minimizar o atraso ponderado total e custos de entrega, ainda não foi abordado na literatura. São componentes deste trabalho:
+
+\begin{itemize}
+  \item Duas abordagens heurísticas de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.).
+  \item Um modelo de programação linear para solução dos problemas integrados.
+
+\end{itemize}
 
 
-\section{Literature Review}\label{literaturereview}
+\section{Descrição do Problema}\label{problemdescription}
 
-The problem addressed is this paper comprises three main streams of study in literature. First, single-machine scheduling problems with the goal of minimizing the total tardiness. Second, single-machine scheduling with setup regards. Third, scheduling problems with resource constraints.
+Nesta seção é apresentado um modelo matemático de programação linear para solução do problema. As informações sobre parâmetros, índices, variáveis de decisão que serão levados em consideração na resolução deste, são descritos abaixo:
 
-Without setup considerations, the single-machine scheduling with total tardiness minimization  is proved to be NP-hard (Du and Leung, \cite{du1990minimizing}). Scheduling problems with  tardiness minimization are studied by Koulamas (\cite{koulamas2010single}) and Sen et al. (\cite{sen2003static}). For single-machine problems with total tardiness minimization, Emmons (\cite{emmons1969one}) described conditions that when fulfilled would result in an optimal schedule.  Lawler (\cite{lawler1977pseudopolynomial}) presented a decomposition approach that separates the problem into two mutually exclusive sub-problems using the longest job as a separator.
+\begin{tabbing}
+\phantom{$D_{n100}\ $}\= \kill
+\textbf{Indices:} \\
+\\
+$i,j$\>  Index of jobs.\\
+$k$\>  Index of vehicles.\\
+$K$\>  Number of vehicles.\\
+$N$\>  Number of jobs.\\
+\\
+\textbf{Instance Parameters:}\\
+\\
+$Q_{k}$\>  Capacity of each vehicle $k$.\\
+$F_{k}$\>  Cost of each vehicle $k$.\\
+$P_{i}$\>  Processing time associated to job $i$.\\
+$t_{ij}$\>  Travel time between customer of job $i$ and customer of job $j$.\\
+$w_{i}$\> Penalty applied to delivery tardiness of job i.\\
+$s_{i}$\>  Size of job $i$.\\
+$d_{i}$\>  Due date associated to job $i$.\\
+\\
+\textbf{Decision Variables:}\\
+\\
+$C_{i}$\>  Completion time of job $i$\\
+$X^{k}_{ij}$\>  Binary decision variable which indicates with value '1' that a vehicle {k}\\\> 
+                went from customer of job $i$ to customer of job $j$, and '0' otherwise.\\
+$Y_{k}$\>  Binary variable which represents with value '1' if a vehicle $k$ is used,\\\>
+            and '0' otherwise.\\
+$S_{k}$\>  Time of a vehicle $k$ starts to be used.\\
+$A_{ij}$\>  Binary variable which represents if a job $i$ is processed before job $j$,\\
+\> value '1' if it's true, and '0' otherwise.\\
+$D_{i}$\>  Delivery time of job $i$.\\
+$T_{i}$\>  Tardiness of job $i$.\\
+\end{tabbing}
 
-Surveys of Allahverdi et al. (\cite{allahverdi2008survey}) and Potts and Kovalyov (\cite{potts2000scheduling}) present the main studies on scheduling problems with setup times considerations. Many meta-heuristics approaches were applied for minimizing  the total tardiness on single-machine scheduling problems with sequence-dependent setup times. Gupta and Smith (\cite{gupta2006algorithms}) presented a greedy randomized adaptive search procedure (GRASP) heuristic as well as a space-based local search procedure; Liao and Juan (\cite{liao2007ant}) introduced an ant colony optimization (ACO) based algorithm; Lin and Ying (\cite{lin2008hybrid}) proposed a simulated annealing and a tabu search algorithm; Ying et al. (\cite{ying2009sequencing}) developed a local search based iterated greedy heuristic; and Sioud et al. (\cite{sioud2012hybrid}) used a hybrid genetic algorithm. An exact branch and bound algorithm was presented by Bigras et al. (\cite{bigras2008time}). For a variant of the problem where the goal is to minimize the weighted tardiness of the jobs, an exact method based on successive sublimation dynamic programming and an iterated local search (ILS) heuristic were presented by Tanaka and Araki (\cite{tanaka2013exact}) and Subramanian et al. (\cite{subramanian2014iterated}), respectively.
+Seja uma máquina linear que lidará com $N$ tarefas, isto é, cada tarefa $i$ de tamanho $s_i$ deverá ser processada em sequência a partir do início do processo ($t=0$). Um cliente ordena somente uma tarefa. Caso uma tarefa $i$ seja processada antes de uma tarefa $j$ na máquina, a variável $A_ij$ possuirá valor ‘1’, ou ‘0’ caso contrário.  O tempo de completude de processamento para tarefa $i$ é representado por $C_i$. 
+Para a entrega das tarefas, são disponibilizados $K$ veículos, realizando circuitos partindo da origem ‘O’,  sendo a distância entre dois clientes $i$ e $j$ representada por $t_ij$. Na rota percorrida para entrega, caso uma tarefa $i$ seja entregue imediatamente anterior à uma tarefa $j$ e seja entregue por um veículo $k$, esta será representada pela variável $X^{k}_{ij}$ com valor ‘1’, ou ‘0’ caso contrário. A distância de trajeto entre dois clientes $i$ e $j$ é representada por $t_{ij}$. Este conjunto de variáveis combinadas descreve a primeira parte da função objetivo, que minimiza o a distância de entrega percorrida pelos veículos:
+\begin{equation}
+    \label{eq:obj}
+    \min \sum_{i,j=0}^N\sum_{k=0}^K X^{k}_{ij}*t_{ij}  
+\end{equation}
 
- Some authors addressed scheduling problems with family setup-times and total tardiness objective.
-  Gupta and Chantaravarapan (\cite{gupta2008single}) studied the problem under consideration of the group technology assumption (GTA)  (see e.g. Potts and Van Wassenhove, \cite{potts1992integrating}). They presented a mixed-integer programming (MIP) formulation that solves small problem instances as well as a heuristic algorithm for larger instances. Based on the properties described by Emmons (\cite{emmons1969one}), Schaller (\cite{schaller2007scheduling}) developed two branch and bound procedures for the family scheduling problem with and without GTA. Moreover, Schaller and Gupta (\cite{schaller2008single}) proposed exact and heuristic methods, with and without  GTA, for a single-machine scheduling problem with family setups. Furthermore, Jacob and Arroyo (\cite{vilar2016ils}) presented iterated local search heuristics for a single-machine scheduling problem with sequence-dependent family setup times to minimize total tardiness.
+Cada veículo $k$ possui capacidade $Q_k$ e custo de utilização $F_k$, além de possuir tempo de ínicio $S_k$. Caso um veículo $k$ seja utilizado, será representado em $Y_k$ com o valor ‘1’, ou ‘0’ caso contrário. Dessa forma, a segunda parte da função objetivo é representada pela minimização dos custos dos veículos:
+\begin{equation}
+    \label{eq:obj}
+    \min \sum_{k=0}^K F_{k}*Y_{k}
+\end{equation}
+Cada tarefa $i$  possui tempo de processamento $P_i$ e data de vencimento $d_i$ vinculada, que pode ser penalizada por uma constante $w_i$ multiplicada pelo seu atraso $T_i$. O tempo de chegada no destinatário é representado por $D_i$.
+A variável de atraso $T$ é dada por $D_i-d_i$, i.e., a diferença entre o tempo de chegada e a data de vencimento. Dessa forma, $T_i$ = max(0, $D_i-d_i$) e a terceira parte da função objetivo é a minimização do atraso total ponderado das entregas:
+  
+\begin{equation}
+    \label{eq:obj}
+    \min \sum_{i=1}^N w_{i}*T_{i}
+\end{equation}
 
-Briskorn et al. (\cite{briskorn2010complexity}) studied a single-machine scheduling problem where the unavailability of the required resource prevents a job of being processed. They considered the minimizing of the maximum lateness and  the number of tardy jobs. Briskorn et al. (\cite{briskorn2013exact}) studied the single-machine problem with inventory constraints to minimize the total weighted completion times. Based on properties derived for an optimal solution, they presented a branch and bound and a dynamic programming method for solving the problem. They concluded that even for small problem instances with 20 jobs, exact approaches are not efficient for solving the problem, then heuristics methods are required.
+Os problemas de minimização descritos acima tratam partes específicas do processo de produção ou entrega de uma manufatura. Finalmente, ao somar os três problemas de minimização, é gerado o problema tratado neste artigo, que representa a minimização dos custos de entrega e seu atraso total ponderado:
 
-The formulation of the problem studied in this paper is given by Herr and Goel (\cite{herr2016minimising}). They presented a MIP model as well as an ILS heuristic for solving the problem. Furthermore, they considered two variants of the problem: first, setup times are only considered between jobs of different families; second,  setup times are also considered between jobs of the same family.
- In this paper we address  the first variant of the problem.
+\begin{equation}
+    \label{eq:obj}
+    \min \sum_{i,j=0}^N\sum_{k=0}^K X^{k}_{ij}*t_{ij}  
+    + \sum_{k=0}^K F_{k}*Y_{k} + \sum_{i=1}^N w_{i}*T_{i}
+\end{equation}
 
-\section{Problem Description}\label{problemdescription}
+Quando não tratado o Problema de Minimização de Atraso, resta o Problema de Roteamento com Frota Heterogênea de Veículos (HFVRP), uma versão de VRP, que separadamente é provado como strong NP-Hard (Chen,2010).  Por consequência, o problema descrito é também de complexidade strong NP-Hard.
+
+\section{Representação de Solução}\label{solutionrepresentation}
+
+
+A representação de uma solução é disposta linearmente, de modo que tarefas e veículos sigam acompanhados de seus respectivos códigos de identificação. O conjunto de tarefas $N$ do problema será dividido em $K$ subconjuntos, sendo cada subconjunto destinado à um veículo específico. O tempo de ínicio de funcionamento de um veículo, $S$, é dado pela soma dos tempos de processamento $P$ destas tarefas mais o somatório acumulado das tarefas processadas anteriormente (tendo início em $t=0$).
+Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido por um veículo. Seja $R$ uma solução viável, $k$ $\in$ $K$ um veículo e $S_k$ sua rota completa, sua representação é dada por:
+
+\begin{equation}
+S_{i} = O \rightarrow  C_{j_{1}}\rightarrow  C_{{j_{2}}}\rightarrow ... \rightarrow  C_{j_{|N_{i}|}}\rightarrow  O
+\end{equation}
+
+Neste contexto, $J$ $\in$ $N$ é o conjunto de tarefas carregadas pelo veículo $k$ e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. Em Figura \ref{fig:solutionrep} é apresentada a representação visual de uma solução.
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{SOL_REP} 
+    \caption[]{Representação de solução com tarefas organizadas em lotes.}
+  	\label{fig:solutionrep}
+\end{figure}
+
+Um subconjunto de tarefas pode não possuir tarefas e ser designado à um veículo $w$, indicando que este não está em uso e portanto $|N_{w}|=0$.
+Um caso hipotético de rede de transporte é descrito abaixo, no qual a origem e seis clientes ($C_1$ à $C_6$) são dispostos cartesianamente, sendo a distância entre eles representada pelas distâncias euclidianas dos pontos (Tabela \ref{table:ed}). 
+
+
+\begin{table}
+\centering
+\caption{Euclidian distance (ED) between two points in the network.}
+\begin{tabular}{l|lllllll} 
+\hline\noalign{\smallskip}
+\textbf{ED(x,y)} & Origin & $C_{1}$  & $C_{2}$  & $C_{3}$  & $C_{4}$  & $C_{5}$  & $C_{6}$   \\ 
+\hline
+Origin                  & 0      & 27 & 260 & 253 & 254 & 112 & 90   \\
+$C_{1}$                      & 27    & 0   & 265 & 270 & 237 & 114  & 105  \\
+$C_{2}$                      & 260   & 265 & 0   & 474 & 212 & 371 & 175  \\
+$C_{3}$                     & 253    & 270 & 474 & 0   & 507 & 178 & 307  \\
+$C_{4}$                      & 254    & 237 & 212 & 507 & 0   & 346 & 231  \\
+$C_{5}$                      & 112    & 114  & 371 & 178 & 346 & 0   & 198  \\
+$C_{6}$                      & 90    & 105 & 175 & 307 & 231 & 198 & 0    \\
+\hline\noalign{\smallskip}
+\end{tabular}
+\label{table:ed}
+\end{table}
+
+A descrição da Frota de Veículos é descrita na Tabela \ref{table:vehicle}, onde três veículos heterogêneos($V_1$, $V_2$ e $V_3$) são disponibilizados para transportar as tarefas. Estas informações são fundamentais para a integração do problema de HFVRP durante as entregas, uma vez que os veículos possuem capacidades e custos distintos.
+
+\begin{table}[]
+\centering
+\caption{Vehicles information: costs and capacities.}
+\begin{tabular}{@{}lll@{}}
+\hline\noalign{\smallskip}
+Vehicle & Capacity (Q) & Price (F) \\ \hline
+$V_{1}$      & 204          & 1224       \\
+$V_{2}$      & 186          & 1116       \\
+$V_{3}$      & 160         & 960       \\ 
+\hline\noalign{\smallskip}
+\end{tabular}
+\label{table:vehicle}
+\end{table}
+
+
 A complete MIP model  for  problem under study is presented by Herr and Goel (\cite{herr2016minimising}). The problem can be described as follows. Let  $J$ the set of $n$ jobs to be processed on a single machine. Each job $j$ has a processing time $p_j$, a due date $d_j$ and a quantity $q_j$ representing the amount of resource required from the machine when the job $j$  is processed. It is assumed that the resource is consumed at a constant rate of $q_j/p_j$. Also, each job belongs to a setup family $f_j$. For any pair of jobs $i, j \in J$, if $i$ is scheduled before $j$ and $f_i \neq f_j$, a setup time of duration $s_{ij}>0$ is required between processing the jobs. Otherwise, $s_{ij}=0$. 
 
 The single machine can process only one job at a time without preemption. Initially the machine has a resource amount $r^*$ and it is supplied at a constant rate $r$ per unit of time. In order to prevent that the cumulative demand of a job surpasses the cumulative supply of the machine, the machine has to remain idle and the starting of the job has to be delayed. This idle time must be sufficient so the delayed job can be processed without resource constraints. Whether in case of setup time or idle time, the machine cannot process any other job. The goal of the problem is to find a schedule (processing sequence of the jobs) that minimizes the total tardiness.
@@ -310,6 +426,9 @@ The authors thanks the financial support of FAPEMIG, CAPES and CNPq, Brazilian r
 
 
 \begin{thebibliography}{}
+
+
+
 
 \bibitem[2008]{allahverdi2008survey}
 Allahverdi, A., Ng, C., Cheng, T. E., Kovalyov, M. Y.: 
