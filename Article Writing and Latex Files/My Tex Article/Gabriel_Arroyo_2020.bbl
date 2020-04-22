@@ -1,0 +1,64 @@
+\begin{thebibliography}{10}
+
+\bibitem{du1990}
+J.~Du and J.~Y.-T. Leung, ``Minimizing total tardiness on one machine is
+  np-hard,'' {\em Mathematics of operations research}, vol.~15, no.~3,
+  pp.~483--495, 1990.
+
+\bibitem{tamannaei2019}
+M.~Tamannaei and M.~Rasti-Barzoki, ``Mathematical programming and solution
+  approaches for minimizing tardiness and transportation costs in the supply
+  chain scheduling problem,'' {\em Computers \& Industrial Engineering},
+  vol.~127, pp.~643--656, 2019.
+
+\bibitem{ullrich2013}
+C.~A. Ullrich, ``Integrated machine scheduling and vehicle routing with time
+  windows,'' {\em European Journal of Operational Research}, vol.~227, no.~1,
+  pp.~152--165, 2013.
+
+\bibitem{hassanzadeh2017}
+A.~Hassanzadeh and M.~Rasti-Barzoki, ``Minimizing total resource consumption
+  and total tardiness penalty in a resource allocation supply chain scheduling
+  and vehicle routing problem,'' {\em Applied Soft Computing}, vol.~58,
+  pp.~307--323, 2017.
+
+\bibitem{braekers2016vehicle}
+K.~Braekers, K.~Ramaekers, and I.~Van~Nieuwenhuyse, ``The vehicle routing
+  problem: State of the art classification and review,'' {\em Computers \&
+  Industrial Engineering}, vol.~99, pp.~300--313, 2016.
+
+\bibitem{gendreau1999tabu}
+M.~Gendreau, G.~Laporte, C.~Musaraganyi, and {\'E}.~D. Taillard, ``A tabu
+  search heuristic for the heterogeneous fleet vehicle routing problem,'' {\em
+  Computers \& Operations Research}, vol.~26, no.~12, pp.~1153--1173, 1999.
+
+\bibitem{condotta2013tabu}
+A.~Condotta, S.~Knust, D.~Meier, and N.~V. Shakhlevich, ``Tabu search and lower
+  bounds for a combined production--transportation problem,'' {\em Computers \&
+  operations research}, vol.~40, no.~3, pp.~886--900, 2013.
+
+\bibitem{chen2010integrated}
+Z.-L. Chen, ``Integrated production and outbound distribution scheduling:
+  review and extensions,'' {\em Operations research}, vol.~58, no.~1,
+  pp.~130--148, 2010.
+
+\bibitem{mladenovic1997variable}
+N.~Mladenovi{\'c} and P.~Hansen, ``Variable neighborhood search,'' {\em
+  Computers \& operations research}, vol.~24, no.~11, pp.~1097--1100, 1997.
+
+\bibitem{talbi2009metaheuristics}
+E.-G. Talbi, {\em Metaheuristics: from design to implementation}, vol.~74.
+\newblock John Wiley \& Sons, 2009.
+
+\bibitem{molina2016grasp}
+L.~Molina-S{\'a}nchez and E.~Gonz{\'a}lez-Neira, ``Grasp to minimize total
+  weighted tardiness in a permutation flow shop environment,'' {\em
+  International Journal of Industrial Engineering Computations}, vol.~7, no.~1,
+  pp.~161--176, 2016.
+
+\bibitem{penna2013iterated}
+P.~H.~V. Penna, A.~Subramanian, and L.~S. Ochi, ``An iterated local search
+  heuristic for the heterogeneous fleet vehicle routing problem,'' {\em Journal
+  of Heuristics}, vol.~19, no.~2, pp.~201--232, 2013.
+
+\end{thebibliography}

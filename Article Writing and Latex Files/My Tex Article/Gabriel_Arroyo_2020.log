@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  21 APR 2020 18:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  22 APR 2020 18:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**LION_12_paper_24.tex
-(./LION_12_paper_24.tex
+**Gabriel_Arroyo_2020.tex
+(./Gabriel_Arroyo_2020.tex
 LaTeX2e <2017-04-15>
 Babel <3.18> and hyphenation patterns for 10 language(s) loaded.
 (./llncs.cls
@@ -124,6 +124,11 @@ LaTeX Font Info:    Redeclaring math symbol \Omega on input line 370.
 \c@solution=\count113
 \c@remark=\count114
 \headlineindent=\dimen124
+)
+(/usr/share/texlive/texmf-dist/tex/latex/cite/cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2015/03/17 v1.2c Input encoding file
@@ -590,32 +595,23 @@ Package: relsize 2013/03/29 ver 4.1
 \algocf@algoframe=\box62
 \algocf@algobox=\box63
 )
-(./LION_12_paper_24.aux
+(./Gabriel_Arroyo_2020.aux)
+\openout1 = `Gabriel_Arroyo_2020.aux'.
 
-LaTeX Warning: Label `eq:obj' multiply defined.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
 
-
-LaTeX Warning: Label `eq:obj' multiply defined.
-
-
-LaTeX Warning: Label `eq:obj' multiply defined.
-
-)
-\openout1 = `LION_12_paper_24.aux'.
-
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
- (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count133
 \scratchdimen=\dimen143
@@ -687,45 +683,52 @@ e
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-<SOL_REP.png, id=22, 1747.52875pt x 379.4175pt>
-File: SOL_REP.png Graphic file (type png)
-<use SOL_REP.png>
-Package pdftex.def Info: SOL_REP.png  used on input line 137.
+<Images/SOL_REP.png, id=22, 1747.52875pt x 379.4175pt>
+File: Images/SOL_REP.png Graphic file (type png)
+<use Images/SOL_REP.png>
+Package pdftex.def Info: Images/SOL_REP.png  used on input line 139.
 (pdftex.def)             Requested size: 347.12354pt x 75.36688pt.
  [4]
-Overfull \hbox (0.66748pt too wide) in paragraph at lines 164--165
+Overfull \hbox (0.66748pt too wide) in paragraph at lines 166--167
 []\OT1/cmr/m/n/10 A Frota de Ve^^S^^Pculos ^^Se de-scrita na Tabela 2[], onde t
 r^es ve^^S^^Pculos het-erog^eneos($\OML/cmm/m/it/10 V[]$\OT1/cmr/m/n/10 ,
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 182.
+               Default added (so using `htbp') on input line 184.
 
 
-Overfull \hbox (50.48524pt too wide) in paragraph at lines 185--198
+Overfull \hbox (50.48524pt too wide) in paragraph at lines 187--200
  [][] 
  []
 
-[5 <./SOL_REP.png (PNG copy)>]
-<VISUAL_REP.png, id=33, 1803.73875pt x 775.89874pt>
-File: VISUAL_REP.png Graphic file (type png)
-<use VISUAL_REP.png>
-Package pdftex.def Info: VISUAL_REP.png  used on input line 205.
+[5 <./Images/SOL_REP.png (PNG copy)>]
+<Images/VISUAL_REP.png, id=33, 1803.73875pt x 775.89874pt>
+File: Images/VISUAL_REP.png Graphic file (type png)
+<use Images/VISUAL_REP.png>
+Package pdftex.def Info: Images/VISUAL_REP.png  used on input line 207.
 (pdftex.def)             Requested size: 347.12354pt x 149.31657pt.
- [6 <./VISUAL_REP.png (PNG copy)>] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
-
+ [6 <./Images/VISUAL_REP.png (PNG copy)>]
+Overfull \hbox (1.54263pt too wide) in paragraph at lines 258--259
+\OT1/cmr/m/n/10 O pro-cesso de busca lo-cal visa ap-ri-morar uma solu^^Xc~ao at
+-ual ao con-sid-erar solu^^Xc~oes
  []
 
-
+[7]
 Underfull \hbox (badness 10000) in paragraph at lines 271--272
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 282--283
+Underfull \hbox (badness 10000) in paragraph at lines 273--274
 
+ []
+
+
+Overfull \hbox (0.57149pt too wide) in paragraph at lines 280--281
+\OT1/cmr/m/n/10 Du-rante o pro-cesso, as opera^^Xc~oes apli-cadas po-dem gerar 
+solu^^Xc~oes invi^^Saveis, por^^Sem
  []
 
 
@@ -743,68 +746,76 @@ Underfull \hbox (badness 10000) in paragraph at lines 288--289
 
  []
 
-[8] [9] [10]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 380.
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
+
+ []
+
+[8] [9]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 378.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 416.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 414.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 416.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 414.
 
-<ILS_DIF.png, id=54, 1666.225pt x 382.42876pt>
-File: ILS_DIF.png Graphic file (type png)
-<use ILS_DIF.png>
-Package pdftex.def Info: ILS_DIF.png  used on input line 426.
+[11]
+<Images/ILS_DIF.png, id=57, 1666.225pt x 382.42876pt>
+File: Images/ILS_DIF.png Graphic file (type png)
+<use Images/ILS_DIF.png>
+Package pdftex.def Info: Images/ILS_DIF.png  used on input line 424.
 (pdftex.def)             Requested size: 119.97827pt x 27.53717pt.
-[11] [12 <./ILS_DIF.png (PNG copy)>]
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 493.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 493.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 491.
 
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 494.
-
+[12 <./Images/ILS_DIF.png (PNG copy)>] [13]
 
 LaTeX Warning: Command \textquoteright invalid in math mode on input line 495.
 
-[13] (./LION_12_paper_24.bbl) [14] (./LION_12_paper_24.aux)
 
-LaTeX Warning: There were multiply-defined labels.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 498.
 
- ) 
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 499.
+
+(./Gabriel_Arroyo_2020.bbl [14]) [15] (./Gabriel_Arroyo_2020.aux) ) 
 Here is how much of TeX's memory you used:
- 3852 strings out of 494789
- 51969 string characters out of 6177365
- 136283 words of memory out of 5000000
- 7128 multiletter control sequences out of 15000+600000
+ 3958 strings out of 494789
+ 53514 string characters out of 6177365
+ 136146 words of memory out of 5000000
+ 7230 multiletter control sequences out of 15000+600000
  9017 words of font info for 33 fonts, out of 8000000 for 9000
  83 hyphenation exceptions out of 8191
- 41i,23n,42p,794b,629s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on LION_12_paper_24.pdf (14 pages, 466266 bytes).
+ 41i,23n,42p,821b,627s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmtt9.pfb>
+Output written on Gabriel_Arroyo_2020.pdf (15 pages, 485213 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 87 compressed objects within 1 object stream
+ 132 PDF objects out of 1000 (max. 8388607)
+ 92 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
