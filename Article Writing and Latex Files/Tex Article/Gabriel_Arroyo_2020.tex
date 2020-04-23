@@ -132,7 +132,7 @@ Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido
 R_{k} = O \rightarrow  J_1\rightarrow  J_2\rightarrow ... \rightarrow  J_{|N_{k}|}\rightarrow  O
 \end{equation}
 
-Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N_k|$ $\in$ $N$  e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. Em Figura \ref{fig:solutionrep} é apresentada a representação visual de uma solução.
+Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N_k|$ $\in$ $N$  e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. A Figura \ref{fig:solutionrep} representa visualmente uma solução.
 
 \begin{figure}[ht]
 	\centering
@@ -142,6 +142,127 @@ Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N
 \end{figure}
 
 Um subconjunto de tarefas pode não possuir tarefas e ser designado à um veículo $w$, indicando que este não está em uso e portanto $|N_{w}|=0$.
+
+\section{Mathematical Model}\label{mathematicalmodel}
+
+Nesta seção, um modelo matemático linear misto é apresentado. Este é modelo é uma versão modificada do proposto por (Tamannaei and Rasti-Barzoki, 2019)\cite{tamannaei2019}, sendo o primeiro desenvolvido na versão do problema em que veículos possuem mesma capacidades ($Q$) e custos ($F$). O modelo é descrito a seguir:
+
+\setcounter{equation}{0}
+\begin{equation}
+    \label{mm:obj}
+    \min \sum_{i,j=0}^N\sum_{k=0}^K X^{k}_{ij}*t_{ij}  
+    + \sum_{k=0}^K F_{k}*Y_{k} + \sum_{i=1}^N w_{i}*T_{i}
+\end{equation}
+st.
+
+    \begin{equation}
+        \label{mm:come-out-1-time}
+        \sum_{k=0}^K\sum_{j=0,j\neq i}^N X^{k}_{ij} = 1, \quad \forall i = 1 \dots N\\
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:capacity}
+        \sum_{i=0}^N \sum_{j=0, j\neq i}^N {s_{i} *X^{k}_{ij} } \leq Q_{k}*Y_{k},  \quad \forall k = 0 \dots K;  
+	\end{equation}%
+	\begin{equation}
+        \label{mm:vehicle-use}
+        \sum_{j=0}^N X^{k}_{0j} = Y_{k}, \quad  \forall k = 0 \dots K;\\
+    \end{equation}
+    	\begin{equation}
+        \label{mm:come-in-and-out}
+        \sum_{i=0}^N X^{k}_{ih} = \sum_{j=0}^N X^{k}_{hj}; \quad \forall h = 0 \dots N;\\ \forall k = 0 \dots K\\
+    \end{equation}
+     \begin{equation}
+        \label{mm:proc-order-1}
+        A_{ij}+A_{ji}=1; \quad  \forall i,j = 0 \dots N; i\neq j;
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:proc-order-2}
+        A_{ij}+A_{jr}+A_{ri} \geq 1; \quad \forall i,j,r= 0 \dots N; i\neq j\neq r;\\
+    \end{equation}
+    
+     \begin{equation}
+        \label{mm:comp-time}
+        C_{j} = \sum_{i=1,i\neq j}^N (P_{i}*A_{ij}) + P_{j};
+        \quad \forall j=1 \dots N;    
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:big-m}
+        S_{k}\geq C_{j} - M*(1- \sum_{i=1,i\neq j}^N X^{k}_{ij});
+        \quad \forall j=1 \dots N; \forall k=0 \dots K;
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:big-m-2}
+        D_{j}-S_{k} \geq t_{0j} - M*(1 - X^{k}_{0j}); \quad \forall k=0 \dots K; \forall j=1 \dots N
+    \end{equation}
+     \begin{equation}
+        \label{mm:big-m-3}
+        D_{j}-D_{i} \geq t_{ij} - M*(1 -\sum_{i=1}^N X^{k}_{ij}); \quad \forall i,j=1 \dots N;
+    \end{equation}
+    
+     \begin{equation}
+        \label{mm:tardiness}
+        T_{i} \geq D_{i}-d_{i}; \quad \forall i=1 \dots N;
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:comp-time-origin}
+        C_{0}=0;
+    \end{equation}
+    
+    \begin{equation}
+        \label{mm:dest-time-origin}
+        D_{0}= 0;
+    \end{equation}
+    
+     \begin{equation}
+        \label{mm:tardiness-origin}
+        T_{0}= 0;
+    \end{equation}
+    \begin{equation}
+        \label{mm:xijk-binary}
+        X_{ijk}\in \{0,1\};  \quad \forall i,j=0 \dots N, \forall k=0 \dots K;
+    \end{equation}
+    \begin{equation}
+        \label{mm:aij-binary}
+        A_{ij}\in\{0,1\};  \quad \forall i,j=1 \dots N;
+    \end{equation}
+    \begin{equation}
+        \label{mm:yk-binary}
+        Y_{k}\in\{0,1\};  \quad \forall k=0 \dots N;
+    \end{equation}
+    \begin{equation}
+        \label{mm:sk-geq-zero}
+        S_{k}\geq 0;  \quad  \forall k=0 \dots K;
+    \end{equation}
+     \begin{equation}
+        \label{mm:tardiness-geq-zero}
+        T_{i}\geq 0;  \quad  \forall i=1 \dots N;
+    \end{equation}
+    \begin{equation}
+        \label{mm:dest-time-geq-zero}
+        D_{i}\geq 0;  \quad \forall i=1 \dots N;
+    \end{equation}
+
+The objective function (\ref{mm:obj}) is to minimize the travel distance, total tardiness weight of the jobs and the used vehicles costs. Constraints (\ref{mm:come-out-1-time}) ensure that each job is carried by exactly one vehicle.
+
+Constraints (\ref{mm:capacity}) guarantee that sum of jobs in each vehicle doesn't  overcome it's capacity. Constraints (\ref{mm:vehicle-use}) indicates that if a vehicle is in use, it will leave the origin.
+
+Constraints (\ref{mm:come-in-and-out}) ensure that if a vehicle arrives at a customer, it will also leave  that customer. Constraints (\ref{mm:proc-order-1}) and (\ref{mm:proc-order-2}) are to maintenance the processing order, demanding jobs to be processed in a sequential and possible order.
+
+Constraints (\ref{mm:comp-time}) defines the completion time of a job as the sum of previous jobs' processing times and its own. Constraints (\ref{mm:big-m}) guarantee that if a job $j$ is carried by a vehicle $k$, the vehicle start time will be greather than job $j$'s completion time. 
+
+% Help in Constraints 10 and 11
+
+Constraints (\ref{mm:tardiness}) defines the tardiness T of a job as the difference between its destination time (D) and its due date (d).   Constraints (\ref{mm:comp-time-origin}), (\ref{mm:dest-time-origin}) and (\ref{mm:tardiness-origin}) certifies that the origin (customer zero) do not assume any impossible values. 
+
+Constraints (\ref{mm:xijk-binary}), (\ref{mm:aij-binary}) and (\ref{mm:yk-binary}) are to define these variables as binary variables. Constraints (\ref{mm:sk-geq-zero}), (\ref{mm:tardiness-geq-zero}) and (\ref{mm:dest-time-geq-zero}) ensure that these variables won't assume negative values.
+
+\subsection{Hipothetical Case}\label{hipcase}
+
 Um caso hipotético de rede de transporte é descrito abaixo, no qual a origem e seis clientes ($C_1$ à $C_6$) são dispostos cartesianamente, sendo a distância entre eles representada pelas distâncias euclidianas dos pontos (Tabela \ref{table:ed}). 
 
 \begin{table}
@@ -163,72 +284,44 @@ $C_{6}$                      & 90    & 105 & 175 & 307 & 231 & 198 & 0    \\
 \label{table:ed}
 \end{table}
 
-A Frota de Veículos é descrita na Tabela \ref{table:vehicle}, onde três veículos heterogêneos($V_1$, $V_2$ e $V_3$) são disponibilizados para transportar as tarefas. Nela, os preços $F$ dos veículos são diretamente proporcionais às suas capacidades de transporte.
+As tarefas e a frota de veículos são detalhadamente descritos na Tabela \ref{table:jobvehicleinfo}. As informações sobre as tarefas definem a prioridade e urgência de suas entregas. Três veículos heterogêneos($V_1$, $V_2$ e $V_3$) são disponibilizados para transportá-las. Os preços $F$ dos veículos são diretamente proporcionais às suas capacidades de transporte.
+
+
 
 \begin{table}
 \centering
-\caption{Vehicles information: costs and capacities.}
-\begin{tabular}{@{}lll@{}}
+\caption{Jobs and vehicles detailed informations.}
+\begin{tabular}{lllll|lll} 
 \hline\noalign{\smallskip}
-Vehicle & Capacity (Q) & Price (F) \\ \hline
-$V_{1}$      & 204          & 1224       \\
-$V_{2}$      & 186          & 1116       \\
-$V_{3}$      & 160         & 960       \\ 
-\hline\noalign{\smallskip}
-\end{tabular}
-\label{table:vehicle}
-\end{table}
-
-Por último, as informações sobre as tarefas para a o problema de agendamento de produção são apontadas na Tabela \ref{table:jobparam}, com estas informações a instância se completa.
-
-\begin{table}[]
-\centering
-\caption{Jobs' detailed parameters.}
-\begin{tabular}{@{}llllll@{}}
-\hline\noalign{\smallskip}
-Job & Customer & Processing Time (P) & Due date (d) & Penalty weight (w) & Job size (s) \\ 
+\multicolumn{1}{l}{Job} & $P_i$ & $d_i$  & $w_i$  & $s_i$ & \multicolumn{1}{l}{Vehicle} & $Q_k$  & $F_k$    \\ 
 \hline
-$J_{1}$ & $C_{1}$      & 25                  & 266           & 1.8                & 20            \\
-$J_{2}$  & $C_{2}$       & 49                  & 347          & 2.3                  & 31            \\
-$J_{3}$ & $C_{3}$      & 36                  & 303          & 4.3                & 25           \\
-$J_{4}$  & $C_{4}$       & 96                  & 431           & 4                & 86            \\
-$J_{5}$ & $C_{5}$      & 52                  & 177           & 2                & 33            \\
-$J_{6}$  & $C_{6}$       & 43                  & 315           & 4.6                & 42         \\ 
+$J_1$                        & 25 & 266 & 1.8 & 20 & $V_1$                           & 204 & 1224  \\
+$J_2$                        & 49 & 347 & 2.3 & 31 & $V_2$                           & 186 & 1116  \\
+$J_3$                        & 36 & 303 & 4.3 & 25 & $V_3$                           & 160 & 960   \\
+$J_4$                        & 96 & 431 & 4   & 86 &                              &     &       \\
+$J_5$                        & 52 & 177 & 2   & 33 &                              &     &       \\
+$J_6$                        & 43 & 315 & 4.6 & 42 &                              &     &       \\
 \hline\noalign{\smallskip}
+\label{table:jobvehicleinfo}
 \end{tabular}
-\label{table:jobparam}
 \end{table}
 
 A Figura \ref{fig:ganttchart1} descreve visualmente a solução ótima para a instância. Neste caso hipotético, todos os três veículos foram utilizados durante a entrega, possuindo tempos
-de início $S_1$,$S_2$ e $S_3$ iguais a 180, 301 e 88, respectivamente. Dentre as seis tarefas, apenas $J_6$ foi entregue sem atrasos.
+de início $S_1$,$S_2$ e $S_3$ iguais a 180, 301 e 88, respectivamente. A porcentagem no final de um trajeto representa o espaço ocupado pelas tarefas carregadas no veículo. Dentre as seis tarefas, apenas $J_6$ foi entregue sem atrasos.
 
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=1\textwidth]{Images/VISUAL_REP} 
+    \includegraphics[width=1\textwidth]{Images/VISUAL_REP2} 
     \caption[]{Gráfico de Gantt com a descrição visual da solução.}
   	\label{fig:ganttchart1}
 \end{figure}
 
 
-As informações sobre a configuração obtida na resposta e sua distribuição temporal são descritas na Tabela \ref{table:jobtimes}. 
+Na solução ótima da instância, os tempos de completude $C$ das tarefas são, respectivamente: 276, 180, 88, 301, 52 e 137. 
 
-\begin{table}
-\centering
-\caption{Optimal Solution Settings.}
-\begin{tabular}{@{}lllll@{}}
-\hline\noalign{\smallskip}
-Job & Customer & Completion time.(C) & Dest. Time (T) & Tardiness (T)  \\ 
-\hline
-$J_{1}$ & $C_{1}$      & 276                  & 328           & 62  \\
-$J_{2}$  & $C_{2}$       & 180                  & 445          & 98  \\
-$J_{3}$ & $C_{3}$      & 88                  & 378          & 75      \\
-$J_{4}$  & $C_{4}$       & 301                 & 565           & 134  \\
-$J_{5}$ & $C_{5}$      & 52                  & 200           & 23       \\
-$J_{6}$  & $C_{6}$       & 137                  & 270           & 0      \\ 
-\hline\noalign{\smallskip}
-\end{tabular}
-\label{table:jobtimes}
-\end{table}
+Os tempos de destino $D$, que indicam o momento em que o pedido chega àos clientes são: 328, 445, 378, 565, 200 e 270. 
+
+No cálculo da diferença entre o tempo de destino e a o prazo de entrega, obtêm-se os seguintes valores de atraso $T$:  62, 98, 75, 134, 23 e 0.
 
 O resultado ótimo da função objetivo possui valor absoluto $6127.5$,sendo composto por três partes integrantes do problema. A primeira, é dada pelos custos de trajeto dos três veículos, que são calculados em $DC = (112+178+253) + (90+175+260) + (27+237+254) = 1586$. 
 
