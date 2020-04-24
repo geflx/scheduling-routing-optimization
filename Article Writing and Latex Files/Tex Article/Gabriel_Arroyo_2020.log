@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  23 APR 2020 19:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.3.7)  24 APR 2020 19:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,18 +598,18 @@ Package: relsize 2013/03/29 ver 4.1
 (./Gabriel_Arroyo_2020.aux)
 \openout1 = `Gabriel_Arroyo_2020.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -682,122 +682,178 @@ e
 ))
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-<Images/SOL_REP.png, id=22, 1747.52875pt x 379.4175pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (16.93274pt too wide) in paragraph at lines 75--76
+[]\OT1/cmr/m/n/10 (Tamannaei and Morteza,2019) [2], de-sen-volveram o primeiro 
+mod-elo matem^^Satico
+ []
+
+[2] [3] [4] [5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 311--313
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 314--315
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 316--317
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 317--318
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 320--322
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 330--331
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 332--335
+
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 336--339
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 340--343
+
+ []
+
+<Images/SOL_REP.png, id=39, 1747.52875pt x 379.4175pt>
 File: Images/SOL_REP.png Graphic file (type png)
 <use Images/SOL_REP.png>
-Package pdftex.def Info: Images/SOL_REP.png  used on input line 139.
+Package pdftex.def Info: Images/SOL_REP.png  used on input line 359.
 (pdftex.def)             Requested size: 347.12354pt x 75.36688pt.
- [4] [5 <./Images/SOL_REP.png (PNG copy)>] [6]
-<Images/VISUAL_REP2.pdf, id=34, 500.87125pt x 156.585pt>
+[8 <./Images/SOL_REP.png (PNG copy)>]
+<Images/VISUAL_REP2.pdf, id=43, 500.87125pt x 156.585pt>
 File: Images/VISUAL_REP2.pdf Graphic file (type pdf)
 <use Images/VISUAL_REP2.pdf>
-Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 314.
+Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 416.
 (pdftex.def)             Requested size: 347.12354pt x 108.524pt.
- [7] [8 <./Images/VISUAL_REP2.pdf>]
-Overfull \hbox (1.54263pt too wide) in paragraph at lines 351--352
+ [9] [10 <./Images/VISUAL_REP2.pdf>]
+Overfull \hbox (1.54263pt too wide) in paragraph at lines 454--455
 \OT1/cmr/m/n/10 O pro-cesso de busca lo-cal visa ap-ri-morar uma solu^^Xc~ao at
 -ual ao con-sid-erar solu^^Xc~oes
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 364--365
+Underfull \hbox (badness 10000) in paragraph at lines 467--468
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 366--367
+Underfull \hbox (badness 10000) in paragraph at lines 469--470
 
  []
 
 
-Overfull \hbox (0.57149pt too wide) in paragraph at lines 373--374
+Overfull \hbox (0.57149pt too wide) in paragraph at lines 476--477
 \OT1/cmr/m/n/10 Du-rante o pro-cesso, as opera^^Xc~oes apli-cadas po-dem gerar 
 solu^^Xc~oes invi^^Saveis, por^^Sem
  []
 
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 377--378
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 480--481
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 379--380
+Underfull \hbox (badness 10000) in paragraph at lines 482--483
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 381--382
+Underfull \hbox (badness 10000) in paragraph at lines 484--485
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 383--384
+Underfull \hbox (badness 10000) in paragraph at lines 486--487
 
  []
 
-[10] [11] [12]
+[12] [13] [14]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 471.
-
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 507.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 574.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 507.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 610.
 
-[13]
-<Images/ILS_DIF.png, id=299, 1666.225pt x 382.42876pt>
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 610.
+
+[15]
+<Images/ILS_DIF.png, id=307, 1666.225pt x 382.42876pt>
 File: Images/ILS_DIF.png Graphic file (type png)
 <use Images/ILS_DIF.png>
-Package pdftex.def Info: Images/ILS_DIF.png  used on input line 517.
+Package pdftex.def Info: Images/ILS_DIF.png  used on input line 620.
 (pdftex.def)             Requested size: 119.97827pt x 27.53717pt.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 584.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 687.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 588.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 691.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 591.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 694.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 592.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 695.
 
-[14 <./Images/ILS_DIF.png (PNG copy)>] [15] (./Gabriel_Arroyo_2020.bbl)
-[16] (./Gabriel_Arroyo_2020.aux) ) 
+[16 <./Images/ILS_DIF.png (PNG copy)>] [17] (./Gabriel_Arroyo_2020.bbl [18])
+[19] (./Gabriel_Arroyo_2020.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3979 strings out of 494789
- 53889 string characters out of 6177365
- 136332 words of memory out of 5000000
- 7251 multiletter control sequences out of 15000+600000
+ 3988 strings out of 494789
+ 53989 string characters out of 6177365
+ 136412 words of memory out of 5000000
+ 7260 multiletter control sequences out of 15000+600000
  9017 words of font info for 33 fonts, out of 8000000 for 9000
  83 hyphenation exceptions out of 8191
- 41i,23n,42p,821b,627s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-bx9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Gabriel_Arroyo_2020.pdf (16 pages, 510697 bytes).
+ 41i,23n,42p,706b,627s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmtt9.pfb>
+Output written on Gabriel_Arroyo_2020.pdf (19 pages, 536472 bytes).
 PDF statistics:
- 374 PDF objects out of 1000 (max. 8388607)
- 222 compressed objects within 3 object streams
+ 392 PDF objects out of 1000 (max. 8388607)
+ 235 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

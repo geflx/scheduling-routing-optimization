@@ -5,10 +5,16 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{multirow}
-%\usepackage{algorithm,algorithmic}
+
+%Packages and settings to run the algorithms properly 
 \usepackage[ruled]{algorithm2e}
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
+
+%Adds the possibility to Create Sub-Sub-Sections
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
 
 
 %\graphicspath{ {images/} }
@@ -36,28 +42,44 @@ Neste trabalho são propostas duas heurísticas baseadas em Iterated Local Searc
 
 \section{Introdução}\label{introduction}
 
-O processo de agendamento de produção e roteamento de veículos é uma tarefa que está presente em manufaturas, e possui grande importância econômica por conta dos prazos impostos, custos de entrega e manuseio do tempo gasto. Separadamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990)\cite{du1990}.  Estudos são realizados na área de pesquisa operacional para integrar os dois problemas. (Tamannaei and Morteza,2019)\cite{tamannaei2019}, estudaram o problema minimizando o atraso total e os custos de transporte utilizando tarefas com tamanhos iguais e custos iguais para todos veículos. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
+O processo de agendamento de produção e roteamento de veículos é uma tarefa que está presente em manufaturas, e possui grande importância econômica por conta dos prazos impostos, custos de entrega e manuseio do tempo gasto. Separadamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990)\cite{du1990}. 
 
-Este trabalho ao buscar uma representação realista da integração entre o processo de agendamento de produção de uma máquina linear e roteamento de veículos, considera tarefas de diferentes volumes e uma frota heterogênea e limitada de veículos, i.e., possuem capacidades e custos variados. (Christian Ullrich, 2013)\cite{ullrich2013} desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
+Este trabalho teve por objetivo uma representação realista da integração entre o processo de agendamento de produção de uma máquina linear e roteamento de veículos, com tarefas de diferentes volumes e uma frota heterogênea limitada de veículos, i.e., possuem capacidades e custos variados. 
 
-As aplicações para este problema possuem grande abrangência de setores industriais (como o setor quimico, metalúrgico e têxtil), e a crescente pressão nos mercados globais força as empresas à manusearem seus recursos de forma adequada para garantir um bom funcionamento. Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
+As aplicações para este problema possuem grande abrangência de setores industriais (como o setor quimico, metalúrgico e têxtil), e a crescente pressão nos mercados globais força as empresas à manusearem seus recursos de forma adequada para garantir um bom funcionamento. 
 
-Nas últimas décadas, o problema do estudo de roteamento de veículos tornou-se uma questão de foco na literatura acadêmica (Braekers, Ramaekers e Van Nieuwenhuyse, 2016)\cite{braekers2016vehicle}. Na abordagem deste artigo, uma vez que os veículos por possuem diferentes custos e capacidades, apresentam uma concepção desafiadora de utilização dos recursos, tornando cruciais as decisões de quais veículos utilizar. 
-M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu}, propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
-Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
+Nas últimas décadas, o problema do estudo de roteamento de veículos tornou-se uma questão de foco na literatura acadêmica (Braekers, Ramaekers e Van Nieuwenhuyse, 2016)\cite{braekers2016vehicle}. Neste artigo, por tratar uma frota de veículos heterogênea e limitada, é apresentada uma desafiadora manutenção dos recursos disponíveis, o que torna imprescindível a realização de uma boa gestão.
 
 Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamento em uma máquina simples e roteamento com veículos de capacidades e custos variáveis,  tarefas de diferentes tamanhos, e  com o objetivo de minimizar o atraso ponderado total e custos de entrega, ainda não foi abordado na literatura. São componentes deste trabalho:
 
 \begin{itemize}
   \item Duas abordagens heurísticas de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.).
   \item Um modelo de programação linear para solução dos problemas integrados.
-
 \end{itemize}
+Na Seção \ref{lit-review} são apresentados estudos prévios na literatura, e na Seção \ref{problemdescription} a descrição do problema tratado neste artigo. Em seguida, nas Seções \ref{solutionrepresentation} e \ref{hipcase} são retratadas a representação de solução escolhida e um caso hipotético do problema, respectivamente. Acompanha esta última um modelo matemático misto de programação linear na Seção \ref{mathematicalmodel}. Na Seção \ref{instancesgen} são descritos parâmetros e restrições utilizadas na geração de instâncias.
+%Continuar..
+
+\section{Revisão Literária}\label{lit-review}
+
+Nesta Seção são descritos estudos prévios realizados sobre os problemas de Agendamento de Produção, Roteamentos de Veículos e a combinação destes dois.
+%Inserir aqui VRP e HFRP
+M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu}, propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
+(Christian Ullrich, 2013)\cite{ullrich2013} desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
+%inserir aqui os problemas de agendamento
+
+%Inserir aqui a combinação dos dois problemas
+Estudos são realizados na área de pesquisa operacional para integrar os dois problemas.
+Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
+Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
+
+(Tamannaei and Morteza,2019)\cite{tamannaei2019}, desenvolveram o primeiro modelo matemático misto de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
+
+
 
 
 \section{Descrição do Problema}\label{problemdescription}
 
-Nesta seção é apresentado um modelo matemático de programação linear para solução do problema. As informações sobre parâmetros, índices, variáveis de decisão que serão levados em consideração na resolução deste, são descritos abaixo:
+Nesta seção, o problema discutido neste artigo é apresentado juntamente ao seus parâmetros, índices, variáveis de decisão. Em seguida, a função multiobjetivo tratada no problema é descrita em partes.
 
 \begin{tabbing}
 \phantom{$D_{n100}\ $}\= \kill
@@ -121,27 +143,6 @@ Os problemas de minimização descritos acima tratam partes específicas do proc
 \end{equation}
 
 Quando não tratado o Problema de Minimização de Atraso, resta o Problema de Roteamento com Frota Heterogênea de Veículos (HFVRP), uma versão de VRP, que separadamente é strong NP-Hard (Chen,2010)\cite{chen2010integrated}.  Por consequência, o problema descrito é também de complexidade strong NP-Hard.
-
-\section{Representação de Solução}\label{solutionrepresentation}
-
-
-A representação de uma solução é disposta linearmente, de modo que tarefas e veículos sigam acompanhados de seus respectivos códigos de identificação. O conjunto de tarefas $N$ do problema será dividido em $K$ subconjuntos, sendo cada subconjunto destinado à um veículo específico. O tempo de ínicio de funcionamento de um veículo $k$, denotado por $S_k$, é dado pela soma dos tempos de processamento $P$ destas tarefas somado ao tempo acumulado das tarefas processadas anteriormente (a partir de $t=0$).
-Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido por um veículo. Seja $R$ uma solução viável, $k$ $\in$ $K$ um veículo e $R_k$ sua rota, a representação deste trajeto é dada por:
-
-\begin{equation}
-R_{k} = O \rightarrow  J_1\rightarrow  J_2\rightarrow ... \rightarrow  J_{|N_{k}|}\rightarrow  O
-\end{equation}
-
-Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N_k|$ $\in$ $N$  e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. A Figura \ref{fig:solutionrep} representa visualmente uma solução.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=1\textwidth]{Images/SOL_REP} 
-    \caption[]{Representação de solução com tarefas organizadas em lotes.}
-  	\label{fig:solutionrep}
-\end{figure}
-
-Um subconjunto de tarefas pode não possuir tarefas e ser designado à um veículo $w$, indicando que este não está em uso e portanto $|N_{w}|=0$.
 
 \section{Mathematical Model}\label{mathematicalmodel}
 
@@ -255,11 +256,112 @@ Constraints (\ref{mm:come-in-and-out}) ensure that if a vehicle arrives at a cus
 
 Constraints (\ref{mm:comp-time}) defines the completion time of a job as the sum of previous jobs' processing times and its own. Constraints (\ref{mm:big-m}) guarantee that if a job $j$ is carried by a vehicle $k$, the vehicle start time will be greather than job $j$'s completion time. 
 
-% Help in Constraints 10 and 11
+% Help in Constraints 10 and 1
+Constraints (\ref{mm:big-m-2}) indicates that if a job $j$ is carried by a vehicle $k$ is the first of its tour, its destination time $D_j$ is greater or equal than the sum of start vehicle time $S_k$ and distance between origin and this customer  Constraints (\ref{mm:big-m-3}) certify that if a job $j$ delivered by a vehicle $k$ isn't the first of its tour, its delivery time will be greater or equal than the sum of the previous job $i$ delivery time $D_i$ and the start vehicle time $S_k$.
 
 Constraints (\ref{mm:tardiness}) defines the tardiness T of a job as the difference between its destination time (D) and its due date (d).   Constraints (\ref{mm:comp-time-origin}), (\ref{mm:dest-time-origin}) and (\ref{mm:tardiness-origin}) certifies that the origin (customer zero) do not assume any impossible values. 
 
 Constraints (\ref{mm:xijk-binary}), (\ref{mm:aij-binary}) and (\ref{mm:yk-binary}) are to define these variables as binary variables. Constraints (\ref{mm:sk-geq-zero}), (\ref{mm:tardiness-geq-zero}) and (\ref{mm:dest-time-geq-zero}) ensure that these variables won't assume negative values.
+
+
+\section{Geração de Instâncias}\label{instancesgen}
+
+Por se tratar de uma variação do problema ainda não abordada na literatura, a criação de instâncias para o problema tornou-se necessária. As instâncias foram distruibuídas em dois grupos, pequenas e grandes. O primeiro varia entre oito e vinte tarefas, de três à seis veículos, e o segundo entre trinta e cem tarefas, de cinco à doze veículos.
+
+Seja uma tarefa $i$ $\in$ $N$, o tempo de processamento $P_{i}$ de uma tarefa $i$ possui um intervalo limitado, este é definido como:
+
+\setcounter{equation}{0}
+\begin{equation} 
+\label{ins-P}
+P_{i} \in rand[1,\rho], \quad with \quad \rho = 100
+\end{equation}
+
+O seu tamanho $s_i$  é correlacionado ao tempo de processamento desta tarefa, assim pode assumir valores entre um e $P$:
+
+\begin{equation}
+\label{ins-s}
+s_{i} \in rand[1,P_{i}]
+\end{equation}
+
+A data de vencimento $d_i$ de uma tarefa deve possuir ligação entre seu tempo de processamento e a distância entre o cliente e a origem. Ela é determinada a partir de uma janela de tempo, que possui limite inferior $z_i$ e superior $\overline{z}_{i}$:
+\begin{equation}
+\label{ins-d}
+ \begin{array}{l}
+    d_{i} \in rand[z_{i},\overline{z}_{i}] \quad st. \\
+    \begin{array}{l}
+    				z_i = P_{i}+t_{0i}+\pi_1 \\
+     			\quad \overline{z}_{i} = z_{i} + \pi_2\\
+   			  \end{array}
+ \end{array}
+\end{equation}
+
+Os parâmetros $\pi_1$ e $\pi_2$ influenciam na dificuldade da instância pois seus valores podem encurtar ou prolongar as janelas de tempo, resultando em prazos de entrega menores ou maiores:
+\begin{equation}
+\label{ins-pi}
+ \begin{array}{l}
+ 	\pi_1 \in rand[0,\frac{\sum_{i=1}^N P_{i}}{K+1}]\\
+ 	\pi_2 \in rand[0,\delta*\rho]
+ \end{array}
+\end{equation}
+
+A peso de penalidade $w_i$ é determinado de forma aleatória em um intervalo. Este peso é explicitado na função objetivo:
+\begin{equation}
+\label{ins-w}
+ w_{i} \in rand[1.0, 5.0]
+\end{equation}
+ The capacity (Q) of each vehicle $k$ is given in two different ways, depending on the number of jobs in each group of instances:\\
+ 
+    $Q_{k} = max_{i=1}^N\{s_{i}\} + \tau$, where  $\tau$ is defined by:\\
+    \begin{itemize}
+    \item In \textbf{small} instances: $random[{\frac{\sum_{i=1}^N s_{i}}{K}},\mu*{\frac{\sum_{i=1}^N s_{i}}{K}}]$;\\ 
+    \item In \textbf{larger} instances: $random[{\frac{\sum_{i=1}^K s_{i}}{K}},\mu*{\frac{\sum_{i=1}^N s_{i}}{K}}]$;\\ 
+\end{itemize}
+
+The cost $F_{k}$ of a vehicle $k$ is assumed to depend on its capacity:\\
+    $F_{k} = N*Q_{k}$; \\
+    
+To determine the travel time $t_{ij}$, first we have to generate the points of each customer and origin.
+The machine's coordinates are fixed in an  interval, with its components being:\\ $(x_{0},y_{0}) \sim  x,y \in [400,700]$\\
+To generate the customers' coordinates, each one has to accomplish the following constraints:
+\begin{itemize}
+    \item $(x_{i},y_{i}) \geq (0,0); \forall i=1,...,N $;
+    \item $distance(origin, (x_i,y_i)) \leq (\rho * K); \forall i=1,...,N $;
+\end{itemize}
+The distance type between points is euclidian.\\
+
+Finally, we have the following parameters to generate the instances:\\
+ $\delta \in \{0.5, 1.0, 1.5, 2.0, 2.5\};$\\
+$ \mu \in \{1, 1.5, 2.0\}$ in \textbf{small} instances and in \textbf{larger} ones $ \mu \in \{1.5, 2.0, 2.5\};$\\
+ 
+For \textbf{small} instances, the numbers of jobs and vehicles used were:\\
+ Number of jobs: $N \in \{8,10,15,20\}$;\\
+ Number of vehicles: $K \in \{3,4,5, 6\}$\\ 
+
+Now, for \textbf{larger} instances, the following combination was used:\\
+ Number of jobs: $N \in \{30,50,80,100\}$;\\
+ Number of vehicles: $K \in \{5,8,10,12\}$\\ 
+ 
+
+\section{Representação de Solução}\label{solutionrepresentation}
+
+
+A representação de uma solução é disposta linearmente, de modo que tarefas e veículos sigam acompanhados de seus respectivos códigos de identificação. O conjunto de tarefas $N$ do problema será dividido em $K$ subconjuntos, sendo cada subconjunto destinado à um veículo específico. O tempo de ínicio de funcionamento de um veículo $k$, denotado por $S_k$, é dado pela soma dos tempos de processamento $P$ destas tarefas somado ao tempo acumulado das tarefas processadas anteriormente (a partir de $t=0$).
+Em cada subconjunto há definição de uma rota, que indica o trajeto percorrido por um veículo. Seja $R$ uma solução viável, $k$ $\in$ $K$ um veículo e $R_k$ sua rota, a representação deste trajeto é dada por:
+
+\begin{equation}
+R_{k} = O \rightarrow  J_1\rightarrow  J_2\rightarrow ... \rightarrow  J_{|N_{k}|}\rightarrow  O
+\end{equation}
+
+Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N_k|$ $\in$ $N$  e $|N_k|$ a quantidade de tarefas dispostas neste veículo. Todo veículo parte da origem, e deve retornar para ela, visitando cada cliente somente uma vez. A Figura \ref{fig:solutionrep} representa visualmente uma solução.
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{Images/SOL_REP} 
+    \caption[]{Representação de solução com tarefas organizadas em lotes.}
+  	\label{fig:solutionrep}
+\end{figure}
+
+Um subconjunto de tarefas pode não possuir tarefas e ser designado à um veículo $w$, indicando que este não está em uso e portanto $|N_{w}|=0$.
 
 \subsection{Hipothetical Case}\label{hipcase}
 
@@ -331,6 +433,7 @@ Os atrasos $T$ serão multiplicados por suas respectivas penalidades $w$.
 Isto posto, o custo total de atrasos ponderados é $TC = (62*1.8) + (98*2.3) + (75*4.3) + (134*4) + (23*2) + (0*4.6) = 1241.5$.
 
 Portanto, ao combinar as três parcelas da função objetivo, é obtido o valor final $DC + VC + TC = 6127.5$ na solução ótima da instância. 
+
 
 \section{Abordagem de Solução}\label{solutionapproach}
 
@@ -459,14 +562,14 @@ O algoritmo possui um parâmetro: uma solução $S$, e é iniciado ao atribuir $
 Em seguida, o conjunto de vizinhanças Intra-Rota é visitado sequencialmente (Passos 8-15) e na hipótese de melhorar novamente (Passos 11-14), a busca interna se reinicia (Passo 13). Do contrário, esta termina e a busca externa é reiniciada com nova ordem aleatória (Passos 16-17). 
 A melhor solução encontrada é atualizada a cada iteração da busca externa (Passos 19-21). Ao final do algoritmo, a melhor solução $S*$ é retornada.
 
-\subsection{Iterated Local Search}
+\section{Iterated Local Search}
 
 Ao gerar variados ótimos locais, utilizar a Iterated Local Search torna possível obter aprimoramento da qualidade da solução (Talbi, 2009)\cite{talbi2009metaheuristics}. Neste artigo em específico, as aplicações de Iterated Local Search utilizam duas versões de busca local RVND.
 
 Os métodos de perturbação do algoritmos descritos em seguida utilizam os operadores de vizinhança Inter-Rota: \textbf{Swap-Job}($R_{i}$, $R_{w}$) e \textbf{Insert-Job}($R_{i}$). É realizada uma quantidade $\alpha$ de perturbações, sendo $\alpha$ estatisticamente definido na Seção ‘Calibração de Parâmetros’. %Completar com a seção%
 
 \subsection{ILS RVND}
-O esquema geral da heurística ILS proposta é apresentado em Algoritmo \ref{algo:ilsrvnd}. Existem três parâmetros: $\alpha$ (número de perturbações), $MaxIter$ (quantidade de reinícios de solução) e $MaxIterILS$ (máximo de iterações consecutivas para o algoritmo). Inicialmente, a variável de melhor solução global é inicializada (Passo 1). 
+O esquema geral da metaheurística ILS proposta é apresentado em Algoritmo \ref{algo:ilsrvnd}. Existem três parâmetros: $\alpha$ (número de perturbações), $MaxIter$ (quantidade de reinícios de solução) e $MaxIterILS$ (máximo de iterações consecutivas para o algoritmo). Inicialmente, a variável de melhor solução global é inicializada (Passo 1). 
 
 A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) utilizando as regras descritas na Seção \ref{initialsolutions}, e em seguida é feito busca local em $S$ (Passo 4). Após sua possível melhora, o processo de Perturbação é inicializado (Passos 5-12), a solução atual $S’$ é perturbada com intensidade $\alpha$ (Passo 10), é feito busca local RVND (Passo 11) e a melhor solução encontrada é atualizada (Passos 6-9).
 
@@ -521,7 +624,7 @@ A diferença desta versão de Iterated Local Search para a anterior está na bus
 
 Nesta técnica, assim que uma solução atual é aperfeiçoada utilizando operadores externos às rotas, como realizar intercâmbio de tarefas entre veículos, os operadores internos às rotas são acionados.
 
-\subsection{Genetic Algorithm}\label{genalgo}
+\section{Genetic Algorithm}\label{genalgo}
 
 Algoritmos Genéticos foram desenvolvidos por J. Holland em meados dos anos 70 (University of Michigan, USA)  para entender o processo adaptativo de sistemas naturais (Talbi, 2009)\cite{talbi2009metaheuristics}. Nesta abordagem, são utilizadas técnicas de Torneio Binário para seleção de soluções e 2-point Crossovers para diversificação da prole. O esquema geral do algoritmo é descrito em Algorithm \ref{algo:genalgo}.
 
@@ -588,10 +691,39 @@ O processo de mutação Crossover pode produzir soluções inviáveis, dessa for
   \item No segundo caso, onde apenas uma das soluções é viável, a única prole viável será inserida na população $P’$ (Passo 15).
   \item No último caso, se as duas mutações geradas são inviáveis (Passo 17), uma escolha aleatória entre as soluções ‘pai’ é feita e sofrerá uma nova mutação Crossover (Passo 18), sendo adicionada em seguida.
 \end{itemize}  
-	Após a obtenção de $PopSize-1$ indivíduos em $P’$, é inserida a melhor solução $P*$ encontrada até o momento (Passo 23). Com a população completa, é realizada uma busca local rápida (Passo 24) em todos os indivíduos. Este método é descrito na Seção \ref{fastlocalsearch}.
+	Após a obtenção de $PopSize-1$ indivíduos em $P’$, é inserida a melhor solução $P*$ encontrada até o momento (Passo 23). Com a população completa, é realizada uma busca local rápida (Passo 24) em todos os indivíduos. Este método é descrito na Seção \ref{algo:fastlocalsearch}.
 Por fim, a melhor solução $S*$ é atualizada (Passos 25-26) e a população $P’$ torna-se a população atual $P$, para nas próximas iterações gerar novos indivíduos (Passo 25).
 
 \subsection{Fast Local Search}\label{fastlocalsearch}
+
+Nesta seção é descrito um procedimento de busca local chamado Fast Local Search. Métodos de busca local convencionais como VND e RVND podem ser computacionalmente custosos acionados consecutivas vezes, apesar de possibilitarem melhoras significativas na qualidade da solução. Dessa forma, foi implementado um método de busca local simples para lidar com as soluções do algoritmo populacional. O procedimento é descrito em  Algoritmo \ref{algo:fastlocalsearch}.
+
+\begin{algorithm}
+\label{algo:fastlocalsearch}
+\AlFnt \small
+\LinesNumbered
+\Input{Solution $S$}
+\Output{Better or equal $S*$ solution}
+  \caption{Fast Local Search($S$)}
+  
+  $S* \gets S;$\\
+  $NeighborhoodSet \gets$\textup{$Inter$-$Route$ and $Intra$-$Route$ $Neighborhoods$;}\\
+  \For{$i \gets$ \textup{1 to} $NeighborhoodSet$}{
+  
+         $currNeighborhood \gets NeighborhoodSet[i]$;\\
+         $S' \gets$ \textup{currNeighborhood(S)};\\
+       
+         \If{\textup{f($S'$) $\leq$ f($S*$)}}{
+                {$S* \gets S'$;\\}
+            }
+    }
+  \Output{$S*$}
+\end{algorithm}
+
+O algoritmo possui um parâmetro: uma solução $S$ e se inicia ao atribuir $S$ à melhor solução global $S*$ (Passo 1). Todo o conjunto de vizinhanças (Inter-Rota e Intra-Rota) é atribuido à $NeighborhoodSet$ (Passo 2). Em seguida, o método percorre sequencialmente as vizinhanças em $NeighborhoodSet$ (Passos 3-8) e analisa seus vizinhos (Passos 4-5). Em cada vizinhança, a melhor solução $S'$ da vizinhança é comparada com a melhor solução global e $S*$ é atualizada (Passos 6-8).
+Por fim, o método de busca local retorna a melhor solução encontrada.
+
+
 
 \section{Computational Experiments}\label{experiments}
 
