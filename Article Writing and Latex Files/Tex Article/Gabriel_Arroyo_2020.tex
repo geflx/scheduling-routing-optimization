@@ -22,7 +22,7 @@
 
 \title{Heurísticas para Agendamento de Produção de uma Máquina Linear e Roteamento de Entrega com Frota Heterogênea de Veículos
 }
-\author{Gabriel de Paula Felix  \and José E. C. Arroyo \ }
+\author{Gabriel de P. Felix  \and José E. C. Arroyo \ }
 \institute{Department of Computer Science, Universidade Federal de Viçosa,\\ Vi\c{c}osa - MG, 36570-900, Brazil\\
 gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 
@@ -57,22 +57,28 @@ Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamen
   \item Um modelo de programação linear para solução dos problemas integrados.
 \end{itemize}
 Na Seção \ref{lit-review} são apresentados estudos prévios na literatura, e na Seção \ref{problemdescription} a descrição do problema tratado neste artigo. Em seguida, nas Seções \ref{solutionrepresentation} e \ref{hipcase} são retratadas a representação de solução escolhida e um caso hipotético do problema, respectivamente. Acompanha esta última um modelo matemático misto de programação linear na Seção \ref{mathematicalmodel}. Na Seção \ref{instancesgen} são descritos parâmetros e restrições utilizadas na geração de instâncias.
-%Continuar..
+
+Continua...
+%Continuar a escrever!..
 
 \section{Revisão Literária}\label{lit-review}
 
-Nesta Seção são descritos estudos prévios realizados sobre os problemas de Agendamento de Produção, Roteamentos de Veículos e a combinação destes dois.
+São descritos nesta seção estudos prévios realizados em problemas de Agendamento de Produção, Roteamentos de Veículos e a combinação destes dois.
+
 %Inserir aqui VRP e HFRP
-M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu}, propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
-(Christian Ullrich, 2013)\cite{ullrich2013} desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
+M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu} propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
+Christian Ullrich (2013) \cite{ullrich2013} desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
+
 %inserir aqui os problemas de agendamento
+Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de agendamento de produção e entre de lotes, com vários clientes e manufaturas, e definiram assim a área de Supply Chain Scheduling.
+Kirlik and Oguz (2012) \cite{kirlik2012variable} desenvolveram um General Variable Neighborhood Search (GVNS) para resolver o problema de Minimização do Atraso Total Ponderado com tempos de configuração dependentes da sequência.
 
 %Inserir aqui a combinação dos dois problemas
 Estudos são realizados na área de pesquisa operacional para integrar os dois problemas.
 Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
 Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
 
-(Tamannaei and Morteza,2019)\cite{tamannaei2019}, desenvolveram o primeiro modelo matemático misto de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
+Tamannaei and Morteza (2019)\cite{tamannaei2019} desenvolveram o primeiro modelo matemático misto de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
 
 
 
@@ -266,9 +272,9 @@ Constraints (\ref{mm:xijk-binary}), (\ref{mm:aij-binary}) and (\ref{mm:yk-binary
 
 \section{Geração de Instâncias}\label{instancesgen}
 
-Por se tratar de uma variação do problema ainda não abordada na literatura, a criação de instâncias para o problema tornou-se necessária. As instâncias foram distruibuídas em dois grupos, pequenas e grandes. O primeiro varia entre oito e vinte tarefas, de três à seis veículos, e o segundo entre trinta e cem tarefas, de cinco à doze veículos.
+Por se tratar de uma variação do problema ainda não abordada na literatura, a criação de instâncias para o problema tornou-se necessária. As instâncias foram distruibuídas em dois grupos, instâncias pequenas e grandes. O primeiro varia entre oito e vinte tarefas, de três à seis veículos, e o segundo entre trinta e cem tarefas, de cinco à doze veículos.
 
-Seja uma tarefa $i$ $\in$ $N$, o tempo de processamento $P_{i}$ de uma tarefa $i$ possui um intervalo limitado, este é definido como:
+Seja uma tarefa $i$ $\in$ $N$, seu tempo de processamento $P_{i}$ pertence um intervalo limitado:
 
 \setcounter{equation}{0}
 \begin{equation} 
@@ -276,7 +282,7 @@ Seja uma tarefa $i$ $\in$ $N$, o tempo de processamento $P_{i}$ de uma tarefa $i
 P_{i} \in rand[1,\rho], \quad with \quad \rho = 100
 \end{equation}
 
-O seu tamanho $s_i$  é correlacionado ao tempo de processamento desta tarefa, assim pode assumir valores entre um e $P$:
+Seu tamanho $s_i$  é relacionado ao tempo de processamento, também definido em um intervalo:
 
 \begin{equation}
 \label{ins-s}
@@ -304,43 +310,70 @@ Os parâmetros $\pi_1$ e $\pi_2$ influenciam na dificuldade da instância pois s
  \end{array}
 \end{equation}
 
-A peso de penalidade $w_i$ é determinado de forma aleatória em um intervalo. Este peso é explicitado na função objetivo:
+O peso de penalidade $w_i$ é determinado de forma aleatória em um intervalo, sendo este parâmetro integrante da função objetivo:
 \begin{equation}
 \label{ins-w}
  w_{i} \in rand[1.0, 5.0]
 \end{equation}
- The capacity (Q) of each vehicle $k$ is given in two different ways, depending on the number of jobs in each group of instances:\\
+ A capacidade $Q$ dos veículos é dada de forma que a tarefa de maior tamanho possa ser transportada qualquer um destes, somado à um valor relacionado a média de todos tamanhos pela quantidade de veículos:
  
-    $Q_{k} = max_{i=1}^N\{s_{i}\} + \tau$, where  $\tau$ is defined by:\\
-    \begin{itemize}
-    \item In \textbf{small} instances: $random[{\frac{\sum_{i=1}^N s_{i}}{K}},\mu*{\frac{\sum_{i=1}^N s_{i}}{K}}]$;\\ 
-    \item In \textbf{larger} instances: $random[{\frac{\sum_{i=1}^K s_{i}}{K}},\mu*{\frac{\sum_{i=1}^N s_{i}}{K}}]$;\\ 
-\end{itemize}
+\begin{equation}
+\label{ins-Q}
+	\begin{array}{l}
+    		Q_{k} = max_{i=1}^N\{s_{i}\} + \tau \quad st.\\
+  		\tau \in rand[{\frac{\sum_{i=1}^N s_{i}}{K}},\mu*{\frac{\sum_{i=1}^N s_{i}}{K}}]\\ 
+	\end{array}
+\end{equation}
 
-The cost $F_{k}$ of a vehicle $k$ is assumed to depend on its capacity:\\
-    $F_{k} = N*Q_{k}$; \\
+O custo $F_k$ de um veículo $k$ é diretamente proporcional à sua capacidade:
+\begin{equation}
+\label{ins-Q}
+    F_{k} = N*Q_{k}
+\end{equation}
     
-To determine the travel time $t_{ij}$, first we have to generate the points of each customer and origin.
-The machine's coordinates are fixed in an  interval, with its components being:\\ $(x_{0},y_{0}) \sim  x,y \in [400,700]$\\
-To generate the customers' coordinates, each one has to accomplish the following constraints:
-\begin{itemize}
-    \item $(x_{i},y_{i}) \geq (0,0); \forall i=1,...,N $;
-    \item $distance(origin, (x_i,y_i)) \leq (\rho * K); \forall i=1,...,N $;
-\end{itemize}
-The distance type between points is euclidian.\\
+   
+To determine the travel time $t_{ij}$ between two customers, first we have to generate the origin's coordinates.
+The machine's coordinates $(x_0,y_0)$ are generated subject to the following range:\\ 
+\begin{equation}
+\label{ins-origin}
+x_{0},y_{0} \in  rand[400,700]
+\end{equation}
+Após fixadas as coordenadas da origem. são geradas as coordenadas dos clientes de forma que estejam no primeiro quadrante e sua distância euclidiana (ED) até a origem respeite a seguinte constante:
+\begin{equation}
+\label{ins-customers}
+\begin{array}{l}
+    (x_{i},y_{i}) \geq (0,0) \quad \forall i=1,...,N\\
+    ED((x_0,y_0), (x_i,y_i)) \leq (\rho * K) \quad \forall i=1,...,N
+\end{array}
+\end{equation}
 
-Finally, we have the following parameters to generate the instances:\\
- $\delta \in \{0.5, 1.0, 1.5, 2.0, 2.5\};$\\
-$ \mu \in \{1, 1.5, 2.0\}$ in \textbf{small} instances and in \textbf{larger} ones $ \mu \in \{1.5, 2.0, 2.5\};$\\
- 
-For \textbf{small} instances, the numbers of jobs and vehicles used were:\\
- Number of jobs: $N \in \{8,10,15,20\}$;\\
- Number of vehicles: $K \in \{3,4,5, 6\}$\\ 
+Por fim, são indicados os parâmetros utilizados nas equações acima ($\delta$,$\mu$, $N$ and $K$). Para cada um dos conjuntos de instâncias (small e large), existe uma definição diferente dos valores dos parâmetros, que influenciará na dificuldade da resolução do problema. 
 
-Now, for \textbf{larger} instances, the following combination was used:\\
- Number of jobs: $N \in \{30,50,80,100\}$;\\
- Number of vehicles: $K \in \{5,8,10,12\}$\\ 
- 
+Para instâncias pequenas, os valores definidos para $\mu$, $N$ and $K$ são:
+\begin{equation}
+\label{ins-small-parameters}
+	\begin{array}{ll}
+		\mu \in \{1, 1.5, 2.0\}\\
+		N \in \{8,10,15,20\}\\
+		K \in \{3,4,5, 6\}\\
+	\end{array}
+\end{equation}
+
+Para instâncias maiores, após realizados os ajustes dos três parâmetros, estes foram definidos em:
+\begin{equation}
+\label{ins-large-parameters}
+	\begin{array}{lll}
+		\mu \in \{1.5, 2.0, 2.5\}\\
+		N \in \{50,80,100\}\\
+		K \in \{5,8,10,12\}\\
+	\end{array}
+\end{equation}
+A constante $\delta$ utilizada para calcular o limite superior de $d_i$ (Equação \ref{ins-pi}), assume os seguintes valores para ambos conjuntos de instâncias:
+\begin{equation}
+	\delta \in \{0.5, 1.0, 1.5, 2.0, 2.5\}
+\end{equation}
+
+Definidos os parâmetros, para cada combinação ($\delta$,$\mu$, $N$ and $K$) foram geradas cinco instâncias pequenas e três instâncias grandes, totalizando (5*3*4*4*5) + (3*3*3*4*5) = 1740 instâncias.
 
 \section{Representação de Solução}\label{solutionrepresentation}
 
@@ -356,7 +389,7 @@ Neste contexto, $Ji$ são as tarefas entregues no trajeto e $\forall i=1, ... |N
 
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=1\textwidth]{Images/SOL_REP} 
+    \includegraphics[width=1\textwidth]{Images/SOL_REP2} 
     \caption[]{Representação de solução com tarefas organizadas em lotes.}
   	\label{fig:solutionrep}
 \end{figure}

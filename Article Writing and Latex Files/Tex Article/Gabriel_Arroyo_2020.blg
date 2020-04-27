@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: Gabriel_Arroyo_2020.aux
 The style file: ieeetr.bst
 Database file #1: Bibliography/papers.bib.bib
-You've used 12 entries,
+You've used 14 entries,
             1876 wiz_defined-function locations,
-            559 strings with 5708 characters,
-and the built_in function-call counts, 3930 in all, are:
-= -- 438
-> -- 102
+            572 strings with 6026 characters,
+and the built_in function-call counts, 4632 in all, are:
+= -- 519
+> -- 118
 < -- 0
-+ -- 39
-- -- 27
-* -- 272
-:= -- 523
-add.period$ -- 13
-call.type$ -- 12
-change.case$ -- 11
++ -- 45
+- -- 31
+* -- 320
+:= -- 612
+add.period$ -- 15
+call.type$ -- 14
+change.case$ -- 13
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 199
-empty$ -- 357
-format.name$ -- 27
-if$ -- 974
+cite$ -- 14
+duplicate$ -- 235
+empty$ -- 420
+format.name$ -- 31
+if$ -- 1150
 int.to.chr$ -- 0
-int.to.str$ -- 12
-missing$ -- 13
-newline$ -- 40
-num.names$ -- 12
-pop$ -- 19
+int.to.str$ -- 14
+missing$ -- 15
+newline$ -- 46
+num.names$ -- 14
+pop$ -- 21
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 166
+skip$ -- 199
 stack$ -- 0
-substring$ -- 368
-swap$ -- 104
+substring$ -- 440
+swap$ -- 124
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 45
-width$ -- 14
-write$ -- 130
+while$ -- 53
+width$ -- 16
+write$ -- 152
