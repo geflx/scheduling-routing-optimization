@@ -778,16 +778,24 @@ A métrica de comparação utilizada é o desvio relativo percentual (RPD), send
 	RPD = \frac{f_{method} - f_{best} }{ f_{best}} * 100\%
 \end{equation}
 
-A performance das heurísticas aplicadas foram testadas em todas 1740 instâncias, sendo cada heurística executada cinco vezes em cada instância. A média entre das execuções é considerada para as comparações. O software CPLEX foi executado uma vez para cada instância pequena, onde $N \in \{8,10,15,20\}$ e $V \in \{3,4,5,6\}.$
+A performance das heurísticas aplicadas foram testadas em todas 1740 instâncias, sendo cada heurística executada cinco vezes em cada instância. A média entre das execuções é considerada para as comparações. O software CPLEX foi executado uma vez para cada instância pequena, onde $N \in \{8,10,15,20\}$ e $V \in \{3,4,5,6\}$.
+
+As siglas para as heurísticas nesta seção foram definidas de forma que 'ILS-RVND-1' se refira à heurística ILS RVND, 'ILS-RVND-2' à heurística ILS RVND com Aprimoramento de Rota Interna e por fim 'GA-LS' ao Algoritmo Genético.
 
 \subsection{Efetividade em Instâncias Pequenas}\label{small-instances-effectiveness}
 
+Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o software CPLEX. Este foi definido com tempo limite máximo para execuções $t_{max} = 3600$. Para $N = 8$, tanto as heurísticas quanto o software atingiram a solução ótima. Dessa forma, as análises nesta subseção tratam as instâncias em que $N \in \{10,15,20\}$.
+
 \begin{figure}
 \centering     %%% not \center
-\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 10 Jobs (Int)}}
-\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 15 Jobs (Int)}} 
-\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 20 Jobs (Int)}} 
-\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=60mm]{Images/Small Instances/Task 4 Average RPD Small (Int)}} 
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{Images/Small Instances/avg 10 jobs int}}
+\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=78mm]{Images/Small Instances/avg 15 jobs int}} 
+}
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=78mm]{Images/Small Instances/avg 20 jobs int}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/Small Instances/general avg rpd int}} 
+}
 \caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias pequenas.}
 \end{figure}
 
