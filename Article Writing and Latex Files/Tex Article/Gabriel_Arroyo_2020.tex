@@ -758,7 +758,7 @@ Por fim, o método de busca local retorna a melhor solução encontrada.
 
 
 
-\section{Computational Experiments}\label{experiments}
+\section{Experimentos Computacionais}\label{experiments}
 
 
 %All the heuristic algorithms were coded in C++ and executed on a PC machine IntelR Core TM i7-4790K CPU @ 4.00GHz x 8 with 32GB RAM, running Ubuntu 14.04 LTS 64 bits. The quality of the solutions were measured by the relative percentage deviation (RPD) from the best known solution (reference solution). The RPD measure represents the percentage of how much experimental results differs from a reference value, and is calculated following the equation: 
@@ -767,7 +767,15 @@ Por fim, o método de busca local retorna a melhor solução encontrada.
 %\end{equation}
 %where $TT_{\mbox{reference}}$ is the value of the reference solution, and %$TT_{\mbox{experimental}}$ is the obtained solution by  a given heuristic. 
 
+Nesta Seção são apresentados os experimentos realizados em cima dos três algoritmos e o software CPLEX.
+Todos os algoritmos foram codificados em C++ e executados em uma máquina Intel(R) Core TM i7-4790K CPU @ 4.00GHz x 8 with 32GB RAM, rodando Ubuntu ??.?? 64 bits. 
 
+A métrica de comparação utilizada é o desvio relativo percentual (RPD), sendo utilizada a melhor média entre os algoritmos ($f_{best}$) para a comparação entre elas. O RPD mede percentualmente o quanto os resultados experimentais ($f_{method}$) diferem do valor de referência:
+
+\begin{equation}
+\label{rpd}
+	RPD = \frac{f_{method} - f_{best} }{ f_{best}} * 100\%
+\end{equation}
 \section{Conclusions}\label{conclusions}
 
 \subsubsection*{Acknowledgments.}
