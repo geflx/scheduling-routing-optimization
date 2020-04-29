@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{subfigure}
 
 %Packages and settings to run the algorithms properly 
 \usepackage[ruled]{algorithm2e}
@@ -776,6 +777,22 @@ A métrica de comparação utilizada é o desvio relativo percentual (RPD), send
 \label{rpd}
 	RPD = \frac{f_{method} - f_{best} }{ f_{best}} * 100\%
 \end{equation}
+
+A performance das heurísticas aplicadas foram testadas em todas 1740 instâncias, sendo cada heurística executada cinco vezes em cada instância. A média entre das execuções é considerada para as comparações. O software CPLEX foi executado uma vez para cada instância pequena, onde $N \in \{8,10,15,20\}$ e $V \in \{3,4,5,6\}.$
+
+\subsection{Efetividade em Instâncias Pequenas}\label{small-instances-effectiveness}
+
+\begin{figure}
+\centering     %%% not \center
+\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 10 Jobs (Int)}}
+\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 15 Jobs (Int)}} 
+\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=60mm]{Images/Small Instances/Avg RPD 20 Jobs (Int)}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=60mm]{Images/Small Instances/Task 4 Average RPD Small (Int)}} 
+\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias pequenas.}
+\end{figure}
+
+
+
 \section{Conclusions}\label{conclusions}
 
 \subsubsection*{Acknowledgments.}
