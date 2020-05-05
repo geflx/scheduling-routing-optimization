@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.29)  4 MAY 2020 15:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.29)  4 MAY 2020 23:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -328,6 +328,42 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 
 LaTeX Warning: Label `ins-Q' multiply defined.
 
+
+LaTeX Warning: Label `table:ils' multiply defined.
+
+
+LaTeX Warning: Label `fig:solutionrep' multiply defined.
+
+
+LaTeX Warning: Label `fig:solutionrep' multiply defined.
+
+
+LaTeX Warning: Label `fig:solutionrep' multiply defined.
+
+
+LaTeX Warning: Label `fig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:a' multiply defined.
+
+
+LaTeX Warning: Label `fig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:b' multiply defined.
+
+
+LaTeX Warning: Label `fig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:c' multiply defined.
+
+
+LaTeX Warning: Label `fig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:d' multiply defined.
+
 )
 \openout1 = `Gabriel_Arroyo_2020.aux'.
 
@@ -469,43 +505,96 @@ Overfull \hbox (15.43156pt too wide) in paragraph at lines 773--774
 as em to-das 1740 inst^ancias,
  []
 
-<Images/Small Instances/avg 10 jobs int.png, id=319, 433.62pt x 289.08pt>
-File: Images/Small Instances/avg 10 jobs int.png Graphic file (type png)
-<use Images/Small Instances/avg 10 jobs int.png>
-Package pdftex.def Info: Images/Small Instances/avg 10 jobs int.png  used on in
-put line 790.
+<Images/calibration/general rpd calib ilrs-rvnd-1 int.png, id=319, 433.62pt x 2
+89.08pt>
+File: Images/calibration/general rpd calib ilrs-rvnd-1 int.png Graphic file (ty
+pe png)
+<use Images/calibration/general rpd calib ilrs-rvnd-1 int.png>
+Package pdftex.def Info: Images/calibration/general rpd calib ilrs-rvnd-1 int.p
+ng  used on input line 782.
+(pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
+<Images/calibration/general rpd calib ilrs-rvnd-2 int.png, id=320, 433.62pt x 2
+89.08pt>
+File: Images/calibration/general rpd calib ilrs-rvnd-2 int.png Graphic file (ty
+pe png)
+<use Images/calibration/general rpd calib ilrs-rvnd-2 int.png>
+Package pdftex.def Info: Images/calibration/general rpd calib ilrs-rvnd-2 int.p
+ng  used on input line 790.
+(pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
+<Images/calibration/general rpd calib ga-ls int.png, id=321, 433.62pt x 289.08p
+t>
+File: Images/calibration/general rpd calib ga-ls int.png Graphic file (type png
+)
+<use Images/calibration/general rpd calib ga-ls int.png>
+Package pdftex.def Info: Images/calibration/general rpd calib ga-ls int.png  us
+ed on input line 798.
+(pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
+<Images/small-instances/avg 10 jobs int.png, id=322, 433.62pt x 289.08pt>
+File: Images/small-instances/avg 10 jobs int.png Graphic file (type png)
+<use Images/small-instances/avg 10 jobs int.png>
+Package pdftex.def Info: Images/small-instances/avg 10 jobs int.png  used on in
+put line 813.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
-<Images/Small Instances/avg 15 jobs int.png, id=320, 433.62pt x 289.08pt>
-File: Images/Small Instances/avg 15 jobs int.png Graphic file (type png)
-<use Images/Small Instances/avg 15 jobs int.png>
-Package pdftex.def Info: Images/Small Instances/avg 15 jobs int.png  used on in
-put line 790.
+<Images/small-instances/avg 15 jobs int.png, id=323, 433.62pt x 289.08pt>
+File: Images/small-instances/avg 15 jobs int.png Graphic file (type png)
+<use Images/small-instances/avg 15 jobs int.png>
+Package pdftex.def Info: Images/small-instances/avg 15 jobs int.png  used on in
+put line 813.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
-<Images/Small Instances/avg 20 jobs int.png, id=321, 433.62pt x 289.08pt>
-File: Images/Small Instances/avg 20 jobs int.png Graphic file (type png)
-<use Images/Small Instances/avg 20 jobs int.png>
-Package pdftex.def Info: Images/Small Instances/avg 20 jobs int.png  used on in
-put line 794.
+<Images/small-instances/avg 20 jobs int.png, id=324, 433.62pt x 289.08pt>
+File: Images/small-instances/avg 20 jobs int.png Graphic file (type png)
+<use Images/small-instances/avg 20 jobs int.png>
+Package pdftex.def Info: Images/small-instances/avg 20 jobs int.png  used on in
+put line 817.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
-<Images/Small Instances/general avg rpd int.png, id=322, 433.62pt x 289.08pt>
-File: Images/Small Instances/general avg rpd int.png Graphic file (type png)
-<use Images/Small Instances/general avg rpd int.png>
-Package pdftex.def Info: Images/Small Instances/general avg rpd int.png  used o
-n input line 794.
+<Images/small-instances/general avg rpd int.png, id=325, 433.62pt x 289.08pt>
+File: Images/small-instances/general avg rpd int.png Graphic file (type png)
+<use Images/small-instances/general avg rpd int.png>
+Package pdftex.def Info: Images/small-instances/general avg rpd int.png  used o
+n input line 817.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
-(./Gabriel_Arroyo_2020.bbl [19] [20 <./Images/Small Instances/avg 10 jobs int.p
-ng> <./Images/Small Instances/avg 15 jobs int.png> <./Images/Small Instances/av
-g 20 jobs int.png> <./Images/Small Instances/general avg rpd int.png>] [21])
-[22] (./Gabriel_Arroyo_2020.aux)
+<Images/large-instances/avg rpd 50 jobs int.png, id=326, 433.62pt x 289.08pt>
+File: Images/large-instances/avg rpd 50 jobs int.png Graphic file (type png)
+<use Images/large-instances/avg rpd 50 jobs int.png>
+Package pdftex.def Info: Images/large-instances/avg rpd 50 jobs int.png  used o
+n input line 872.
+(pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
+<Images/large-instances/avg rpd 80 jobs int.png, id=327, 433.62pt x 289.08pt>
+File: Images/large-instances/avg rpd 80 jobs int.png Graphic file (type png)
+<use Images/large-instances/avg rpd 80 jobs int.png>
+Package pdftex.def Info: Images/large-instances/avg rpd 80 jobs int.png  used o
+n input line 872.
+(pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
+<Images/large-instances/avg rpd 100 jobs int.png, id=328, 433.62pt x 289.08pt>
+File: Images/large-instances/avg rpd 100 jobs int.png Graphic file (type png)
+<use Images/large-instances/avg rpd 100 jobs int.png>
+Package pdftex.def Info: Images/large-instances/avg rpd 100 jobs int.png  used 
+on input line 876.
+(pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
+<Images/large-instances/avg rpd all algos.png, id=329, 433.62pt x 289.08pt>
+File: Images/large-instances/avg rpd all algos.png Graphic file (type png)
+<use Images/large-instances/avg rpd all algos.png>
+Package pdftex.def Info: Images/large-instances/avg rpd all algos.png  used on 
+input line 876.
+(pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
+(./Gabriel_Arroyo_2020.bbl [19] [20] [21 <./Images/calibration/general rpd cali
+b ilrs-rvnd-1 int.png>]) [22 <./Images/calibration/general rpd calib ilrs-rvnd-
+2 int.png>] [23 <./Images/calibration/general rpd calib ga-ls int.png>]
+[24 <./Images/small-instances/avg 10 jobs int.png> <./Images/small-instances/av
+g 15 jobs int.png> <./Images/small-instances/avg 20 jobs int.png> <./Images/sma
+ll-instances/general avg rpd int.png>] [25 <./Images/large-instances/avg rpd 50
+ jobs int.png> <./Images/large-instances/avg rpd 80 jobs int.png> <./Images/lar
+ge-instances/avg rpd 100 jobs int.png> <./Images/large-instances/avg rpd all al
+gos.png>] (./Gabriel_Arroyo_2020.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3668 strings out of 481239
- 52625 string characters out of 5920377
- 321962 words of memory out of 5000000
- 18900 multiletter control sequences out of 15000+600000
+ 3728 strings out of 481239
+ 55427 string characters out of 5920377
+ 323996 words of memory out of 5000000
+ 18951 multiletter control sequences out of 15000+600000
  537715 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  40i,23n,42p,616b,636s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -530,10 +619,10 @@ pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmtt9.pfb>
-Output written on Gabriel_Arroyo_2020.pdf (22 pages, 559800 bytes).
+Output written on Gabriel_Arroyo_2020.pdf (25 pages, 604392 bytes).
 PDF statistics:
- 411 PDF objects out of 1000 (max. 8388607)
- 242 compressed objects within 3 object streams
+ 435 PDF objects out of 1000 (max. 8388607)
+ 249 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

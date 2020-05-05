@@ -777,22 +777,45 @@ As siglas para as heurísticas nesta seção foram definidas de forma que 'ILS-R
 
 \subsection{Calibração de parâmetros dos algoritmos}\label{parameters-calibration}
 
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-1 int} 
+     \caption[]{Calibração de parâmetros para a ILS$\_$RVND$\_$1.}
+  	\label{fig:solutionrep}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-2 int} 
+     \caption[]{Calibração de parâmetros para a ILS$\_$RVND$\_$2.}
+  	\label{fig:solutionrep}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ga-ls int} 
+    \caption[]{Calibração de parâmetros para o Algoritmo Genético (GA$\_$LS).}
+  	\label{fig:solutionrep}
+\end{figure}
 
 \subsection{Resultados instâncias de pequeno porte}\label{small-instances-results}
 
 Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o software CPLEX. Este foi definido com tempo limite máximo para execuções $t_{max} = 3600$. Para $N = 8$, tanto as heurísticas quanto o software atingiram a solução ótima. Dessa forma, as análises nesta subseção tratam as instâncias em que $N \in \{10,15,20\}$.
 
 \begin{figure}
+\label{graphics:small}
 \centering     %%% not \center
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{Images/Small Instances/avg 10 jobs int}}
-\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=78mm]{Images/Small Instances/avg 15 jobs int}} 
+\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{Images/small-instances/avg 10 jobs int}}
+\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=78mm]{Images/small-instances/avg 15 jobs int}} 
 }
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=78mm]{Images/Small Instances/avg 20 jobs int}} 
-\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/Small Instances/general avg rpd int}} 
+\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=78mm]{Images/small-instances/avg 20 jobs int}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/small-instances/general avg rpd int}} 
 }
-\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias pequenas.}
+\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de pequeno porte.}
 \end{figure}
 
 \begin{table}
@@ -838,6 +861,21 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
 
 
 \subsection{Resultados instâncias de grande porte}\label{large-instances-results}
+
+
+\begin{figure}
+\label{graphics:large}
+\centering     %%% not \center
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 50$]{\label{fig:a}\includegraphics[width=78mm]{Images/large-instances/avg rpd 50 jobs int}}
+\subfigure[Average RPD with $N = 80$]{\label{fig:b}\includegraphics[width=78mm]{Images/large-instances/avg rpd 80 jobs int}} 
+}
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 100$]{\label{fig:c}\includegraphics[width=78mm]{Images/large-instances/avg rpd 100 jobs int}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/large-instances/avg rpd all algos}} 
+}
+\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de grande porte.}
+\end{figure}
 
 
 \begin{table}
