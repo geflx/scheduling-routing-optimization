@@ -777,27 +777,36 @@ As siglas para as heurísticas nesta seção foram definidas de forma que 'ILS-R
 
 \subsection{Calibração de parâmetros dos algoritmos}\label{parameters-calibration}
 
+Nesta Seção é apresentado o método e os parâmetros determinados para execução dos três algoritmos. Testes preliminares foram realizados para definir os parâmetros dos algoritmos.
+
+\subsubsection{test}
+
+O primeiro, ILS$\_$RVND$\_$1, utiliza três parâmetros para sua execução: a intensidade de perturbação $\alpha$, o número máximo de reinícios do algoritmo $MaxIter$ e o máximo de iterações da ILS $MaxIterILS$. Foram definidos no conjunto de testes os seguintes valores: $\alpha \in \{2,5,8,10\}$, $MaxIter \in \{5,8,10\}$  e $MaxIterILS \in$ $\{50,100\}$.
+Dessa forma, foram geradas 24 combinações de parâmetros, e cada uma delas foi executada 10 vezes nas 1740 instâncias. O cálculo do Average RPD das execuções possibilitou a escolha da combinação $\{10,100,5\}$ na Figura \ref{fig:calib1}.
+
+
 \begin{figure}[ht]
 	\centering
     \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-1 int} 
-     \caption[]{Calibração de parâmetros para a ILS$\_$RVND$\_$1.}
-  	\label{fig:solutionrep}
+     \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS$\_$RVND$\_$1 experiment.}
+  	\label{fig:calib1}
 \end{figure}
 
+De forma análoga, o segundo algoritmo ILS$\_$RVND$\_$2, utilizou os intervalos acima e foi executado 10 vezes em cada uma das instâncias.
 
 \begin{figure}[ht]
 	\centering
     \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-2 int} 
-     \caption[]{Calibração de parâmetros para a ILS$\_$RVND$\_$2.}
-  	\label{fig:solutionrep}
+     \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS$\_$RVND$\_$2 experiment.}
+  	\label{fig:calib2}
 \end{figure}
 
 
 \begin{figure}[ht]
 	\centering
     \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ga-ls int} 
-    \caption[]{Calibração de parâmetros para o Algoritmo Genético (GA$\_$LS).}
-  	\label{fig:solutionrep}
+      \caption[]{Mean plot and confidence intervals at 95\% confidence level for GA$\_$LS experiment.}
+  	\label{fig:calib3}
 \end{figure}
 
 \subsection{Resultados instâncias de pequeno porte}\label{small-instances-results}
