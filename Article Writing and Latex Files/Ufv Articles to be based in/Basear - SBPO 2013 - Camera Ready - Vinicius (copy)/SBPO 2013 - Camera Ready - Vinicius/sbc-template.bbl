@@ -1,0 +1,91 @@
+\begin{thebibliography}{}
+
+\bibitem[A.~Salehpour 2008]{Salehpour:08}
+A.~Salehpour, e.~a. (2008).
+\newblock Efficient clustering of wireless sensor networks based on memetic
+  algorithm.
+\newblock In {\em [ed.] University of Tehran}.
+
+\bibitem[Agarwal and Procopiuc 1999]{Agarwal:99}
+Agarwal, P. and Procopiuc, C. (1999).
+\newblock Exact and approximation algorithms for clustering.
+\newblock In {\em Proc. 9th Annu. ACM-SIAM Symp. Discrete Algorithms}, pages
+  658--667.
+
+\bibitem[Feo and Resende 1995]{Feo:95}
+Feo, T.~A. and Resende, M. G.~C. (1995).
+\newblock Greedy randomized adaptive search procedures.
+\newblock In {\em Journal of Global Optimization 6}, pages 109--133.
+
+\bibitem[I.F.~Akyildiz 2002]{Akyildiz:02}
+I.F.~Akyildiz, e.~a. (2002).
+\newblock Wireless sensor networks: a survey.
+\newblock In {\em Computer Networks 38}, pages 393--422.
+
+\bibitem[J.~Tillet 2002]{Tillet:02}
+J.~Tillet, e.~a. (2002).
+\newblock Cluster-head identification in ad hoc sensor networks using particle
+  swarm optimization.
+\newblock In {\em IEEE International Conference on Personal Wireless
+  Communications}, pages 201--205.
+
+\bibitem[Montegomery 2007]{Montegomery:07}
+Montegomery, D. (2007).
+\newblock John Willy and Sons.
+
+\bibitem[N.~M. Abdul~Latiff 2007]{Latiff:07}
+N.~M. Abdul~Latiff, e.~a. (2007).
+\newblock Energy-aware clustering for wireless sensor networks using particle
+  swarm optimization.
+\newblock In {\em The 18th Annual IEEE International Symposium on Personal,
+  Indoor and Mobile Radio Communications}.
+
+\bibitem[Rajagopalan and Varshney 2006]{Rajagopalan:06}
+Rajagopalan, R. and Varshney, P.~K. (2006).
+\newblock Data aggregation techniques in sensor networks: A survey.
+\newblock In {\em IEEE Communication Surveys and Tutorials, Vol. 8, No. 4},
+  pages 48--63.
+
+\bibitem[Resende and Werneck 2003]{Resende:03}
+Resende, M. G.~C. and Werneck, R.~F. (2003).
+\newblock A hybrid heuristic for the p-median problem.
+\newblock In {\em Technical Report TD-5NWRCR, AT\&T Labs Research}.
+
+\bibitem[S.~Jin 2003]{Jin:03}
+S.~Jin, e.~a. (2003).
+\newblock Sensor network optimization using a genetic algorithm.
+\newblock In {\em Proceedings of the 7th World Multiconference on Systemics,
+  Cybernetics and Informatics}.
+
+\bibitem[S.~Lindsey 2002]{Lindsey:02}
+S.~Lindsey, e.~a. (2002).
+\newblock Data gathering algorithms in sensor networks using energy metrics.
+\newblock In {\em IEEE Transactions on Parallel and Distributed System, vol.
+  13, no. 9}, pages 924--935.
+
+\bibitem[S.~Yi 2007]{Yi:07}
+S.~Yi, e.~a. (2007).
+\newblock Peach: power-efficient and adaptive clustering hierarchy protocol for
+  wireless sensor networks.
+\newblock In {\em Computer Communications,vol. 30}, pages 2842--2852.
+
+\bibitem[W.B.~Heinzelman 2000]{Heinzelman:00}
+W.B.~Heinzelman, e.~a. (2000).
+\newblock Energy-efficient communication protocol for wireless microsensor
+  networks.
+\newblock In {\em 33rd Hawaii International Conference on System Sciences}.
+
+\bibitem[W.B.~Heinzelman 2002]{Heinzelman:02}
+W.B.~Heinzelman, e.~a. (2002).
+\newblock An application specific protocol architecture for wireless
+  microsensor networks.
+\newblock In {\em IEEE Transactions on Wireless Networking, vol. 1, no.4},
+  pages 660--670.
+
+\bibitem[Y.~Jin 2008]{Jin:08}
+Y.~Jin, e.~a. (2008).
+\newblock Eemc: An energy-efficient multi-level clustering algorithm for
+  large-scale wireless sensor networks.
+\newblock In {\em Computer Networks Vol. 52, No. 3}, pages 542--562.
+
+\end{thebibliography}
