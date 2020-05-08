@@ -805,7 +805,7 @@ De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas a
 
  As duas melhores médias '8-100-2' e '10-100-2' não se sobrepuseram nos intervalos de confiança, indicando que há diferença entre as implementações. Ademais, com p-valor 0.00 $<$ 0.05, a hipótese alternativa é novamente válida e há pelo menos uma implementação com  performance significamente diferente. Isto posto, foi definida a combinação '10-100-2' para o algoritmo, por possuir menor média.
 
-
+O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$, o tamanho da população e o número máximo de iterações, respectivamente.  Os conjuntos para estes parâmetros foram definidos em $PopSize \in \{30,50,70\}$ e $MaxIter \in \{5,8,10\}$. Foram geradas 9 combinações de parâmetros e foram executadas sobre as 1740 instâncias.
 
 \begin{figure}[ht]
 	\centering
@@ -813,6 +813,9 @@ De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas a
       \caption[]{Mean plot and confidence intervals at 95\% confidence level for GA$\_$LS experiment.}
   	\label{fig:calib-algo3}
 \end{figure}
+
+Novamente, pelo teste de Kruskall-Wallis, o p-valor $0.00 < 0.05$ indica a validade da hipótese alternativa. Os intervalos de confiança são mostrados na Figura \ref{fig:calib-algo3}. As melhores médias '70-5', '70-8' e '70-10' tiveram seus intervalos sobrepostos, o que indica que são estatisticamente equivalentes. Portanto, foi escolhida a combinação '70-5' por executar em menor tempo do que as demais sobrepostas.
+
 
 \subsection{Resultados instâncias de pequeno porte}\label{small-instances-results}
 
