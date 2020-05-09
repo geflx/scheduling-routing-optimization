@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.29)  8 MAY 2020 14:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.29)  9 MAY 2020 16:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -515,11 +515,6 @@ Package pdftex.def Info: Images/calibration/general rpd calib ilrs-rvnd-1 int.p
 ng  used on input line 791.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 [19]
-Overfull \hbox (0.59921pt too wide) in paragraph at lines 797--798
-\OT1/cmr/m/n/10 as 24 com-bina^^Xc~oes acima e as-sim ex-e-cu-tadas 10 vezes em
- cada uma das inst^ancias.
- []
-
 <Images/calibration/general rpd calib ilrs-rvnd-2 int.png, id=324, 433.62pt x 2
 89.08pt>
 File: Images/calibration/general rpd calib ilrs-rvnd-2 int.png Graphic file (ty
@@ -536,7 +531,10 @@ File: Images/calibration/general rpd calib ga-ls int.png Graphic file (type png
 Package pdftex.def Info: Images/calibration/general rpd calib ga-ls int.png  us
 ed on input line 812.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
-[20 <./Images/calibration/general rpd calib ilrs-rvnd-1 int.png>]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20 <./Images/calibration/general rpd calib ilrs-rvnd-1 int.png>]
 <Images/small-instances/avg 10 jobs int.png, id=330, 433.62pt x 289.08pt>
 File: Images/small-instances/avg 10 jobs int.png Graphic file (type png)
 <use Images/small-instances/avg 10 jobs int.png>
@@ -627,7 +625,7 @@ pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmtt9.pfb>
-Output written on Gabriel_Arroyo_2020.pdf (26 pages, 607672 bytes).
+Output written on Gabriel_Arroyo_2020.pdf (26 pages, 607900 bytes).
 PDF statistics:
  438 PDF objects out of 1000 (max. 8388607)
  251 compressed objects within 3 object streams
