@@ -69,18 +69,21 @@ Continua...
 
 \section{Revisão Literária}\label{lit-review}
 
-São descritos nesta seção estudos prévios realizados em problemas de Agendamento de Produção, Roteamentos de Veículos e a combinação destes dois.
+São descritos nesta seção estudos prévios realizados em problemas de Agendamento de Produção, Roteamentos de Veículos e a integração destes dois.
 
 %Inserir aqui VRP e HFRP
 M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu} propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
-Christian Ullrich (2013) \cite{ullrich2013} desenvolveu um Algoritmo Genético (A.G.) integrando agendamento de produção de máquinas paralelas e roteamento de uma frota heterogênea, em um ambiente com janelas de tempo de entrega e veículos com diferentes capacidades.
+
 
 %inserir aqui os problemas de agendamento
 Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de agendamento de produção e entre de lotes, com vários clientes e manufaturas, e definiram assim a área de Supply Chain Scheduling.
 Kirlik and Oguz (2012) \cite{kirlik2012variable} desenvolveram um General Variable Neighborhood Search (GVNS) para resolver o problema de Minimização do Atraso Total Ponderado com tempos de configuração dependentes da sequência.
 
 %Inserir aqui a combinação dos dois problemas
-Estudos são realizados na área de pesquisa operacional para integrar os dois problemas.
+Na literatura, existem trabalhos prévios que abordam a problemas integrados de produção e transporte.
+
+Ullrich  (2013) aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
+
 Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
 Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
 
@@ -842,34 +845,34 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
 	\hline\noalign{\smallskip}
 	& \multicolumn{2}{c}{ILS$\_$RVND$\_$1} & \multicolumn{2}{c}{ILS$\_$RVND$\_$2} & \multicolumn{2}{c}{GA$\_$LS} & \multicolumn{2}{c}{CPLEX}\\
 	\cline{2-9}\noalign{\smallskip}
-	N x K & Best & Avg. & Best & Avg.  & Best & Avg. & Best & Avg.  \\
+	N x K & Best & Avg. & Best & Avg.  & Best & Avg. & Best  \\
 	\hline
 	\noalign{\smallskip}
-10 x 3 & 0.00 & 0.01 & 0.00 & 0.04 & 0.00 & 0.00 & 0.45  & 0.45 \\
+10 x 3 & 0.00 & 0.01 & 0.00 & 0.04 & 0.00 & 0.00 & 0.45  \\
 \noalign{\smallskip}
-10 x 4 & 0.00 & 0.00 & 0.02 & 0.04 & 0.00 & 0.00 & 0.36  & 0.36 \\
+10 x 4 & 0.00 & 0.00 & 0.02 & 0.04 & 0.00 & 0.00 & 0.36\\
 \noalign{\smallskip}
-10 x 5 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.38  & 0.38 \\
+10 x 5 & 0.00 & 0.00 & 0.00 & 0.05 & 0.00 & 0.00 & 0.38\\
 \noalign{\smallskip}
-10 x 6 & 0.00 & 0.00 & 0.01 & 0.05 & 0.00 & 0.00 & 0.35  & 0.35 \\
+10 x 6 & 0.00 & 0.00 & 0.01 & 0.05 & 0.00 & 0.00 & 0.35 \\
 \noalign{\smallskip}
-15 x 3 & 0.00 & 0.00 & 0.70 & 1.96 & 0.00 & 0.05 & 5.98  & 5.98 \\
+15 x 3 & 0.00 & 0.00 & 0.70 & 1.96 & 0.00 & 0.05 & 5.98  \\
 \noalign{\smallskip}
-15 x 4 & 0.00 & 0.01 & 0.21 & 0.77 & 0.00 & 0.04 & 5.07  & 5.07 \\
+15 x 4 & 0.00 & 0.01 & 0.21 & 0.77 & 0.00 & 0.04 & 5.07 \\
 \noalign{\smallskip}
-15 x 5 & 0.00 & 0.02 & 0.41 & 0.90 & 0.03 & 0.06 & 3.64  & 3.64 \\
+15 x 5 & 0.00 & 0.02 & 0.41 & 0.90 & 0.03 & 0.06 & 3.64  \\
 \noalign{\smallskip}
-15 x 6 & 0.00 & 0.00 & 0.27 & 0.60 & 0.00 & 0.03 & 3.75  & 3.75 \\
+15 x 6 & 0.00 & 0.00 & 0.27 & 0.60 & 0.00 & 0.03 & 3.75  \\
 \noalign{\smallskip}
-20 x 3 & 0.00 & 0.06 & 3.76 & 5.86 & 0.07 & 0.29 & 21.28 & 21.28 \\
+20 x 3 & 0.00 & 0.06 & 3.76 & 5.86 & 0.07 & 0.29 & 21.28 \\
 \noalign{\smallskip}
-20 x 4 & 0.00 & 0.05 & 2.68 & 4.50 & 0.09 & 0.35 & 21.28 & 21.28 \\
+20 x 4 & 0.00 & 0.05 & 2.68 & 4.50 & 0.09 & 0.35 & 21.28 \\
 \noalign{\smallskip}
-20 x 5 & 0.00 & 0.01 & 1.14 & 2.21 & 0.00 & 0.12 & 18.53 & 18.53 \\
+20 x 5 & 0.00 & 0.01 & 1.14 & 2.21 & 0.00 & 0.12 & 18.53  \\
 \noalign{\smallskip}
-20 x 6 & 0.03 & 0.11 & 1.05 & 1.92 & 0.01 & 0.24 & 15.63 & 15.63 \\
+20 x 6 & 0.03 & 0.11 & 1.05 & 1.92 & 0.01 & 0.24 & 15.63  \\
  \hline \noalign{\smallskip}
-	Average: & 0.00 & 0.02 & 0.86  & 1.58 & 0.02 & 0.10 & 8.06 & 8.06
+	Average: & 0.00 & 0.02 & 0.86  & 1.58 & 0.02 & 0.10 & 8.06 
  \\
 	\noalign{\smallskip}\hline
 \end{tabular}
@@ -935,6 +938,91 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
 \end{tabular}
 \label{table:ils}
 \end{table}
+
+\begin{table}
+\centering
+\caption{Runtime Average Analysis over large instances.}
+\begin{tabular}{cccc}
+	\hline\noalign{\smallskip}
+	& ILS$\_$RVND$\_$1 & ILS$\_$RVND$\_$2 & GA$\_$LS\\
+	\cline{2-4}\noalign{\smallskip}
+	N x K & Avg. & Avg. & Avg. \\
+	\hline
+\noalign{\smallskip}
+50 x  5 & 17.57 & 8.48 & 35.41  \\
+\noalign{\smallskip}
+50 x  8 & 16.93 & 11.90 & 36.60  \\
+\noalign{\smallskip}
+50 x  10 & 16.32 & 14.44 & 36.55  \\
+\noalign{\smallskip}
+50 x  12 & 16.46 & 17.22 & 38.87   \\
+\noalign{\smallskip}
+80 x  5 & 68.03 & 28.37 & 180.42  \\
+\noalign{\smallskip}
+80 x  8 & 58.88 & 35.36 & 162.78  \\
+\noalign{\smallskip}
+80 x  10 & 55.00 & 40.32 & 154.89  \\
+\noalign{\smallskip}
+80 x  12 & 53.02 & 46.44 & 160.59  \\
+\noalign{\smallskip}
+100 x  5 & 136.08 & 51.34 & 415.69  \\
+\noalign{\smallskip}
+100 x  8 & 114.50 & 61.28 & 357.94 \\
+\noalign{\smallskip}
+100 x  10 & 103.80 & 68.83 & 340.52  \\
+\noalign{\smallskip}
+100 x  12 & 97.80 & 77.04 & 343.74  \\
+ \hline \noalign{\smallskip}
+	Average: & 62.87 & 38.42 & 188.67
+ \\
+	\noalign{\smallskip}\hline
+\end{tabular}
+\label{table:time-small}
+\end{table}
+
+
+\begin{table}
+\centering
+\caption{Runtime Average Analysis over large instances.}
+\begin{tabular}{ccccc}
+	\hline\noalign{\smallskip}
+	& ILS$\_$RVND$\_$1 & ILS$\_$RVND$\_$2 & GA$\_$LS & CPLEX \\
+	\cline{2-5}\noalign{\smallskip}
+	N x K & Avg. & Avg. & Avg. & Avg. \\
+	\hline
+\noalign{\smallskip}
+10 x  3 & 0.11 & 0.16 & 0.17 &  3575.10 \\
+\noalign{\smallskip}
+10 x  4 & 0.14 & 0.25 & 0.22  & 3620.62\\
+\noalign{\smallskip}
+10 x  5 & 0.17 & 0.37 & 0.27  & 3629.82\\
+\noalign{\smallskip}
+10 x  6 & 0.20 & 0.45 & 0.33  & 3634.85\\
+\noalign{\smallskip}
+15 x  3 & 0.33 & 0.30 & 0.53  & 3614.83\\
+\noalign{\smallskip}
+15 x  4 & 0.39 & 0.46 & 0.62  & 3632.21\\
+\noalign{\smallskip}
+15 x  5 & 0.47 & 0.71 & 0.74  & 3647.36\\
+\noalign{\smallskip}
+15 x  6 & 0.54 & 0.91 & 0.86  & 3649.92\\
+\noalign{\smallskip}
+20 x  3 & 0.79 & 0.51 & 1.25  & 3612.73\\
+\noalign{\smallskip}
+20 x  4 & 0.83 & 0.76 & 1.34 & 3615.70\\
+\noalign{\smallskip}
+20 x  5 & 0.99 & 1.11 & 1.61  & 3618.98\\
+\noalign{\smallskip}
+20 x  6 & 1.09 & 1.52 & 1.74  & 3621.38\\
+ \hline \noalign{\smallskip}
+	Average: & 0.51 & 0.63 & 0.81 & 3622.79
+ \\
+	\noalign{\smallskip}\hline
+\end{tabular}
+\label{table:time-small}
+\end{table}
+
+
 \section{Conclusions}\label{conclusions}
 
 \subsubsection*{Acknowledgments.}

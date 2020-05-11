@@ -1,0 +1,6 @@
+
+
+Ullrich  (2013) aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
+
+
+Meinecke, Scholz-Reiter  apresentam uma heurística de decomposição e integração de múltiplos passos, e obtiveram  significativamente bons resultados quando comparados à heurísticas de agendamento sequenciais. (https://www.researchgate.net/profile/Christian_Meinecke/publication/260635008_A_Heuristic_for_the_Integrated_Production_and_Distribution_Scheduling_Problem/links/00b49531ddd7165cbc000000/A-Heuristic-for-the-Integrated-Production-and-Distribution-Scheduling-Problem.pdf)
