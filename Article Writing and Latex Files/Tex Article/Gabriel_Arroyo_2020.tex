@@ -600,7 +600,7 @@ Os métodos de perturbação do algoritmos descritos em seguida utilizam os oper
 \subsection{ILS RVND}
 O esquema geral da metaheurística ILS proposta é apresentado em Algoritmo \ref{algo:ilsrvnd}. Existem três parâmetros: $\alpha$ (número de perturbações), $MaxIter$ (quantidade de reinícios de solução) e $MaxIterILS$ (máximo de iterações consecutivas para o algoritmo). Inicialmente, a variável de melhor solução global é inicializada (Passo 1). 
 
-A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) utilizando as regras descritas na Seção \ref{initialsolutions}, e em seguida é feito busca local em $S$ (Passo 4). Após sua possível melhora, o processo de Perturbação é inicializado (Passos 5-12), a solução atual $S’$ é perturbada com intensidade $\alpha$ (Passo 10), é feito busca local RVND (Passo 11) e a melhor solução encontrada é atualizada (Passos 6-9).
+A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) utilizando as regras descritas na Seção \ref{initialsolutions}, e em seguida é feito busca local em $S$ (Passo 4). Após sua possível melhora, o processo de Perturbação é inicializado (Passos 5-12), a solução atual $S’$ é perturbada $\alpha$ vezes (Passo 10), é feito busca local RVND (Passo 11) e a melhor solução encontrada é atualizada (Passos 6-9).
 
 \begin{algorithm}
 \label{algo:ilsrvnd}
@@ -766,27 +766,28 @@ Por fim, o método de busca local retorna a melhor solução encontrada.
 Nesta Seção são apresentados os experimentos realizados em cima dos três algoritmos e o software CPLEX.
 Todos os algoritmos foram codificados em C++ e executados em uma máquina Intel(R) Core TM i7-4790K CPU @ 4.00GHz x 8 with 32GB RAM, rodando Ubuntu ??.?? 64 bits. 
 
-A métrica de comparação utilizada é o desvio relativo percentual (RPD), sendo utilizada a melhor média entre os algoritmos ($f_{best}$) para a comparação entre elas. O RPD mede percentualmente o quanto os resultados experimentais ($f_{method}$) diferem do valor de referência:
+A métrica de comparação utilizada é o desvio relativo percentual (RPD), sendo utilizada o melhor resultado entre os algoritmos ($f_{best}$) para a comparação entre elas. O RPD(\%) mede percentualmente o quanto os resultados experimentais ($f_{method}$) diferem do valor de referência:
 
 \begin{equation}
 \label{rpd}
 	RPD = \frac{f_{method} - f_{best} }{ f_{best}} * 100\%
 \end{equation}
 
-A performance das heurísticas aplicadas foram testadas em todas 1740 instâncias, sendo cada heurística executada cinco vezes em cada instância. A média entre das execuções é considerada para as comparações. O software CPLEX foi executado uma vez para cada instância pequena, onde $N \in \{8,10,15,20\}$ e $V \in \{3,4,5,6\}$.
+Também são utilizadas as métricas Average RPD(\%) e Best RPD(\%), onde a primeira utiliza o $f_{method}$ como sendo a média dos resultados das execuções e a segunda como o melhor resultado dentre as execuções.
+A performance das heurísticas aplicadas foram testadas em todas as 1740 instâncias. 
 
 As siglas para as heurísticas nesta seção foram definidas de forma que 'ILS-RVND-1' se refira à heurística ILS RVND, 'ILS-RVND-2' à heurística ILS RVND com Aprimoramento de Rota Interna e por fim 'GA-LS' ao Algoritmo Genético.
 
 
-\subsection{Calibração de parâmetros dos algoritmos}\label{parameters-calibration}
+\subsection{Parameters Calibration}\label{parameters-calibration}
 
-Nesta Seção são apresentados testes preliminares para definir os parâmetros de execução dos três algoritmos.
+Nesta Seção, testes preliminares são apresentados para definir os parâmetros de execução dos três algoritmos.
 
-O primeiro, ILS$\_$RVND$\_$1, utiliza três parâmetros para sua execução: a intensidade de perturbação $\alpha$, o número máximo de reinícios do algoritmo $MaxIter$ e o máximo de iterações da ILS $MaxIterILS$. Foram definidos no conjunto de testes os seguintes valores: $\alpha \in \{2,5,8,10\}$, $MaxIter \in \{5,8,10\}$  e $MaxIterILS \in$ $\{50,100\}$.
+O primeiro algoritmo, ILS$\_$RVND$\_$1, utiliza três parâmetros: o número de perturbações $\alpha$, o número máximo de reinícios do algoritmo $MaxIter$ e o máximo de iterações da ILS $MaxIterILS$. Foram definidos no conjunto de testes os seguintes valores: $\alpha \in \{2,5,8,10\}$, $MaxIter \in \{5,8,10\}$  e $MaxIterILS \in$ $\{50,100\}$.
 Dessa forma, foram geradas 24 combinações de parâmetros, sendo cada uma delas executada 10 vezes para as 1740 instâncias. 
 %response variable%
 
-	Os resultados foram analisados pelo teste não-paramétrico de Kruskall-Wallis utilizando  o RPD médio como variável de resposta. Seguindo a equação \ref{rpd}, $f_{method}$ foi definido como sendo o resultado da combinação para a instância e $f_{best}$ como o melhor resultado obtido dentre todas combinações.
+	Os resultados foram analisados por meio do teste não-paramétrico de Kruskall-Wallis utilizando  o Average RPD(\%) como variável de resposta. Seguindo a Equação \ref{rpd}, a variável $f_{method}$ foi definida como sendo o resultado da combinação para a instância e $f_{best}$ como o melhor resultado obtido dentre todas combinações.
 	No teste de Kruskall-Wallis duas hipóteses são testadas: a hipótese nula afirma que a performance de todas implementações testadas são estatisticamente similares, e a hipótese alternativa conclui que pelo menos uma implementação possui performance significativamente diferente. Na Figura \ref{fig:calib-algo1}, os intervalos médios de confiança são apresentados à 95\% de confiança.
 
 \begin{figure}[ht]
@@ -795,9 +796,10 @@ Dessa forma, foram geradas 24 combinações de parâmetros, sendo cada uma delas
      \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS$\_$RVND$\_$1 experiment.}
   	\label{fig:calib-algo1}
 \end{figure}
-	Intervalos que se sobrepõem sugerem que pode não haver diferença entre as implementações. Os  intervalos '8-100-5' e '10-100-5' se sobrepuseram e apresentaram com menor média. Pelo teste de Kruskall-Wallis, p-valor 0.00 $<$ 0.05 indica que a hipótese nula deve ser rejeitada, concluindo assim que pelo menos uma implentação tem performance significativamente diferente (hipótese alternativa). A combinação '10-100-5' foi escolhida por apresentar o melhor intervalo.
+
+	Intervalos que se sobrepõem sugerem que pode não haver diferença entre as implementações. Os  intervalos '8-100-5' e '10-100-5' se sobrepuseram e apresentaram com menor média. Pelo teste de Kruskall-Wallis, o p-valor=$0.00 \leq 0.05$ obtido indica que a hipótese nula deve ser rejeitada, concluindo assim que pelo menos uma implentação tem performance significativamente diferente (hipótese alternativa). A combinação '10-100-5' foi escolhida por apresentar o melhor intervalo.
 	
-De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas as mesmas 24 combinações acima e em seguida executadas 10 vezes em cada uma das instâncias. As combinações que possuiam menor intensidade de perturbação $\alpha$ obtiveram destaque (Figura \ref{fig:calib-algo2}).
+De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas as 24 combinações de parâmetros acima e em seguida executadas 10 vezes em cada instância. As combinações que possuiam menor o número de perturbações $\alpha$ obtiveram destaque (Figura \ref{fig:calib-algo2}).
 
 \begin{figure}[ht]
 	\centering
@@ -806,9 +808,9 @@ De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas a
   	\label{fig:calib-algo2}
 \end{figure}
 
- As duas melhores médias '8-100-2' e '10-100-2' não se sobrepuseram nos intervalos de confiança, indicando diferença entre as implementações. Ademais, com p-valor 0.00 $<$ 0.05, a hipótese alternativa é novamente válida e há pelo menos uma implementação com  performance significamente diferente. Isto posto, foi definida a combinação '10-100-2' para o algoritmo, por possuir menor média.
+ As duas menores médias '8-100-2' e '10-100-2' não se sobrepuseram nos intervalos de confiança, indicando que há diferenças entre as implementações. Ademais, com o p-valor=$0.00 \leq 0.05$, a hipótese alternativa é novamente válida e há pelo menos uma implementação com  performance significamente diferente. Isto posto, foi definida a combinação '10-100-2' para o algoritmo.
 
-O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$, o tamanho da população e o número máximo de iterações, respectivamente.  Os conjuntos para estes parâmetros foram definidos em $PopSize \in \{30,50,70\}$ e $MaxIter \in \{5,8,10\}$. São geradas 9 combinações de parâmetros e foram executadas sobre as 1740 instâncias.
+O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$, o tamanho da população e o número máximo de iterações, respectivamente.  Os conjuntos de valores destes parâmetros foram definidos em $PopSize \in \{30,50,70\}$ e $MaxIter \in \{5,8,10\}$. São geradas 9 combinações de parâmetros e foram executadas em todas as instâncias.
 
 \begin{figure}[ht]
 	\centering
@@ -817,15 +819,19 @@ O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$,
   	\label{fig:calib-algo3}
 \end{figure}
 
-Novamente, pelo teste de Kruskall-Wallis, seu p-valor $0.00 < 0.05$ indica a validade da hipótese alternativa. Os intervalos de confiança são mostrados na Figura \ref{fig:calib-algo3}. As melhores médias '70-5', '70-8' e '70-10' tiveram seus intervalos sobrepostos, o que indica que são estatisticamente equivalentes. Portanto, foi escolhida a combinação '70-5' por executar em menor tempo do que as demais citadas.
+Novamente, pelo teste de Kruskall-Wallis, o p-valor=$0.00 \leq 0.05$ obtido indica a validade da hipótese alternativa. Os intervalos de confiança são mostrados na Figura \ref{fig:calib-algo3}. As melhores médias '70-5', '70-8' e '70-10' tiveram seus intervalos sobrepostos, o que indica que são estatisticamente equivalentes. Portanto, foi escolhida a combinação '70-5' por executar em menor tempo do que as demais ao possuir um número menor de iterações.
 
 
-\subsection{Resultados instâncias de pequeno porte}\label{small-instances-results}
+\subsection{Small-scale Instances Results}\label{small-instances-results}
 
-Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o software CPLEX. Este foi definido com tempo limite máximo para execuções $t_{max} = 3600$. Para $N = 8$, tanto as heurísticas quanto o software atingiram a solução ótima. Dessa forma, as análises nesta subseção tratam as instâncias em que $N \in \{10,15,20\}$.
+Em instâncias pequenas, os resultados das heurísticas foram comparados entre si e aos resultados do software CPLEX. Para o software, foi definido o tempo limite de execução de $t_{max} = 3600s$. Para $N = 8$, tanto as heurísticas quanto o software atingiram a solução ótima. Dessa forma, as análises nesta Seção tratam as instâncias em que $N \in \{10,15,20\}$. Todas as três heurísticas foram executadas cinco vezes para cada uma das 1200 instâncias pequenas, e o software CPLEX uma única vez. 
+
+A performance de cada algoritmo é medida pelo Average RPD(\%) seguindo a Equação \ref{rpd}, onde $f_{best}$ é o melhor resultado encontrado pelos quatro algoritmos, e $f_{method}$ como sendo a média das cinco execuções da heurística para cada instâncias. Como o software CPLEX foi executado uma vez, $f_{method}$ é o resultado desta execução.
+
+Os resultados para as quatro implementações foram analisados pelo teste de Kruskall-Wallis. O p-valor=$0.00 \leq 0.05$ obtido indica que ao menos uma das implementações é significativamente diferente. Na Figura \ref{graphics:small} são plotados os valores de Average RPD(\%) das instâncias agrupadas pelo número de tarefas, e por último um gráfico geral de todas intâncias.
+
 
 \begin{figure}
-\label{graphics:small}
 \centering     %%% not \center
 \makebox[\textwidth][c]{
 \subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{Images/small-instances/avg 10 jobs int}}
@@ -836,7 +842,14 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
 \subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/small-instances/general avg rpd int}} 
 }
 \caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de pequeno porte.}
+\label{graphics:small}
 \end{figure}
+
+É perceptível o distanciamento dos resultados do software CPLEX a medida em que o número de tarefas aumenta. Os algoritmos ILS$\_$RVND$\_$1 e GA$\_$LS obtiveram seus intervalos sobrepostos para $N=10$ e $N=15$, indicando que suas implementações são estatisticamente equivalentes para estes grupos. No gráfico geral, o algoritmo ILS$\_$RVND$\_$1 obteve a melhor média, seguido pelas heurísticas GA$\_$LS, ILS$\_$RVND$\_$2 e então CPLEX.
+
+Na Tabela \ref{table:small-results}, as instâncias são agrupadas pelo número de tarefas $N$ e pelo número de veículos $K$, e seus resultados avaliados pelo Best RPD(\%) e Average RPD(\%). Nesta tabela, é possível observar a qualidade das soluções ao aumentar o número de clientes e veículos. Os resultados retratam o cenário apresentado acima, onde a heurística ILS$\_$RNVD$\_$1 possui a menor média geral. Este algoritmo disputa os melhores resultados com o Algoritmo Genético GA$\_$LS em 66,67\% dos grupos, e possui a média para o Best RPD(\%) quando comparada à heurística GA$\_$LS para $N=20$ e $K=6$.
+
+
 
 \begin{table}
 \centering
@@ -876,114 +889,15 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
  \\
 	\noalign{\smallskip}\hline
 \end{tabular}
-\label{table:ils}
+\label{table:small-results}
 \end{table}
 
-
-\subsection{Resultados instâncias de grande porte}\label{large-instances-results}
-
-
-\begin{figure}
-\label{graphics:large}
-\centering     %%% not \center
-\makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 50$]{\label{fig:a}\includegraphics[width=78mm]{Images/large-instances/avg rpd 50 jobs int}}
-\subfigure[Average RPD with $N = 80$]{\label{fig:b}\includegraphics[width=78mm]{Images/large-instances/avg rpd 80 jobs int}} 
-}
-\makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 100$]{\label{fig:c}\includegraphics[width=78mm]{Images/large-instances/avg rpd 100 jobs int}} 
-\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/large-instances/avg rpd all algos}} 
-}
-\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de grande porte.}
-\end{figure}
+Um fator importante a se considerar ao julgar a qualidade de soluções dos algoritmos é o tempo de execução. Neste trabalho, o tempo foi medido em segundos e suas médias apresentadas por grupos na Tabela \ref{table:time-small}.  Nela, o software CPLEX é executado com tempo médio t=3600(s), indicando que a solução ótima não foi atingida com certeza no tempo limite. Para as três heurísticas, o pior tempo médio foi alcançado pela heurística populacional (GA$\_$LS). Dentre as heurísticas de solução única, ILS$\_$RVND$\_$1 obteve o melhor tempo médio de execução.
 
 
 \begin{table}
 \centering
-\caption{Best RPD and Avg. RPD analyisis over large instances.}
-\begin{tabular}{ccccccc}
-	\hline\noalign{\smallskip}
-	& \multicolumn{2}{c}{ILS$\_$RVND$\_$1} & \multicolumn{2}{c}{ILS$\_$RVND$\_$2} & \multicolumn{2}{c}{GA$\_$LS}\\
-	\cline{2-7}\noalign{\smallskip}
-	N x K & Best & Avg. & Best & Avg.  & Best & Avg. \\
-	\hline
-\noalign{\smallskip}
-50 x  5 & 0.41 & 0.89 &12.02 & 13.91 & 0.21 & 1.48 \\
-\noalign{\smallskip}
-50 x  8 & 0.00 & 0.41 & 10.90 & 13.14 & 0.93 & 2.22 \\
-\noalign{\smallskip}
-50 x  10 & 0.00 & 0.31 & 10.11 & 11.86 & 1.15 & 2.38 \\
-\noalign{\smallskip}
-50 x  12 & 0.00 & 0.31 & 9.05  & 10.75 & 1.40 & 2.43 \\
-\noalign{\smallskip}
-80 x  5 & 0.71 & 1.63 & 14.52 & 15.80 & 0.89 & 2.40 \\
-\noalign{\smallskip}
-80 x  8 & 0.05 & 0.65 & 16.53 & 18.05 & 1.76 & 3.38 \\
-\noalign{\smallskip}
-80 x  10 & 0.00 & 0.59 & 16.13 & 17.63 & 2.19 & 3.43 \\
-\noalign{\smallskip}
-80 x  12 & 0.00 & 0.40 & 14.56 & 16.19 & 2.11 & 3.29 \\
-\noalign{\smallskip}
-100 x  5 & 0.61 & 1.24 & 14.63 & 15.95 & 0.91 & 2.44 \\
-\noalign{\smallskip}
-100 x  8 & 0.00 & 0.69 & 17.12 & 18.90 & 2.03 & 3.40 \\
-\noalign{\smallskip}
-100 x  10 & 0.01 & 0.46 & 16.86 & 18.56 & 2.24 & 3.57 \\
-\noalign{\smallskip}
-100 x  12 & 0.00 & 0.45 & 16.64 & 18.17 & 2.37 & 3.48 \\
- \hline \noalign{\smallskip}
-	Average: & 0.15 & 0.67 & 14.09  & 15.74 & 1.52 & 2.83
- \\
-	\noalign{\smallskip}\hline
-\end{tabular}
-\label{table:ils}
-\end{table}
-
-\begin{table}
-\centering
-\caption{Runtime Average Analysis over large instances.}
-\begin{tabular}{cccc}
-	\hline\noalign{\smallskip}
-	& ILS$\_$RVND$\_$1 & ILS$\_$RVND$\_$2 & GA$\_$LS\\
-	\cline{2-4}\noalign{\smallskip}
-	N x K & Avg. & Avg. & Avg. \\
-	\hline
-\noalign{\smallskip}
-50 x  5 & 17.57 & 8.48 & 35.41  \\
-\noalign{\smallskip}
-50 x  8 & 16.93 & 11.90 & 36.60  \\
-\noalign{\smallskip}
-50 x  10 & 16.32 & 14.44 & 36.55  \\
-\noalign{\smallskip}
-50 x  12 & 16.46 & 17.22 & 38.87   \\
-\noalign{\smallskip}
-80 x  5 & 68.03 & 28.37 & 180.42  \\
-\noalign{\smallskip}
-80 x  8 & 58.88 & 35.36 & 162.78  \\
-\noalign{\smallskip}
-80 x  10 & 55.00 & 40.32 & 154.89  \\
-\noalign{\smallskip}
-80 x  12 & 53.02 & 46.44 & 160.59  \\
-\noalign{\smallskip}
-100 x  5 & 136.08 & 51.34 & 415.69  \\
-\noalign{\smallskip}
-100 x  8 & 114.50 & 61.28 & 357.94 \\
-\noalign{\smallskip}
-100 x  10 & 103.80 & 68.83 & 340.52  \\
-\noalign{\smallskip}
-100 x  12 & 97.80 & 77.04 & 343.74  \\
- \hline \noalign{\smallskip}
-	Average: & 62.87 & 38.42 & 188.67
- \\
-	\noalign{\smallskip}\hline
-\end{tabular}
-\label{table:time-small}
-\end{table}
-
-
-\begin{table}
-\centering
-\caption{Runtime Average Analysis over large instances.}
+\caption{Runtime Average Analysis over small instances.}
 \begin{tabular}{ccccc}
 	\hline\noalign{\smallskip}
 	& ILS$\_$RVND$\_$1 & ILS$\_$RVND$\_$2 & GA$\_$LS & CPLEX \\
@@ -1023,7 +937,131 @@ Nas instâncias pequenas, as heurísticas foram comparadas aos resultados o soft
 \end{table}
 
 
+\subsection{Large-scale Instances Results}\label{large-instances-results}
+
+Em instâncias grandes, os resultados para as heurísticas foram comparados entre si. As três heurísticas foram executadas cinco vezes em cada uma das 540 instâncias de grande porte. A qualidade das soluções encontradas é também avaliada pelo Average RPD(\%) pela Equação \ref{rpd} e plotadas na Figura \ref{graphics:large} com intervalos de à 95\% de confiança. Neste grupo de instâncias, é possível observar um distanciamento considerável do algoritmo ILS$\_$RNVD$\_$2 para os demais algoritmos. 
+
+Pelo Teste de Kruskall-Wallis, o p-valor=$0.00 \leq 0.05$ obtido sustenta a hipótese alternativa de que pelo menos uma implementação é significativamente diferente das demais.
+Além disso, não existem intervalos sobrepostos nos gráficos para $N \in \{50,80,100\}$, o que indica que todas os resultados são realmente estatisticamente diferentes.
+
+Os algoritmos se comportam de forma semelhante à medida em que o número de clientes $N$ aumenta, e no gráfico geral, ao distanciar o intervalo algoritmo ILS$\_$RVND$\_$1 do eixo x, indica que há instâncias em que os demais algoritmos obtiveram melhores resultados.
+
+\begin{figure}
+\label{graphics:large}
+\centering     %%% not \center
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 50$]{\label{fig:a}\includegraphics[width=78mm]{Images/large-instances/avg rpd 50 jobs int}}
+\subfigure[Average RPD with $N = 80$]{\label{fig:b}\includegraphics[width=78mm]{Images/large-instances/avg rpd 80 jobs int}} 
+}
+\makebox[\textwidth][c]{
+\subfigure[Average RPD with $N = 100$]{\label{fig:c}\includegraphics[width=78mm]{Images/large-instances/avg rpd 100 jobs int}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/large-instances/avg rpd all algos}} 
+}
+\caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de grande porte.}
+\end{figure}
+
+Na Tabela \ref{table:large-results}, ao analisar os resultados pelos conjuntos de instâncias, é possível observar que a primeira heurística ILS$\_$RVND$\_$1 obteve destaque em cima das demais, seguido do Algoritmo Genético  GA$\_$LS e da segunda heurística ILS$\_$RVND$\_$2. Apenas em um conjunto de instâncias, '50-5', o primeiro obteve a média para o Best RPD(\%) inferior a média de melhor resultado do Algoritmo Genético.
+
+\begin{table}
+\centering
+\caption{Best RPD and Avg. RPD analysis over large instances.}
+\begin{tabular}{ccccccc}
+	\hline\noalign{\smallskip}
+	& \multicolumn{2}{c}{ILS$\_$RVND$\_$1} & \multicolumn{2}{c}{ILS$\_$RVND$\_$2} & \multicolumn{2}{c}{GA$\_$LS}\\
+	\cline{2-7}\noalign{\smallskip}
+	N x K & Best & Avg. & Best & Avg.  & Best & Avg. \\
+	\hline
+\noalign{\smallskip}
+50 x  5 & 0.41 & 0.89 &12.02 & 13.91 & 0.21 & 1.48 \\
+\noalign{\smallskip}
+50 x  8 & 0.00 & 0.41 & 10.90 & 13.14 & 0.93 & 2.22 \\
+\noalign{\smallskip}
+50 x  10 & 0.00 & 0.31 & 10.11 & 11.86 & 1.15 & 2.38 \\
+\noalign{\smallskip}
+50 x  12 & 0.00 & 0.31 & 9.05  & 10.75 & 1.40 & 2.43 \\
+\noalign{\smallskip}
+80 x  5 & 0.71 & 1.63 & 14.52 & 15.80 & 0.89 & 2.40 \\
+\noalign{\smallskip}
+80 x  8 & 0.05 & 0.65 & 16.53 & 18.05 & 1.76 & 3.38 \\
+\noalign{\smallskip}
+80 x  10 & 0.00 & 0.59 & 16.13 & 17.63 & 2.19 & 3.43 \\
+\noalign{\smallskip}
+80 x  12 & 0.00 & 0.40 & 14.56 & 16.19 & 2.11 & 3.29 \\
+\noalign{\smallskip}
+100 x  5 & 0.61 & 1.24 & 14.63 & 15.95 & 0.91 & 2.44 \\
+\noalign{\smallskip}
+100 x  8 & 0.00 & 0.69 & 17.12 & 18.90 & 2.03 & 3.40 \\
+\noalign{\smallskip}
+100 x  10 & 0.01 & 0.46 & 16.86 & 18.56 & 2.24 & 3.57 \\
+\noalign{\smallskip}
+100 x  12 & 0.00 & 0.45 & 16.64 & 18.17 & 2.37 & 3.48 \\
+ \hline \noalign{\smallskip}
+	Average: & 0.15 & 0.67 & 14.09  & 15.74 & 1.52 & 2.83
+ \\
+	\noalign{\smallskip}\hline
+\end{tabular}
+\label{table:large-results}
+\end{table}
+
+Ao analisar o tempo de execução das três implementações em instâncias grandes, na Tabela \ref{table:time-large} é possível observar que em todos os grupos, o algoritmo ILS$\_$RVND$\_$2 foi executou com média mais rápida, seguido do algoritmo ILS$\_$RVND$\_$1 e então do Algoritmo Genético GA$\_$LS. Por se tratar de uma heurística populacional, o GA$\_$LS consome mais tempo para gerar e avaliar toda a população repetidas vezes. 
+\begin{table}
+\centering
+\caption{Runtime Average Analysis over large instances.}
+\begin{tabular}{cccc}
+	\hline\noalign{\smallskip}
+	& ILS$\_$RVND$\_$1 & ILS$\_$RVND$\_$2 & GA$\_$LS\\
+	\cline{2-4}\noalign{\smallskip}
+	N x K & Avg. & Avg. & Avg. \\
+	\hline
+\noalign{\smallskip}
+50 x  5 & 17.57 & 8.48 & 35.41  \\
+\noalign{\smallskip}
+50 x  8 & 16.93 & 11.90 & 36.60  \\
+\noalign{\smallskip}
+50 x  10 & 16.32 & 14.44 & 36.55  \\
+\noalign{\smallskip}
+50 x  12 & 16.46 & 17.22 & 38.87   \\
+\noalign{\smallskip}
+80 x  5 & 68.03 & 28.37 & 180.42  \\
+\noalign{\smallskip}
+80 x  8 & 58.88 & 35.36 & 162.78  \\
+\noalign{\smallskip}
+80 x  10 & 55.00 & 40.32 & 154.89  \\
+\noalign{\smallskip}
+80 x  12 & 53.02 & 46.44 & 160.59  \\
+\noalign{\smallskip}
+100 x  5 & 136.08 & 51.34 & 415.69  \\
+\noalign{\smallskip}
+100 x  8 & 114.50 & 61.28 & 357.94 \\
+\noalign{\smallskip}
+100 x  10 & 103.80 & 68.83 & 340.52  \\
+\noalign{\smallskip}
+100 x  12 & 97.80 & 77.04 & 343.74  \\
+ \hline \noalign{\smallskip}
+	Average: & 62.87 & 38.42 & 188.67
+ \\
+	\noalign{\smallskip}\hline
+\end{tabular}
+\label{table:time-large}
+\end{table}
+
+Para a heurística ILS$\_$RVND$\_$2, a técnica de Aprimoramento Interno de Rota não obteve sucesso para instâncias grandes, e isso se dá pelo aprimoramento de vizinhanças externas às rotas não obtêr um número favorável de melhoras a assim acionar o aprimoramento interno. Isso não acontece na primeira heurística ILS$\_$RVND$\_$2, que aciona todas as vizinhanças internas e externas em ordem aleatória (RVND). Dessa forma, o tempo de médio de execução para a heurística ILS$\_$RVND$\_$1  é significativamente superior a da outra (ILS$\_$RVND$\_$2).
+
+
+
+
 \section{Conclusions}\label{conclusions}
+
+Neste trabalho foram realizados estudos para solucionar o problema integrado de agendamento de produção e entrega, com frota heterogênea de veículos e tarefas de diferentes capacidades. 
+
+Por se tratar de um problema NP-Difícil, métodos convencionais são ineficientes para resolver o problema. Pelo conhecimento dos autores, até o atual momento não é abordada na literatura esta versão para o problema integrado.
+
+Foram propostos um modelo MILP, duas heurísticas Iterated Local Search com RVND e um Algoritmo Genético para o problema. As instâncias para esta nova abordagem foram geradas aqui, totalizando 1740 instâncias de pequeno e grande porte. A quantidade máxima de clientes considerados foi de 100 clientes.
+
+Em instâncias pequenas, as heurísticas obtiveram melhores soluções do que o software CPLEX em um tempo muito inferior. 
+A implementação básica de Iterated Local Search com RVND (ILS$\_$RVND$\_$1), no geral, se mostrou a mais eficiente quando comparadas com as demais e ao software CPLEX, em qualidade de solução e tempo de execução. 
+
+Para trabalhos futuros, o objetivo é tratar esse problema em um ambiente de máquinas paralelas e tempo de preparação das máquinas.
 
 \subsubsection*{Acknowledgments.}
 The authors thanks the financial support of FAPEMIG, CAPES and CNPq, Brazilian research agencies.
