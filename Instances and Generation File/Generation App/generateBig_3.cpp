@@ -49,8 +49,11 @@ void generateTime(vector<vector<int> > &tij,int numTrabalhos,int numVeiculos,int
 
 int main(){
 	srand(time(NULL));
-	vector<int> n{50,80,100};
-	vector<int> k{5,8,10,12};
+	// vector<int> n{50,80,100};
+	 vector<int> n{150,200};
+	// vector<int> k{5,8,10,12};
+	vector<int> k{8,12,16,20};
+
 	vector<int> instancia{1,2,3}; //Analise de parametros da ILS: 180 instancias por arquivo.
 	vector<float> mi{1.5,2.0,2.5}; //u
 	vector<float> delta{0.5,1.0,1.5,2.0,2.5};

@@ -69,27 +69,31 @@ Continua...
 
 \section{Revisão Literária}\label{lit-review}
 
-São descritos nesta seção estudos prévios realizados em problemas de Agendamento de Produção, Roteamentos de Veículos e a integração destes dois.
-
-%Inserir aqui VRP e HFRP
-M. Gendreau, G. Laporte and C. Musaragayi (1999)\cite{gendreau1999tabu} propuseram um algoritmo Tabu Search para o problema de Roteamento de Veículos com Frota Heterogênea (HVRP), e foram obtidas soluções de boa qualidade para as instâncias abordadas.
-
+Na literatura existem alguns trabalhos sobre o problema integrado de agendamento de produção e entrega.
 
 %inserir aqui os problemas de agendamento
-Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de agendamento de produção e entre de lotes, com vários clientes e manufaturas, e definiram assim a área de Supply Chain Scheduling.
-Kirlik and Oguz (2012) \cite{kirlik2012variable} desenvolveram um General Variable Neighborhood Search (GVNS) para resolver o problema de Minimização do Atraso Total Ponderado com tempos de configuração dependentes da sequência.
+Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de agendamento de produção e entre de lotes, com vários clientes e manufaturas, e definiram assim a área de Supply Chain Scheduling. Em seu trabalho, o objetivo principal era minimizar os custos de agendamento e entrega, utilizando diversos objetivos clássicos de agendamento. A cooperação entre a manufatura e o fornecedor foi apresentada como fator importante de diminuição de custos no agendamento.
 
-%Inserir aqui a combinação dos dois problemas
-Na literatura, existem trabalhos prévios que abordam a problemas integrados de produção e transporte.
-
-Ullrich  (2013) aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
+Ullrich  (2013) \cite{ullrich2013} aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
 
 Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
+
+Xiao, Konak (2015) \cite{xiao2015simulating} apresentaram o problema de Green Vehicle Routing and Schedulling (GVRSP) considerando condições depentendes do tempo de tráfego com múltiplas funções objetivo, como reduzir emissão total de CO$_{2}$, distância total percorrida e tempo total de trajeto. Uma nova formulação matématica é proposta, e também um algoritmo de Simulated Annealing (SA) para resolver instâncias de grande porte. Resultados mostram que até 50\% da emissão de CO$_{2}$ pode ser atingida, com reduções médias de 12\% e 28\% comparado à métodos tradicionais de roteamento.
+
+Cheng, Leung and Li (2015) \cite{cheng2015integrated} estudaram o problema integrado de produção e entrega considerando o processamento em lotes em uma máquina, desde que respeite sua capacidade. Em seu trabalho, tamanhos das tarefas e tempos de processamento são arbitrários, e veículos com capacidades idênticas. Foi gerado um limite inferior (lower bound) para o custo total ideal, e implementado um algoritmo de Colônia de Formigas, obtendo bons resultados e executando em tempo curto para instâncias de grande porte.
+
 Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
 
+Billaut, Croce and Ta (2017) \cite{billaut2017tabu} abordaram o problema integrado de agendamento de produção em entrega em um ambiente de produção Flow Shop com apenas um veículo disponível. Foi minimizado o atraso total das entregas, sendo implementados dois algoritmos de Tabu Search e uma mateurística (matheuristic). Experimentos foram realizados em conjuntos de dados aleatórios.
+
+Wang, Yao, Sheng and Yang (2019) \cite{wang2019minimizing} estudaram o problema integrado de produção e distribuição de tarefas para uma máquina linear e múltiplos veículos. Neste ambiente, é possível trocar uma máquina entre duas produções adjacentes. O objetivo de minimizar a emissão total de carbono foi acrescentado à minimizar os custos totais. Foram desenvolvidos um modelo MILP para a solução e em seguida um algoritmo híbrido de Busca Tabu. 
+
+Ghannadpour and Zarrabi (2019) \cite{ghannadpour2019multi} abordaram o problema multi-objetivo de frota heterogênea integrada a produção, com minimização de energia de acordo com novos requisitos sustentáveis. São apresentados dois casos de minimização, são tratados o número de veículos alugados e a satisfação dos clientes, acrescentado à minimização de energia (primeiro caso) e minimização de distância percorrida(segundo caso). É apresentada uma nova formulação matemática para o problema de roteamento de veículos com janelas de tempo (VRPTW) e desenvolvido uma nova solução baseada em um algoritmo evolucionário.
+
+Liu, Wenli and Kunpeng Li, and Zou (2020) \cite{liu2020coordinated} estudaram o problema integrado de produção e entrega para uma máquina linear, com objetivo de minimizar a soma dos tempos de entrega. Neste trabalho, os veículos são limitados e possuem mesma capacidade. É proposto um algoritmo de Variable Neighborhood Search (VNS) e complementado com um algoritmo de Busca Tabu para intensificação. Os resultados são comparados com o Solver CPLEX e dois algoritmos de heurísticas na literatura, obtendo-se bons resultados.
+
+
 Tamannaei and Morteza (2019)\cite{tamannaei2019} desenvolveram o primeiro modelo matemático misto de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
-
-
 
 
 \section{Descrição do Problema}\label{problemdescription}
