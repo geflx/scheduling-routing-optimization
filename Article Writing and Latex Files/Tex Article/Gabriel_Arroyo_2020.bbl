@@ -9,6 +9,11 @@ J.~Du and J.~Y.-T. Leung, ``Minimizing total tardiness on one machine is
 N.~G. Hall and C.~N. Potts, ``Supply chain scheduling: Batching and delivery,''
   {\em Operations Research}, vol.~51, no.~4, pp.~566--584, 2003.
 
+\bibitem{ullrich2013}
+C.~A. Ullrich, ``Integrated machine scheduling and vehicle routing with time
+  windows,'' {\em European Journal of Operational Research}, vol.~227, no.~1,
+  pp.~152--165, 2013.
+
 \bibitem{condotta2013tabu}
 A.~Condotta, S.~Knust, D.~Meier, and N.~V. Shakhlevich, ``Tabu search and lower
   bounds for a combined production--transportation problem,'' {\em Computers \&
@@ -25,12 +30,6 @@ B.-Y. Cheng, J.~Y.-T. Leung, and K.~Li, ``Integrated scheduling of production
   and distribution to minimize total cost using an improved ant colony
   optimization method,'' {\em Computers \& Industrial Engineering}, vol.~83,
   pp.~217--225, 2015.
-
-\bibitem{hassanzadeh2017}
-A.~Hassanzadeh and M.~Rasti-Barzoki, ``Minimizing total resource consumption
-  and total tardiness penalty in a resource allocation supply chain scheduling
-  and vehicle routing problem,'' {\em Applied Soft Computing}, vol.~58,
-  pp.~307--323, 2017.
 
 \bibitem{billaut2017tabu}
 J.-C. Billaut, F.~Della~Croce, and Q.~C. Ta, ``Tabu search and matheuristic
@@ -57,11 +56,6 @@ M.~Tamannaei and M.~Rasti-Barzoki, ``Mathematical programming and solution
   approaches for minimizing tardiness and transportation costs in the supply
   chain scheduling problem,'' {\em Computers \& Industrial Engineering},
   vol.~127, pp.~643--656, 2019.
-
-\bibitem{ullrich2013}
-C.~A. Ullrich, ``Integrated machine scheduling and vehicle routing with time
-  windows,'' {\em European Journal of Operational Research}, vol.~227, no.~1,
-  pp.~152--165, 2013.
 
 \bibitem{mladenovic1997variable}
 N.~Mladenovi{\'c} and P.~Hansen, ``Variable neighborhood search,'' {\em

@@ -3,44 +3,46 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: Gabriel_Arroyo_2020.aux
 The style file: ieeetr.bst
 Database file #1: Bibliography/papers.bib
-You've used 16 entries,
+Warning--I didn't find a database entry for "hassanzadeh2017"
+You've used 15 entries,
             1876 wiz_defined-function locations,
-            580 strings with 6541 characters,
-and the built_in function-call counts, 5103 in all, are:
-= -- 557
-> -- 147
+            576 strings with 6343 characters,
+and the built_in function-call counts, 4776 in all, are:
+= -- 520
+> -- 139
 < -- 0
-+ -- 55
-- -- 39
-* -- 353
-:= -- 683
-add.period$ -- 17
-call.type$ -- 16
-change.case$ -- 15
++ -- 52
+- -- 37
+* -- 332
+:= -- 641
+add.period$ -- 16
+call.type$ -- 15
+change.case$ -- 14
 chr.to.int$ -- 0
-cite$ -- 16
-duplicate$ -- 261
-empty$ -- 468
-format.name$ -- 39
-if$ -- 1262
+cite$ -- 15
+duplicate$ -- 244
+empty$ -- 438
+format.name$ -- 37
+if$ -- 1180
 int.to.chr$ -- 0
-int.to.str$ -- 16
-missing$ -- 17
-newline$ -- 52
-num.names$ -- 16
-pop$ -- 33
+int.to.str$ -- 15
+missing$ -- 16
+newline$ -- 49
+num.names$ -- 15
+pop$ -- 31
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 210
+skip$ -- 195
 stack$ -- 0
-substring$ -- 456
-swap$ -- 130
+substring$ -- 424
+swap$ -- 121
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 58
-width$ -- 18
-write$ -- 168
+while$ -- 54
+width$ -- 17
+write$ -- 158
+(There was 1 warning)

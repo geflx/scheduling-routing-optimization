@@ -62,10 +62,13 @@ Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamen
   \item Duas abordagens heurísticas de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.).
   \item Um modelo de programação linear para solução dos problemas integrados.
 \end{itemize}
-Na Seção \ref{lit-review} são apresentados estudos prévios na literatura, e na Seção \ref{problemdescription} a descrição do problema tratado neste artigo. Em seguida, nas Seções \ref{solutionrepresentation} e \ref{hipcase} são retratadas a representação de solução escolhida e um caso hipotético do problema, respectivamente. Acompanha esta última um modelo matemático misto de programação linear na Seção \ref{mathematicalmodel}. Na Seção \ref{instancesgen} são descritos parâmetros e restrições utilizadas na geração de instâncias.
 
-Continua...
-%Continuar a escrever!..
+Na Seção \ref{lit-review} são apresentados estudos prévios na literatura. Em seguida, nas Seções \ref{problemdescription} e \ref{mathematicalmodel} a descrição do problema e o modelo MILP proposto. A Seção \ref{solutionrepresentation} e Subseção \ref{hipcase} contém a representação de solução escolhida e um caso hipotético do problema, respectivamente. 
+
+Na Seção \ref{instancesgen} é detalhamente explicitada a geração de instâncias. Os operadores de vizinhança e métodos de busca local RVND são apresentados na Seção \ref{nboperators}. A solução inicial utilizada nos algoritmos é citada na Seção \ref{solutionapproach}.
+
+As duas versões de Iterated Local Search são descritas na Seção \ref{ils}, e o Algoritmo Genético na Seção \ref{genalgo}. Em seguida, experimentos computacionais são mostrados na Seção \ref{experiments}, sendo a calibração de parâmetros descrita na Subseção \ref{parameters-calibration} e os resultados dos algoritmos nas Subseções \ref{small-instances-results} e \ref{large-instances-results}. Por fim, o trabalho é concluido na Seção \ref{conclusions}.
+
 
 \section{Revisão Literária}\label{lit-review}
 
@@ -76,24 +79,22 @@ Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de ag
 
 Ullrich  (2013) \cite{ullrich2013} aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
 
-Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear e considerando datas de entrega para os trabalhos, com veículos com mesma capacidade para entrar as tarefas.
+Condotta, Knust, Meier, and Shakhlevich (2013)\cite{condotta2013tabu} estudaram o problema de minimizar o atraso máximo de uma máquina linear juntamente com o transporte de tarefas, considerando datas de entrega para os trabalhos e veículos limitados de mesma capacidade. Neste trabalho foi formulado um modelo MILP do problema, desenvolvido um algoritmo de Busca Tabu para soluções parciais e então calculada a entrega em tempo polinomial para as soluções parciais.
 
 Xiao, Konak (2015) \cite{xiao2015simulating} apresentaram o problema de Green Vehicle Routing and Schedulling (GVRSP) considerando condições depentendes do tempo de tráfego com múltiplas funções objetivo, como reduzir emissão total de CO$_{2}$, distância total percorrida e tempo total de trajeto. Uma nova formulação matématica é proposta, e também um algoritmo de Simulated Annealing (SA) para resolver instâncias de grande porte. Resultados mostram que até 50\% da emissão de CO$_{2}$ pode ser atingida, com reduções médias de 12\% e 28\% comparado à métodos tradicionais de roteamento.
 
-Cheng, Leung and Li (2015) \cite{cheng2015integrated} estudaram o problema integrado de produção e entrega considerando o processamento em lotes em uma máquina, desde que respeite sua capacidade. Em seu trabalho, tamanhos das tarefas e tempos de processamento são arbitrários, e veículos com capacidades idênticas. Foi gerado um limite inferior (lower bound) para o custo total ideal, e implementado um algoritmo de Colônia de Formigas, obtendo bons resultados e executando em tempo curto para instâncias de grande porte.
-
-Há pouco tempo, Hassanzadeh and RastiBarzoki (2017)\cite{hassanzadeh2017} estudaram a otimização na cadeia de produção considerando o problema de roteamento de veículos com penalidades de atraso e consumo total de recursos.
+Cheng, Leung and Li (2015) \cite{cheng2015integrated} estudaram o problema integrado de produção e entrega considerando o processamento em lotes em uma máquina, desde que respeite sua capacidade. Em seu trabalho, os tamanhos de tarefas e tempos de processamento são arbitrários, e veículos contam com capacidades idênticas. Foi gerado um limite inferior (lower bound) para o custo total ideal, e implementado um algoritmo de Colônia de Formigas, obtendo bons resultados e executando em tempo curto para instâncias de grande porte.
 
 Billaut, Croce and Ta (2017) \cite{billaut2017tabu} abordaram o problema integrado de agendamento de produção em entrega em um ambiente de produção Flow Shop com apenas um veículo disponível. Foi minimizado o atraso total das entregas, sendo implementados dois algoritmos de Tabu Search e uma mateurística (matheuristic). Experimentos foram realizados em conjuntos de dados aleatórios.
 
-Wang, Yao, Sheng and Yang (2019) \cite{wang2019minimizing} estudaram o problema integrado de produção e distribuição de tarefas para uma máquina linear e múltiplos veículos. Neste ambiente, é possível trocar uma máquina entre duas produções adjacentes. O objetivo de minimizar a emissão total de carbono foi acrescentado à minimizar os custos totais. Foram desenvolvidos um modelo MILP para a solução e em seguida um algoritmo híbrido de Busca Tabu. 
+Wang, Yao, Sheng and Yang (2019) \cite{wang2019minimizing} estudaram o problema integrado de produção e distribuição de tarefas para uma máquina linear e múltiplos veículos. Neste ambiente, é possível trocar uma máquina entre duas produções adjacentes. O objetivo de minimizar a emissão total de carbono foi acrescentado ao de minimizar os custos totais. Foram desenvolvidos um modelo MILP para a solução e em seguida um algoritmo híbrido de Busca Tabu. 
 
-Ghannadpour and Zarrabi (2019) \cite{ghannadpour2019multi} abordaram o problema multi-objetivo de frota heterogênea integrada a produção, com minimização de energia de acordo com novos requisitos sustentáveis. São apresentados dois casos de minimização, são tratados o número de veículos alugados e a satisfação dos clientes, acrescentado à minimização de energia (primeiro caso) e minimização de distância percorrida(segundo caso). É apresentada uma nova formulação matemática para o problema de roteamento de veículos com janelas de tempo (VRPTW) e desenvolvido uma nova solução baseada em um algoritmo evolucionário.
+Ghannadpour and Zarrabi (2019) \cite{ghannadpour2019multi} abordaram o problema multi-objetivo de frota heterogênea integrada a produção, com minimização de energia de acordo com novos requisitos sustentáveis. São apresentados dois casos de minimização, onde são tratados o número de veículos alugados e a satisfação dos clientes, acrescentado à minimização de energia(primeiro caso) e minimização de distância percorrida(segundo caso). É apresentada uma nova formulação matemática para o problema de roteamento de veículos com janelas de tempo (VRPTW) e desenvolvida uma nova solução baseada em um algoritmo evolucionário.
 
-Liu, Wenli and Kunpeng Li, and Zou (2020) \cite{liu2020coordinated} estudaram o problema integrado de produção e entrega para uma máquina linear, com objetivo de minimizar a soma dos tempos de entrega. Neste trabalho, os veículos são limitados e possuem mesma capacidade. É proposto um algoritmo de Variable Neighborhood Search (VNS) e complementado com um algoritmo de Busca Tabu para intensificação. Os resultados são comparados com o Solver CPLEX e dois algoritmos de heurísticas na literatura, obtendo-se bons resultados.
+Liu, Wenli and Kunpeng Li, and Zou (2020) \cite{liu2020coordinated} estudaram o problema integrado de produção e entrega para uma máquina linear, com objetivo de minimizar a soma dos tempos de entrega. Neste trabalho, os veículos são limitados e possuem mesma capacidade. É proposto um algoritmo de Variable Neighborhood Search (VNS) e complementado com um algoritmo de Busca Tabu para intensificação. Os resultados são comparados com o Solver CPLEX e dois algoritmos de heurísticas da literatura, obtendo-se bons resultados.
 
 
-Tamannaei and Morteza (2019)\cite{tamannaei2019} desenvolveram o primeiro modelo matemático misto de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Foram propostos três algoritmos genéticos (A.G.) e um método exato  Branch-and-Bound (B\&B).
+Tamannaei and Morteza (2019)\cite{tamannaei2019} abordaram o problema de programação linear para o problema de minimização do atraso ponderado total e custos de entrega. Em seu trabalho, as tarefas possuem pesos iguais e veículos possuem mesmo custo e capacidade. Foram propostos um modelo MILP para o problema, um Algoritmo Genético (GA) e um método exato Branch-and-Bound (B\&B).
 
 
 \section{Descrição do Problema}\label{problemdescription}
@@ -152,7 +153,7 @@ A minimização do trajeto de entrega, custos utilização de veículos e atraso
 
 %Quando não tratado o Problema de Minimização de Atraso, resta o Problema de Roteamento com Frota Heterogênea de Veículos (HFVRP), uma versão de VRP, que separadamente é strong NP-Hard (Chen,2010)\cite{chen2010integrated}.  Por consequência, o problema descrito é também de complexidade strong NP-Hard.
 
-\section{Mathematical Model}\label{mathematicalmodel}
+\section{Modelo Matemático}\label{mathematicalmodel}
 
 
 Nesta seção, um modelo matemático linear misto é apresentado. Este é modelo é uma versão modificada do proposto por (Tamannaei and Rasti-Barzoki, 2019)\cite{tamannaei2019}, sendo o primeiro desenvolvido na versão do problema em que veículos possuem mesma capacidades ($Q$) e custos ($F$). O modelo é descrito a seguir:
@@ -468,21 +469,7 @@ A constante $\delta$ utilizada para calcular o limite superior de $d_i$ (Equaç�
 
 Definidos os parâmetros, para cada combinação ($\delta$,$\mu$, $N$ and $K$) foram geradas cinco instâncias pequenas e três instâncias grandes, totalizando (5*3*4*4*5) + (3*3*3*4*5) = 1740 instâncias.
 
-\section{Abordagem de Solução}\label{solutionapproach}
-
-São tratadas no artigo três abordagens para solucionar o Problema de Sequenciamento de Produção e Entrega, sendo duas versões da metaheurística Iterated Local Search (ILS) e um Algoritmo Genético (G.A.). Ullrich (2013)\cite{ullrich2013} atingiu bons resultados com a aplicação de um Algoritmo Genético para o ambiente de máquinas paralelas do problema.
-
-O método de busca local aplicado junto aos algoritmos é o procedimento VND (Mladenovic and Hansen 1997)\cite{mladenovic1997variable}, com ordenação aleatória de vizinhanças (RVND). São descritas duas versões de RVND neste trabalho. Em uma das versões, uma técnica de aprimoramento interno de rotas é aplicada. 
-
-A estrutura de ambas Iterated Local Search são similares, diferenciando-se na chamada dos métodos de busca local RVND. O Algoritmo Genético (G.A.) desenvolvido utiliza técnicas de Torneio Binário e 2-point Crossover. 
-
-\subsection{Soluções Iniciais}\label{initialsolutions}
-
-A qualidade de um ótimo local obtido por método de busca local depende da solução inicial trabalhada (El-Ghazali Talbi, 2009)\cite{talbi2009metaheuristics}. As regras para a criação de soluções iniciais utilizadas aqui originam-se do problema de Permutation Flow Shop, sendo estas Apparent Tardiness Cost (ATC), Weighted Modified Due Date (WMDD) e Weighted Earliest Due Date (EDD) (Molina-Sánchez and González-Neira, 2015)\cite{molina2016grasp}.
-
-O conjunto de regras têm por objetivo designar uma ordem favorável para o sequenciamento de tarefas. Por se tratar de uma Frota Heterogênea de Veículos, a ordem gerada pelas regras pode ou não ser atendida devido às restrições de capacidade dos veículos. Caso nenhuma das três regras gere sequência viável, uma solução inicial aleatória é utilizada.
-
-\subsection{Operadores de Vizinhança}\label{nboperators}
+\section{Busca Local e Vizinhanças}\label{nboperators}
 
 O processo de busca local visa aprimorar uma solução atual ao considerar soluções similares pelas operações de vizinhança definidas. Neste trabalho, são consideradas apenas soluções viáveis no processo. Portanto, todas as soluções em que a soma dos tamanhos das tarefas exceda a capacidade de transporte de um veículo serão desconsideradas. Matematicamente, uma solução $S$ é descartada se:
 \begin{equation}\\
@@ -595,13 +582,27 @@ O algoritmo possui um parâmetro: uma solução $S$, e é iniciado ao atribuir $
 Em seguida, o conjunto de vizinhanças Intra-Rota é visitado sequencialmente (Passos 8-15) e na hipótese de melhorar novamente (Passos 11-14), a busca interna se reinicia (Passo 13). Do contrário, esta termina e a busca externa é reiniciada com nova ordem aleatória (Passos 16-17). 
 A melhor solução encontrada é atualizada a cada iteração da busca externa (Passos 19-21). Ao final do algoritmo, a melhor solução $S*$ é retornada.
 
-\section{Iterated Local Search}
+
+\section{Abordagens de Solução}\label{solutionapproach}
+
+Neste trabalho são propostos três algoritmos para solucionar o Problema de Sequenciamento de Produção e Entrega: dois algoritmos de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.). 
+
+O primeiro algoritmo de Iterated Local utiliza a implementação básica de RVND e o segundo utiliza o modelo de RVND customizado com a técnica de aprimoramento interno de rotas (Penna and Ochi, 2013 \cite{penna2013iterated}). O Algoritmo Genético (GA) desenvolvido contém método de Torneio Binário e mutação em 2-point Crossover. 
+
+\subsection{Soluções Iniciais}\label{initialsolutions}
+
+A qualidade de um ótimo local obtido por método de busca local depende da solução inicial trabalhada (El-Ghazali Talbi, 2009)\cite{talbi2009metaheuristics}. As regras para a criação de soluções iniciais utilizadas aqui originam-se do problema de Permutation Flow Shop, sendo estas Apparent Tardiness Cost (ATC), Weighted Modified Due Date (WMDD) e Weighted Earliest Due Date (EDD) (Molina-Sánchez and González-Neira, 2015)\cite{molina2016grasp}.
+
+O conjunto de regras têm por objetivo designar uma ordem favorável para o sequenciamento de tarefas. Por se tratar de uma Frota Heterogênea de Veículos, a ordem gerada pelas regras pode ou não ser atendida devido às restrições de capacidade dos veículos. Caso nenhuma das três regras gere sequência viável, uma solução inicial aleatória é utilizada.
+
+
+\section{Iterated Local Search}\label{ils}
 
 Ao gerar variados ótimos locais, utilizar a Iterated Local Search torna possível obter aprimoramento da qualidade da solução (Talbi, 2009)\cite{talbi2009metaheuristics}. Neste artigo em específico, as aplicações de Iterated Local Search utilizam duas versões de busca local RVND.
 
 Os métodos de perturbação do algoritmos descritos em seguida utilizam os operadores de vizinhança Inter-Rota: \textbf{Swap-Job}($R_{i}$, $R_{w}$) e \textbf{Insert-Job}($R_{i}$). É realizada uma quantidade $\alpha$ de perturbações, sendo $\alpha$ estatisticamente definido na Seção ‘Calibração de Parâmetros’. %Completar com a seção%
 
-\subsection{ILS RVND}
+\subsection{ILS-RVND}
 O esquema geral da metaheurística ILS proposta é apresentado em Algoritmo \ref{algo:ilsrvnd}. Existem três parâmetros: $\alpha$ (número de perturbações), $MaxIter$ (quantidade de reinícios de solução) e $MaxIterILS$ (máximo de iterações consecutivas para o algoritmo). Inicialmente, a variável de melhor solução global é inicializada (Passo 1). 
 
 A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) utilizando as regras descritas na Seção \ref{initialsolutions}, e em seguida é feito busca local em $S$ (Passo 4). Após sua possível melhora, o processo de Perturbação é inicializado (Passos 5-12), a solução atual $S’$ é perturbada $\alpha$ vezes (Passo 10), é feito busca local RVND (Passo 11) e a melhor solução encontrada é atualizada (Passos 6-9).
@@ -657,7 +658,7 @@ A diferença desta versão de Iterated Local Search para a anterior está na bus
 
 Nesta técnica, assim que uma solução atual é aperfeiçoada utilizando operadores externos às rotas, como realizar intercâmbio de tarefas entre veículos, os operadores internos às rotas são acionados.
 
-\section{Genetic Algorithm}\label{genalgo}
+\section{Algoritmo Genético}\label{genalgo}
 
 Algoritmos Genéticos foram desenvolvidos por J. Holland em meados dos anos 70 (University of Michigan, USA)  para entender o processo adaptativo de sistemas naturais (Talbi, 2009)\cite{talbi2009metaheuristics}. Nesta abordagem, são utilizadas técnicas de Torneio Binário para seleção de soluções e 2-point Crossovers para diversificação da prole. O esquema geral do algoritmo é descrito em Algorithm \ref{algo:genalgo}.
 
@@ -727,7 +728,7 @@ O processo de mutação Crossover pode produzir soluções inviáveis, dessa for
 	Após a obtenção de $PopSize-1$ indivíduos em $P’$, é inserida a melhor solução $P*$ encontrada até o momento (Passo 23). Com a população completa, é realizada uma busca local rápida (Passo 24) em todos os indivíduos. Este método é descrito na Seção \ref{algo:fastlocalsearch}.
 Por fim, a melhor solução $S*$ é atualizada (Passos 25-26) e a população $P’$ torna-se a população atual $P$, para nas próximas iterações gerar novos indivíduos (Passo 25).
 
-\subsection{Fast Local Search}\label{fastlocalsearch}
+\subsection{Busca Local Rápida}\label{fastlocalsearch}
 
 Nesta seção é descrito um procedimento de busca local chamado Fast Local Search. Métodos de busca local convencionais como VND e RVND podem ser computacionalmente custosos acionados consecutivas vezes, apesar de possibilitarem melhoras significativas na qualidade da solução. Dessa forma, foi implementado um método de busca local simples para lidar com as soluções do algoritmo populacional. O procedimento é descrito em  Algoritmo \ref{algo:fastlocalsearch}.
 
@@ -783,7 +784,7 @@ A performance das heurísticas aplicadas foram testadas em todas as 1740 instân
 As siglas para as heurísticas nesta seção foram definidas de forma que 'ILS-RVND-1' se refira à heurística ILS RVND, 'ILS-RVND-2' à heurística ILS RVND com Aprimoramento de Rota Interna e por fim 'GA-LS' ao Algoritmo Genético.
 
 
-\subsection{Parameters Calibration}\label{parameters-calibration}
+\subsection{Calibração de Parâmetros}\label{parameters-calibration}
 
 Nesta Seção, testes preliminares são apresentados para definir os parâmetros de execução dos três algoritmos.
 
@@ -826,7 +827,7 @@ O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$,
 Novamente, pelo teste de Kruskall-Wallis, o p-valor=$0.00 \leq 0.05$ obtido indica a validade da hipótese alternativa. Os intervalos de confiança são mostrados na Figura \ref{fig:calib-algo3}. As melhores médias '70-5', '70-8' e '70-10' tiveram seus intervalos sobrepostos, o que indica que são estatisticamente equivalentes. Portanto, foi escolhida a combinação '70-5' por executar em menor tempo do que as demais ao possuir um número menor de iterações.
 
 
-\subsection{Small-scale Instances Results}\label{small-instances-results}
+\subsection{Resultados em Instâncias Pequenas}\label{small-instances-results}
 
 Em instâncias pequenas, os resultados das heurísticas foram comparados entre si e aos resultados do software CPLEX. Para o software, foi definido o tempo limite de execução de $t_{max} = 3600s$. Para $N = 8$, tanto as heurísticas quanto o software atingiram a solução ótima. Dessa forma, as análises nesta Seção tratam as instâncias em que $N \in \{10,15,20\}$. Todas as três heurísticas foram executadas cinco vezes para cada uma das 1200 instâncias pequenas, e o software CPLEX uma única vez. 
 
@@ -941,7 +942,7 @@ Um fator importante a se considerar ao julgar a qualidade de soluções dos algo
 \end{table}
 
 
-\subsection{Large-scale Instances Results}\label{large-instances-results}
+\subsection{Resultados em Instâncias Grandes}\label{large-instances-results}
 
 Em instâncias grandes, os resultados para as heurísticas foram comparados entre si. As três heurísticas foram executadas cinco vezes em cada uma das 540 instâncias de grande porte. A qualidade das soluções encontradas é também avaliada pelo Average RPD(\%) pela Equação \ref{rpd} e plotadas na Figura \ref{graphics:large} com intervalos de à 95\% de confiança. Neste grupo de instâncias, é possível observar um distanciamento considerável do algoritmo ILS$\_$RNVD$\_$2 para os demais algoritmos. 
 
@@ -1054,18 +1055,18 @@ Para a heurística ILS$\_$RVND$\_$2, a técnica de Aprimoramento Interno de Rota
 
 
 
-\section{Conclusions}\label{conclusions}
+\section{Conclusões}\label{conclusions}
 
 Neste trabalho foram realizados estudos para solucionar o problema integrado de agendamento de produção e entrega, com frota heterogênea de veículos e tarefas de diferentes capacidades. 
 
-Por se tratar de um problema NP-Difícil, métodos convencionais são ineficientes para resolver o problema. Pelo conhecimento dos autores, até o atual momento não é abordada na literatura esta versão para o problema integrado.
+Por se tratar de um problema NP-Difícil, métodos convencionais são ineficientes para resolver o problema. Pelo conhecimento dos autores, até o atual momento havia sido abordada na literatura esta versão do problema integrado.
 
 Foram propostos um modelo MILP, duas heurísticas Iterated Local Search com RVND e um Algoritmo Genético para o problema. As instâncias para esta nova abordagem foram geradas aqui, totalizando 1740 instâncias de pequeno e grande porte. A quantidade máxima de clientes considerados foi de 100 clientes.
 
-Em instâncias pequenas, as heurísticas obtiveram melhores soluções do que o software CPLEX em um tempo muito inferior. 
+Em instâncias pequenas, as heurísticas obtiveram melhores soluções do que o Solver CPLEX em um tempo muito inferior. O Solver CPLEX foi executado para instâncias de até 20 clientes.
 A implementação básica de Iterated Local Search com RVND (ILS$\_$RVND$\_$1), no geral, se mostrou a mais eficiente quando comparadas com as demais e ao software CPLEX, em qualidade de solução e tempo de execução. 
 
-Para trabalhos futuros, o objetivo é tratar esse problema em um ambiente de máquinas paralelas e tempo de preparação das máquinas.
+Para trabalhos futuros, o objetivo é tratar esse problema em um ambiente com máquinas paralelas e tempo de preparação das máquinas.
 
 \subsubsection*{Acknowledgments.}
 The authors thanks the financial support of FAPEMIG, CAPES and CNPq, Brazilian research agencies.
