@@ -2815,6 +2815,10 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
         vector< data > bestConfig;
         double bestObj = INF;
 
+
+        //FindingDelay
+        printf("Started constructing first population\n");
+
         for(int i=0; i< popSize; i++){
             vector<data> trash; // will be use as a puppet to call function generateRandom
             pair<double, vector<data>> callRvnd = RVND( false, njobs, ncars, w, P, t, F, d , Q, s, trash);
@@ -2826,6 +2830,10 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                 bestConfig = pop[ i ];
             }
         }
+
+        //FindingDelay
+        printf("Finished constructing first population\n");
+
         int maxIter = (njobs+ncars)*K;
 
         int contIter = 0;
@@ -2919,6 +2927,11 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
             //Fast Local Search in new population
             // AND calculating object function!!
 
+            
+            //FindingDelay
+            printf("Another population generated (with crossing overs!)\n");
+            printf("Starting Fast Local Search...\n");
+            
             for(int i=0;i< popSize; i++){
                 pair<double, vector<data>> callFastLocalSearch = fastLocalSearch(true,njobs,ncars,w,P,t,F,d,Q,s, newPop[ i ]);
                 pop[ i ] = callFastLocalSearch.second;
@@ -2929,6 +2942,10 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                     bestConfig = pop[ i ];
                 }
             }
+
+            //FindingDelay
+            printf("Finishing Fast Local Search...\n");
+
         }
 
     return { bestObj, bestConfig};
