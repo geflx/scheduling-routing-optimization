@@ -2819,12 +2819,48 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
         double bestObj = INF;
 
 
+        int nbValidSolutions = 0;
+        vector< vector<data> > validSolutions;
+
+        vector<data> atcConfig = generateGreedy(atc, s, njobs, ncars, w, P, d, F, Q);
+        vector<data> weddConfig = generateGreedy(wedd, s, njobs, ncars, w, P, d, F, Q);
+        vector<data> wmddConfig = generateGreedy(wmdd, s, njobs, ncars, w, P, d, F, Q);
+
+  
+        if( validConfig( atcConfig, Q, s, njobs, ncars)){
+            validSolutions.push_back( atcConfig );
+            nbValidSolutions++;
+        }
+        if( validConfig( wmddConfig, Q, s, njobs, ncars)){
+
+            validSolutions.push_back( wmddConfig);
+            nbValidSolutions++;
+        }
+        if( validConfig( weddConfig, Q, s, njobs, ncars)){
+
+            validSolutions.push_back( weddConfig);
+            nbValidSolutions++;
+        }
+        int contGetValid = 0;
+
         //FindingDelay
         printf("Started constructing first population\n");
 
         for(int i=0; i< popSize; i++){
-            vector<data> trash; // will be use as a puppet to call function generateRandom
-            pair<double, vector<data>> callRvnd = RVND( false, njobs, ncars, w, P, t, F, d , Q, s, trash);
+            
+            pair< double, vector<data> > callRvnd;
+
+            if(contGetValid < nbValidSolutions){
+                
+                pop[i] = validSolutions[ contGetValid ];
+                callRvnd = RVND( true, njobs, ncars, w, P, t, F, d , Q, s, pop[i]);
+                contGetValid++;
+
+            }else{
+                vector<data> trash; // will be use as a puppet to call function generateRandom
+                callRvnd = RVND( false, njobs, ncars, w, P, t, F, d , Q, s, trash);
+            }
+
             pop[ i ] = callRvnd.second;
             popObj[ i ] = callRvnd.first;
 
@@ -3077,24 +3113,23 @@ int main(){
             int contParameterInstance = 1;
             for(int paramPopSize:popSize){
                 for(int paramMaxIter:maxIter){
-                        time_t time2;
-                        time(&time2);
+                    time_t time2;
+                    time(&time2);
 
-                        //FindingDelay
-                        oneFeasible = bothFeasible = bothInfeasible = 0;
+                    //FindingDelay
+                    oneFeasible = bothFeasible = bothInfeasible = 0;
 
-                        pair<double,vector<data>> ga1 = genAlgo1(njobs, ncars, w, P, t, F, d, Q, s, paramPopSize, paramMaxIter);
+                    pair<double,vector<data>> ga1 = genAlgo1(njobs, ncars, w, P, t, F, d, Q, s, paramPopSize, paramMaxIter);
 
-                        //Finding Delay
-                        cout<<"Both, One and None: "<<bothFeasible<<" "<<oneFeasible<<" "<<bothInfeasible<<endl;
+                    //Finding Delay
+                    cout<<"Both, One and None: "<<bothFeasible<<" "<<oneFeasible<<" "<<bothInfeasible<<endl;
 
-                        sheetObjFunctionFile<<ga1.first<<" ";
-                        time_t time2end;
-                        time(&time2end);
-                        double diff2 = difftime(time2end,time2);
-                        printConfigToFile( detailedResultFile, ga1.first, " ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
-                        timeResultFile<<diff2<<" ";
-
+                    sheetObjFunctionFile<<ga1.first<<" ";
+                    time_t time2end;
+                    time(&time2end);
+                    double diff2 = difftime(time2end,time2);
+                    printConfigToFile( detailedResultFile, ga1.first, " ", ga1.second, Q, s, njobs, ncars, P, t, d, w, F);
+                    timeResultFile<<diff2<<" ";
                 }
             }
             sheetObjFunctionFile<<endl;

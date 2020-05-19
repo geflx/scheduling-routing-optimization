@@ -321,7 +321,6 @@ vector<data> generateValidRandomConfig(int njobs, int ncars, const vector<int> &
         vector<bool> visitedConfig(configSize,false);
         vector<bool> visitedCar(ncars,false);
 
-
         int insertedVehicles=0;
         //Generating vehicles random positions
         while(insertedVehicles<ncars){
@@ -383,6 +382,7 @@ vector<data> generateValidRandomConfig(int njobs, int ncars, const vector<int> &
             }
         }
     }
+
     return configuration;
 }
 
@@ -555,14 +555,20 @@ vector<data> generateGreedy(const string &which, const vector<int> &jobSize, int
             double value = 0;
 
             if(which == atc){
+
                 value= (weight[j]/procTime[j]) * exp( (-1) * (max( dueDate[j]- procTime[j]- acumulatedD ,0 ))/ procTimeAvg );
                 pq.push( make_pair( value,j) );
+
             }else if( which == wmdd){
+
                 value=  (1 /weight[j])* max(procTime[j], dueDate[j] - acumulatedD) ;
                 pq.push( make_pair( (-1) * value,j) );
+
             }else if( which == wedd){
+
                 value=  ( dueDate[j]/weight[j]) ;
                 pq.push( make_pair( (-1) * value,j) );
+                
             }
 
         }

@@ -150,6 +150,30 @@ A minimização do trajeto de entrega, custos utilização de veículos e atraso
     + \sum_{k=0}^K F_{k}*Y_{k} + \sum_{i=1}^N w_{i}*T_{i}
 \end{equation}
 
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \frac{\sum_{i=1}^N P_{i}}{N} })
+\end{equation}
+
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \overline{P}})
+\end{equation}
+
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- max(d_i-P_i-t, 0) / \overline{P})
+\end{equation}
+
+\begin{equation}
+    \label{eq:wmdd}
+    WMDD_i \quad = \quad \frac{ 1}{w_i} * max(P_i, d_i - t))
+\end{equation}
+\begin{equation}
+    \label{eq:wedd}
+    WEDD_i \quad = \quad \frac{d_i}{w_i} 
+\end{equation}
+
 
 %Quando não tratado o Problema de Minimização de Atraso, resta o Problema de Roteamento com Frota Heterogênea de Veículos (HFVRP), uma versão de VRP, que separadamente é strong NP-Hard (Chen,2010)\cite{chen2010integrated}.  Por consequência, o problema descrito é também de complexidade strong NP-Hard.
 
@@ -708,9 +732,9 @@ A cada iteração uma nova solução é inserida em $P'$ até o limite de $PopSi
             }
         }
         $ P' \gets$ P' + P*; \tcp{Include best solution to P'}
-        $ P' \gets$ \textup{ Fast Local Search($P'$);}\\
-        \If{  \textup{f($P'$) $\leq$ f(Best($P'$))} }{
-            \textup{$P' \gets P*$;\\}
+        $ P' \gets$ \textup{ Fast Local Search($P'$);} \tcp{Fast Local Search in population P'}
+        \If{\textup{ f(Best($P'$)) $\leq$ f($P*$)  } }{
+            \textup{$P* \gets Best($P'$)$;\\}
         }
         
         $ P \gets$ \text { $P';$} \\
