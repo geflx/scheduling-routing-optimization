@@ -32,11 +32,13 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 
 \maketitle
 \begin{abstract}
-Este artigo aborda um problema de programação multiobjetivo do sequenciamento de produção de uma máquina linear integrado ao roteamento de veículos para entrega. Nesta abordagem as tarefas possuem penalidades de atraso, datas de vencimento e são caracterizadas por diferentes volumes, com uma frota heterogênea e limitada de veículos (HFVRP). Os critérios a serem minimizados são referentes ao atraso total ponderado e também aos custos de transporte e entrega, incluindo rotas escolhidas e veículos utilizados. 
+%Este artigo aborda o problema de programação integrado de sequenciamento da produção de uma máquina linear e roteamento de veículos para entrega. Nesta versão, tarefas possuem penalidades, datas de vencimento e diferentes tamanhos, com veículos dispostos em uma frota heterogênea e limitada de veículos (HFVRP). Os critérios a serem minimizados são: o atraso total ponderado, custos de transporte e distância total percorrida.
+%O problema é classificado como NP-Difícil no senso comum, exigindo a aplicação de heurísticas para solucioná-lo.
+%São propostas duas heurísticas Iterated Local Search, Algoritmo Genético (AG) e um modelo misto de programação linear inteira (MILP). Foram geradas instâncias de pequeno e grande porte (até cem clientes), sendo os resultados comparados com o Solver CPLEX. Análises estatísticas mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software a medida em que o número de clientes aumenta.
 
-O problema é classificado como NP-Difícil no senso comum, portanto heurísticas eficientes são necessárias para obter soluções próximas da ótima em tempo computacional razoável.
-Neste trabalho são propostas duas heurísticas baseadas em Iterated Local Search e um Algoritmo Genético (AG). Instâncias para o problema são geradas com base em trabalhos anteriores e os resultados obtidos são comparados aos do solver de otimização CPLEX. Os resultados mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software a medida em que o número de clientes aumenta.
-
+This paper address an integrated job schedulling and vehicle routing problem, where jobs contains different sizes, penalties and due dates. To deliver them, there are vehicles from a limited heteregenous fleet (HFVRP). The minimization criteria are: total weighted penalty, transport costs and total distance traveled. 
+The given problem is classified as NP-Hard, demanding heuristics approaches to obtain near-optimal solutions in reasonable computational time. There are proposed two versions of Iterated Local Search (ILS), one Genetic Algorithmn (GA) and a Mixed-Integer Linear Programming (MILP) model to solve it. In addition, were also generated small and big instances (with at most one hundred customers) and the results compared to CPLEX Solver. 
+Estathistical Analysis shows that heuristics approaches obtained better quality solutions in much less time than the solver.
 
 \keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
 \end{abstract}
@@ -148,30 +150,6 @@ A minimização do trajeto de entrega, custos utilização de veículos e atraso
     \label{eq:objfull}
     \min \sum_{i,j=0}^N\sum_{k=0}^K X^{k}_{ij}*t_{ij}  
     + \sum_{k=0}^K F_{k}*Y_{k} + \sum_{i=1}^N w_{i}*T_{i}
-\end{equation}
-
-\begin{equation}
-    \label{eq:atc}
-    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \frac{\sum_{i=1}^N P_{i}}{N} })
-\end{equation}
-
-\begin{equation}
-    \label{eq:atc}
-    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \overline{P}})
-\end{equation}
-
-\begin{equation}
-    \label{eq:atc}
-    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- max(d_i-P_i-t, 0) / \overline{P})
-\end{equation}
-
-\begin{equation}
-    \label{eq:wmdd}
-    WMDD_i \quad = \quad \frac{ 1}{w_i} * max(P_i, d_i - t))
-\end{equation}
-\begin{equation}
-    \label{eq:wedd}
-    WEDD_i \quad = \quad \frac{d_i}{w_i} 
 \end{equation}
 
 
@@ -617,6 +595,31 @@ O primeiro algoritmo de Iterated Local utiliza a implementação básica de RVND
 
 A qualidade de um ótimo local obtido por método de busca local depende da solução inicial trabalhada (El-Ghazali Talbi, 2009)\cite{talbi2009metaheuristics}. As regras para a criação de soluções iniciais utilizadas aqui originam-se do problema de Permutation Flow Shop, sendo estas Apparent Tardiness Cost (ATC), Weighted Modified Due Date (WMDD) e Weighted Earliest Due Date (EDD) (Molina-Sánchez and González-Neira, 2015)\cite{molina2016grasp}.
 
+
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \frac{\sum_{i=1}^N P_{i}}{N} })
+\end{equation}
+
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- \frac{max(d_i-P_i-t, 0)}{ \overline{P}})
+\end{equation}
+
+\begin{equation}
+    \label{eq:atc}
+    ATC_i \quad = \quad \frac{ w_i}{P_i} * \exp(- max(d_i-P_i-t, 0) / \overline{P})
+\end{equation}
+
+\begin{equation}
+    \label{eq:wmdd}
+    WMDD_i \quad = \quad \frac{ 1}{w_i} * max(P_i, d_i - t))
+\end{equation}
+\begin{equation}
+    \label{eq:wedd}
+    WEDD_i \quad = \quad \frac{d_i}{w_i} 
+\end{equation}
+
 O conjunto de regras têm por objetivo designar uma ordem favorável para o sequenciamento de tarefas. Por se tratar de uma Frota Heterogênea de Veículos, a ordem gerada pelas regras pode ou não ser atendida devido às restrições de capacidade dos veículos. Caso nenhuma das três regras gere sequência viável, uma solução inicial aleatória é utilizada.
 
 
@@ -664,6 +667,41 @@ A cada iteração externa, uma nova solução inicial $S$ é gerada (Passo 3) ut
     }
   \Output{$S*$}
 \end{algorithm}
+
+\begin{algorithm}
+\label{algo:ilsrvnd}
+\AlFnt \small
+\LinesNumbered
+\Input{Parameters of max. iterations numbers}
+\Output{Best solution $S*$}
+
+  \caption{ILS-RVND ($ \alpha, MaxIter,MaxIterILS$)}
+  
+  $S* \gets \infty $;\\
+  
+  \For{$i \gets$ \textup{1 to} $MaxIter$}{
+  
+         $S' \gets $ \textup {Initial-Solution();}\\
+         
+        \For{$j \gets$ \textup{1 to} $MaxIterILS$}{
+        
+            $S' \gets $\textup{RVND($S'$)}; 
+            
+            \If{\textup{f($S'$) $<$ f($S*$)}}{
+                {$S* \gets S'$;\\
+                $j \gets 1;$ \tcp{Restart Perturbing Process}}
+            }
+            
+            $S' \gets $\textup{Perturb($S'$, $\alpha$)};\\
+         }
+         
+         \If{\textup{f($S'$) $<$ f($S*$)}}{
+                {$S* \gets S'$;\\}
+            }
+    }
+  \Output{$S*$}
+\end{algorithm}
+
 
 Caso alguma melhora em $S’$ em  relação à solução inicial $S$ seja obtida, o processo de Perturbação é reinicializado (Passo 8). Nos Passos 13-15, $S’$ é comparada a melhor solução $S*$ e finaliza uma iteração do algoritmo. Ao final é retornada a melhor solução encontrada $S*$.
 
