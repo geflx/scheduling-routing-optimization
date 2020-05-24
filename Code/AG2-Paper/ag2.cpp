@@ -30,8 +30,10 @@ int main(){
 
         for(int i=0; i<runNb; i++){
 
-            //Solution Ans = ag2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-            //cout << Ans.Value << "\n";
+            Solution S = ag2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            cout << S.Value << "\n";
+            for(int i=0; i<N; i++) cout<<"V"<<S.M[0][i]<<" "; cout << "\n";
+            for(int i=0; i<N; i++) cout<<"J"<<S.M[1][i]<<" "; cout << "\n";
 
         }
     }
