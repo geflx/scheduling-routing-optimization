@@ -1823,7 +1823,7 @@ bool nbhood7(char bestOrFirst, vector<data> &config, vector<vehicleLoaded> &vehi
                 return false;
             }
         }
-
+        return false; // "control reaches end of non-void function" warning
 }
 
 //pair< ValueObjFunction, validSolution>
@@ -2783,8 +2783,11 @@ pair< bool, vector<data> > crossOver( const vector<data> &f1, const vector<data>
 pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, vector<data> &initialConfig){
 
+    if(!reuse){
+        initialConfig = randomConfigSequential(njobs,ncars,Q,s);
+    }
 
-    //Caution - there is something missing?
+    //Caution - is there something missing?
     vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig,ncars);//Generating info about vehicle transportation
 
     nbhood1('B',initialConfig, vehicleOrder, njobs, ncars, w, P, t, F, d);
@@ -2808,9 +2811,11 @@ pair<double, vector<data>> fastLocalSearch(bool reuse, int njobs, int ncars, con
 //FindingDelay
 int bothFeasible, oneFeasible, bothInfeasible;
 
-pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &w,const vector<int> &P, const vector<vector<int>> &t,
-    const vector<int> &F , const vector<int> &d, const vector<int> &Q, const vector<int> &s, int popSize, int K){
+pair<double, vector<data>> genAlgo1(int useRules, int fastOrRvndInGreedy, int fastOrRvnd, int njobs, int ncars, const vector<double> &w,
+                    const vector<int> &P, const vector<vector<int>> &t, const vector<int> &F , const vector<int> &d, const vector<int> &Q, 
+                    const vector<int> &s, int popSize, int K){
 
+        //fastOrRvnd: {1:fast, 2:rvnd}
 
         vector< double > popObj( popSize , -1);
         vector< vector<data> > pop( popSize );
@@ -2822,56 +2827,70 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
         int nbValidSolutions = 0;
         vector< vector<data> > validSolutions;
 
-        vector<data> atcConfig = generateGreedy(atc, s, njobs, ncars, w, P, d, F, Q);
-        vector<data> weddConfig = generateGreedy(wedd, s, njobs, ncars, w, P, d, F, Q);
-        vector<data> wmddConfig = generateGreedy(wmdd, s, njobs, ncars, w, P, d, F, Q);
+        vector<data> atcConfig, weddConfig, wmddConfig; 
+        
+        if(useRules == 1){ 
 
-  
-        if( validConfig( atcConfig, Q, s, njobs, ncars)){
-            validSolutions.push_back( atcConfig );
-            nbValidSolutions++;
-        }
-        if( validConfig( wmddConfig, Q, s, njobs, ncars)){
+            atcConfig = generateGreedy(atc, s, njobs, ncars, w, P, d, F, Q);
+            weddConfig = generateGreedy(wedd, s, njobs, ncars, w, P, d, F, Q);
+            wmddConfig = generateGreedy(wmdd, s, njobs, ncars, w, P, d, F, Q);
 
-            validSolutions.push_back( wmddConfig);
-            nbValidSolutions++;
-        }
-        if( validConfig( weddConfig, Q, s, njobs, ncars)){
-
-            validSolutions.push_back( weddConfig);
-            nbValidSolutions++;
+            if(validConfig(atcConfig, Q, s, njobs, ncars)){
+                validSolutions.push_back( atcConfig );
+                nbValidSolutions++;
+            }
+            if(validConfig(wmddConfig, Q, s, njobs, ncars)){
+                validSolutions.push_back( wmddConfig);
+                nbValidSolutions++;
+            }
+            if(validConfig(weddConfig, Q, s, njobs, ncars)){
+                validSolutions.push_back( weddConfig);
+                nbValidSolutions++;
+            }
         }
         int contGetValid = 0;
 
         //FindingDelay
-        printf("Started constructing first population\n");
+        // printf("Started constructing first population\n");
 
-        for(int i=0; i< popSize; i++){
+        for(int i=0; i<popSize; i++){
             
-            pair< double, vector<data> > callRvnd;
+            pair< double, vector<data> > callLocalSearch;
+            
+            if(contGetValid < nbValidSolutions && useRules==1){
 
-            if(contGetValid < nbValidSolutions){
-                
                 pop[i] = validSolutions[ contGetValid ];
-                callRvnd = RVND( true, njobs, ncars, w, P, t, F, d , Q, s, pop[i]);
+
+                if(fastOrRvndInGreedy == 0){
+                    callLocalSearch = fastLocalSearch(true,njobs,ncars,w,P,t,F,d,Q,s, pop[i]);
+                }else{
+                    callLocalSearch = RVND( true, njobs, ncars, w, P, t, F, d , Q, s, pop[i]);
+                }
+
                 contGetValid++;
 
             }else{
                 vector<data> trash; // will be use as a puppet to call function generateRandom
-                callRvnd = RVND( false, njobs, ncars, w, P, t, F, d , Q, s, trash);
+
+                if(fastOrRvnd == 0){
+                    callLocalSearch = fastLocalSearch(false,njobs,ncars,w,P,t,F,d,Q,s, trash);
+                }else if(fastOrRvnd == 1){
+                    callLocalSearch = RVND( false, njobs, ncars, w, P, t, F, d , Q, s, trash);
+                }
             }
 
-            pop[ i ] = callRvnd.second;
-            popObj[ i ] = callRvnd.first;
+            pop[ i ] = callLocalSearch.second;
+            popObj[ i ] = callLocalSearch.first;
 
             if( popObj[ i ] < bestObj ){
                 bestObj = popObj[ i ];
                 bestConfig = pop[ i ];
             }
         }
+        
 
         //FindingDelay
-        printf("Finished constructing first population\n");
+        // printf("Finished constructing first population\n");
 
         int maxIter = (njobs+ncars)*K;
 
@@ -2888,12 +2907,14 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                 int father1 = -1;
                 int father2 = -1;
 
-                // Generatin fathers 1 and 2 by tournament
+                // Generating fathers 1 and 2 by tournament
                 while( father1 == father2 ){
+
                     int fatherLeft1 = rand()%popSize;
                     int fatherLeft2 = rand()%popSize;
-                    while ( fatherLeft1 == fatherLeft2) //Need to be DIF
+                    while ( fatherLeft1 == fatherLeft2){
                         fatherLeft1 = rand()%popSize;
+                    }
 
                     if( popObj[ fatherLeft1 ] < popObj[ fatherLeft2 ]){
                         father1 = fatherLeft1;
@@ -2919,45 +2940,49 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
                 //new person to be inserted in new population
                 vector<data> newPerson;
 
-                //IF Both sons are feasible
+                //Checking feasibility
                 if( son1.first && son2.first){
+
+                    /* Binary tournament
+                    vector<vehicleLoaded> vehicleOrder1=generateVehicleOrder(son1.second, ncars);
+                    vector<int> startVehicleTime1(ncars,0);
+                    vector<int> deliveryTime1 = calculatingDeliveryTime(son1.second, startVehicleTime1,t,P,vehicleOrder1,njobs);
+                    vector<int> jobTardiness1 = calculatingJobTardiness(deliveryTime1,njobs,d);
+                    double finalObj1= objFunction(vehicleOrder1, son1.second, ncars, njobs, t, w, jobTardiness1, F);
+
+                    vector<vehicleLoaded> vehicleOrder2=generateVehicleOrder(son2.second, ncars);
+                    vector<int> startVehicleTime2(ncars,0);
+                    vector<int> deliveryTime2 = calculatingDeliveryTime(son2.second, startVehicleTime2, t, P, vehicleOrder2,njobs);
+                    vector<int> jobTardiness2 = calculatingJobTardiness(deliveryTime2, njobs, d);
+                    double finalObj2= objFunction(vehicleOrder2, son2.second, ncars, njobs, t, w, jobTardiness2, F);
+
+                    if(finalObj1 < finalObj2){
+                        newPop[ newPopSize ] = son1.second;
+                    }else{
+                        newPop[ newPopSize ] = son2.second;
+                    }
+                    */
+
                     newPop[ newPopSize ] = son1.second;
                     newPop[ newPopSize ] = son2.second;
 
-                    //FindingDelay
-                    ++bothFeasible;
-
-                //When just one son is feasible
                 }else if( son1.first ){
 
-                    //FindingDelay
-                    ++oneFeasible;
-
                     newPop[ newPopSize ] = son1.second;
-                    // newPopObj[ newPopSize ] = resSon1;
 
                 }else if( son2.first ){
-                    
-                    //FindingDelay
-                    ++oneFeasible;
 
                     newPop[ newPopSize ] = son2.second;
 
-                }else{ //both sons are infeasible
-
-                    //FindingDelay
-                    ++bothInfeasible;
+                }else{ 
 
                     //pick one father at random
-                    int randomPickFather = rand()%2;
+                    int randomPickFather = rand()%2 +1;
 
-                    if( randomPickFather == 0){
+                    if( randomPickFather == 1){ 
                         newPop[ newPopSize ] = pop[ father1 ];
-                        // newPopObj[ newPopSize ] = popObj[ father1 ];
-
-                    }else{ // == 1
+                    }else{ 
                         newPop[ newPopSize ] = pop[ father2 ];
-                        // newPopObj[ newPopSize ] = popObj[ father2 ];
                     }
 
                     vector<data> afterMutation = mutation( newPop[ newPopSize ], Q, s, njobs, ncars);
@@ -2979,9 +3004,9 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
 
             
             //FindingDelay
-            printf("Another population generated (with crossing overs!)\n");
-            printf("Iteration: %d\n", contIter);
-            printf("Starting Fast Local Search...\n");
+            // printf("Another population generated (with crossing overs!)\n");
+            // printf("Iteration: %d\n", contIter);
+            // printf("Starting Fast Local Search...\n");
             
             for(int i=0;i< popSize; i++){
                 pair<double, vector<data>> callFastLocalSearch = fastLocalSearch(true,njobs,ncars,w,P,t,F,d,Q,s, newPop[ i ]);
@@ -2995,7 +3020,7 @@ pair<double, vector<data>> genAlgo1(int njobs, int ncars, const vector<double> &
             }
 
             //FindingDelay
-            printf("Finishing Fast Local Search...\n");
+            // printf("Finishing Fast Local Search...\n");
 
         }
 
@@ -3012,9 +3037,21 @@ int main(){
     float varMi,sigmaUm,sigmaDois;
     int numInstancia;
     cout<<"Input file name + .ext to open: ";
-
-
     getline(cin,fileName);
+
+    int useRules;
+    cout<<"Use Dispatching Rules, type 0 or 1: "; 
+    cin >> useRules;
+
+    int fastOrRvndInGreedy = 0;
+    if( useRules == 1 ){
+        cout<<"In DR Solutions, use FastLS (0) or RVND(1): ";
+        cin >> fastOrRvndInGreedy;
+    }
+
+    int fastOrRvnd;
+    cout<<"In Random Solutions, use Fast LS (0) or RVND(1): ";
+    cin >> fastOrRvnd;
 
     //Define to print results in spreadsheet mode
     #ifdef SPREADSHEET_MODE
@@ -3117,12 +3154,13 @@ int main(){
                     time(&time2);
 
                     //FindingDelay
-                    oneFeasible = bothFeasible = bothInfeasible = 0;
+                    // oneFeasible = bothFeasible = bothInfeasible = 0;
 
-                    pair<double,vector<data>> ga1 = genAlgo1(njobs, ncars, w, P, t, F, d, Q, s, paramPopSize, paramMaxIter);
+                    pair<double,vector<data>> ga1 = genAlgo1(useRules, fastOrRvndInGreedy, fastOrRvnd, njobs, ncars, 
+                                                    w, P, t, F, d, Q, s, paramPopSize, paramMaxIter);
 
                     //Finding Delay
-                    cout<<"Both, One and None: "<<bothFeasible<<" "<<oneFeasible<<" "<<bothInfeasible<<endl;
+                    // cout<<"Both, One and None: "<<bothFeasible<<" "<<oneFeasible<<" "<<bothInfeasible<<endl;
 
                     sheetObjFunctionFile<<ga1.first<<" ";
                     time_t time2end;
