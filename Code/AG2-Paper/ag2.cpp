@@ -8,34 +8,37 @@ int main(){
     double mi, delta;
 
     int N, K;
-    vector<double> w(N);
-    vector<int> F(K), Q(K);
-    vector<int> s(N), d(N), P(N);
-    vector<vector<int>> t (N+1, vector<int> (N+1, 0));
+    vector<double> w;
+    vector<int> F, Q, s, d, P;
+    vector<vector<int>> t;
 
+    cout << "Input instance name: ";
     getline(cin, fileName);
+    cout << "string: " << fileName << "\n";
     ifstream input(fileName);
+
+    int runNb; 
+    cout << "Input running times: ";
+    cin >> runNb;
+
+    int itNumber, popSize;
+    cout << "Input it. number and popSize: ";
+    cin >> itNumber >> popSize;
 
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
-
-        int runNb; 
-        cout << "Input running times: ";
-        cin >> runNb;
-
-        int itNumber, popSize;
-        cout << "Input it. number and popSize: ";
-        cin >> itNumber >> popSize;
+        //debugRead(mi, delta, N, K, P, d, s, w, Q, F, t);
 
         for(int i=0; i<runNb; i++){
 
-            Solution S = ag2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            Solution S = AG_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
             cout << S.Value << "\n";
-            for(int i=0; i<N; i++) cout<<"V"<<S.M[0][i]<<" "; cout << "\n";
-            for(int i=0; i<N; i++) cout<<"J"<<S.M[1][i]<<" "; cout << "\n";
+            // for(int i=0; i<N; i++) cout<<"V"<<S.M[0][i]<<" "; cout << "\n";
+            // for(int i=0; i<N; i++) cout<<"J"<<S.M[1][i]<<" "; cout << "\n";
 
-        }
+        } 
     }
 
+    input.close();
 }
