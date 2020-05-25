@@ -1,8 +1,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include <fstream>
-
 void readInstance(ifstream &input, double &mi, double &delta, int &N, int &K,
                   vector<int> &P, vector<int> &d, vector<int> &s,
                   vector<double> &w, vector<int> &Q, vector<int> &F,
@@ -63,4 +61,42 @@ void debugRead(double &mi, double &delta, int &N, int &K,
     cout << "\n";
 
 }
+
+void printSolution(const Solution &S, int N){
+
+    cout << "Solution Value: " << fixed << S.Value << "\n";
+    cout << "Solution Value: "  << S.Value << "\n";
+
+    for(int i=0; i<N; i++) 
+        cout<<"V"<<S.M[0][i]<<" "; 
+    cout << "\n";
+
+    for(int i=0; i<N; i++) 
+        cout<<"J"<<S.M[1][i]<<" "; 
+    cout << "\n\n";
+}
+
+void getVariables(string &fileName, ifstream& input, int &gaVersion, int &runNb, int &itNumber, int &popSize){
+
+    
+    cout << "Input file name with '.txt' :  ";
+    getline(cin, fileName);
+
+    input.open(fileName);
+
+    cout << "Which GA Version (1,2)? ";
+    cin >> gaVersion;
+
+    cout << "How many times to run? ";
+    cin >> runNb;
+
+    cout << "Iterations: ";
+    cin >> itNumber;
+    
+    cout << "Population Size: ";
+    cin >> popSize;
+
+
+}
+
 #endif

@@ -1,12 +1,17 @@
 #ifndef AG2_H
 #define AG2_H
 
+#include <fstream>
 #include <limits>
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
+
+//Select Method version
+#define CROSSOVER_OPTION 0
+#define MUTATION_OPTION 0
 
 using namespace std;
 
@@ -113,18 +118,31 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
     
     int cont = point;
 
+
     for(int i=0; i<N; i++){
         
         if(cont == N)
             break;
 
-        if( MixJobs.find(S2.M[1][i]) != MixJobs.end() ){
-            S.M[0][cont] = S2.M[0][i];
-            S.M[1][cont] = S2.M[1][i];
+        if( CROSSOVER_OPTION == 0){
+            // Change Job and Vehicle  
+            if( MixJobs.find(S2.M[1][i]) != MixJobs.end() ){
 
-            ++cont;
+                S.M[0][cont] = S2.M[0][i];
+                S.M[1][cont] = S2.M[1][i];
+
+                ++cont;
+            }
+
+        }else if( CROSSOVER_OPTION == 1){
+            // Change just Job, keeping the same Vehicle
+            if( MixJobs.find(S2.M[1][i]) != MixJobs.end() ){
+
+                S.M[1][cont] = S2.M[1][i];
+
+                ++cont;
+            }
         }
-
     }
 
     S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
@@ -143,15 +161,21 @@ Solution Mutation( Solution &S, int N, int K, const vector<int> &P, const vector
     while(A == B){
         B = rand() % N;
     }
-    if( A < B ) 
+    if( A > B ) 
         swap(A, B);
 
     pair<int, int> TempA = { S.M[0][A], S.M[1][A] };
-    S.M[0][A] = S.M[0][B];
-    S.M[1][A] = S.M[1][B];
 
-    S.M[0][B] = TempA.first;
+    // Mutate Job
+    S.M[1][A] = S.M[1][B];
     S.M[1][B] = TempA.second;
+
+    if( MUTATION_OPTION == 0){
+        // Also mutate Vehicle
+        S.M[0][A] = S.M[0][B];
+        S.M[0][B] = TempA.first;
+
+    }
 
     S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
@@ -159,25 +183,24 @@ Solution Mutation( Solution &S, int N, int K, const vector<int> &P, const vector
     
 }
 
-Solution AG_Version_1 (int N, int K, int itNumber, int popSize,
+Solution GA_Version_1 (int N, int K, int itNumber, int popSize,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
               const vector<vector<int>> &t)
 {
-    vector<Solution> PP(popSize);
-
     Solution S_best;
     S_best.alocate(N);
-    double minValue = numeric_limits<double>::infinity();
+    S_best.Value = numeric_limits<double>::infinity();
+
+    vector<Solution> PP(popSize);
 
     for(Solution &S: PP){
         S.alocate(N);
         randomSolution(S, N, K);
         S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
-        if(minValue > S.Value){
+        if(S_best.Value > S.Value){
             S_best = S;
-            minValue = S.Value;
         }
     }
     
@@ -190,23 +213,17 @@ Solution AG_Version_1 (int N, int K, int itNumber, int popSize,
         int idP1, idP2;
         idP1 = idP2 = -1;
 
-        idP1 = rand()%N;
+        idP1 = rand() % popSize;
         while(idP2 == idP1 || idP2 == -1)
-            idP2 = rand()%N;
+            idP2 = rand() % popSize;
         
-        Solution P1, P2;
-        P1.alocate(N); 
-        P2.alocate(N);
-        
+        Solution P1, P2;  
         P1 = PP[idP1];
         P2 = PP[idP2];
 
         Solution OFF1, OFF2;
-        OFF1.alocate(N);
-        OFF2.alocate(N);
-        
-        OFF1 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t);
-        OFF2 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t);
+        OFF1 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
+        OFF2 = CrossOver(P2, P1, N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
 
         Solution Local_S_best;
         if(OFF1.Value < OFF2.Value)
@@ -224,6 +241,7 @@ Solution AG_Version_1 (int N, int K, int itNumber, int popSize,
             if(OFF2.Value < Local_S_best.Value)
                 Local_S_best = OFF2;
         }
+        // Parents will be replaced with Offsprings
         PP[idP1] = OFF1;
         PP[idP2] = OFF2;
 
@@ -232,9 +250,89 @@ Solution AG_Version_1 (int N, int K, int itNumber, int popSize,
             cont = 0;
         }
     }
-
     return S_best;
 }
 
+Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
+              const vector<int> &P, const vector<int> &d, const vector<int> &s,
+              const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+              const vector<vector<int>> &t)
+{
+    Solution S_best;
+    S_best.alocate(N);
+    S_best.Value = numeric_limits<double>::infinity();
+
+    vector<Solution> PP(popSize);
+
+    for(Solution &S: PP){
+        S.alocate(N);
+        randomSolution(S, N, K);
+        S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
+
+        if(S_best.Value > S.Value){
+            S_best = S;
+        }
+    }
+    
+    int cont = 0;
+
+    while(cont < itNumber){
+
+        ++cont;
+        
+        vector<Solution> P_New;
+
+        Solution Local_S_best;
+        Local_S_best.Value = numeric_limits<double>::infinity();
+
+        for(int i=0; i< popSize; i+= 2){ // ! i+=2 : adding two new solutions
+
+            int idP1, idP2;
+            idP1 = idP2 = -1;
+
+            idP1 = rand() % popSize;
+            while(idP2 == idP1 || idP2 == -1)
+                idP2 = rand() % popSize;
+            
+            Solution P1, P2;  
+            P1 = PP[idP1];
+            P2 = PP[idP2];
+
+            Solution OFF1, OFF2;
+            OFF1 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
+            OFF2 = CrossOver(P2, P1, N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
+
+            OFF1 = Mutation(OFF1, N, K, P, d, s, w, Q, F, t);
+            OFF2 = Mutation(OFF2, N, K, P, d, s, w, Q, F, t);
+
+            P_New.push_back(OFF1);
+            P_New.push_back(OFF2);
+
+            if(OFF1.Value <= OFF2.Value){
+                if(OFF1.Value < Local_S_best.Value)
+                    Local_S_best = OFF1;
+            }else{
+                if(OFF2.Value < Local_S_best.Value)
+                    Local_S_best = OFF2;
+            }
+        }
+
+        if(S_best.Value < Local_S_best.Value){
+
+            S_best = Local_S_best;
+            cont = 0;
+        
+        }
+
+        // Update Population
+        PP = P_New; 
+        
+        int randomSol = rand() % PP.size();
+        PP[ randomSol ] = S_best;
+                       
+    }
+
+    return S_best;
+}
 
 #endif
