@@ -32,6 +32,7 @@ int main(){
                 S = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
                 
             printSolution(S, N);
+            cout << "Confirm: " << calculateObj(S, N, K, P, d, s, w, Q, F, t) << "\n\n\n\n\n\n\n";
 
         } 
     }

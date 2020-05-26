@@ -16,13 +16,21 @@ void readInstance(ifstream &input, double &mi, double &delta, int &N, int &K,
     Q.resize(K); F.resize(K);
     t.resize(N+1, vector<int>(N+1, 0));
 
-    for(int i=0; i<N; i++) input >> P[i];
-    for(int i=0; i<N; i++) input >> d[i];
-    for(int i=0; i<N; i++) input >> s[i];
-    for(int i=0; i<N; i++) input >> w[i];
+    // Job Variables
+    for(int i=0; i<N; i++) 
+        input >> P[i];
+    for(int i=0; i<N; i++) 
+        input >> d[i];
+    for(int i=0; i<N; i++) 
+        input >> s[i];
+    for(int i=0; i<N; i++) 
+        input >> w[i];
 
-    for(int i=0; i<K; i++) input >> Q[i];
-    for(int i=0; i<K; i++) input >> F[i];
+    // Vehicle Variables
+    for(int i=0; i<K; i++) 
+        input >> Q[i];
+    for(int i=0; i<K; i++) 
+        input >> F[i];
 
     for(int i=0; i<= N; i++)
         for(int j=0; j<=N; j++)
@@ -39,19 +47,32 @@ void debugRead(double &mi, double &delta, int &N, int &K,
     cout << "N: " << N << " K: " << K << "\n";
 
     cout << "P: ";
-    for(int i=0; i<N; i++) cout <<  P[i] << " "; cout << "\n";
+    for(int i=0; i<N; i++) 
+        cout <<  P[i] << " ";
+    cout << "\n";
 
     cout << "d: ";
-    for(int i=0; i<N; i++) cout <<  d[i] << " "; cout << "\n";
+    for(int i=0; i<N; i++) 
+        cout <<  d[i] << " ";
+    cout << "\n";
 
     cout << "s: ";
-    for(int i=0; i<N; i++) cout <<  s[i] << " "; cout << "\n";
+    for(int i=0; i<N; i++) 
+        cout <<  s[i] << " ";
+    cout << "\n";
 
     cout << "w: ";
-    for(int i=0; i<N; i++) cout <<  w[i] << " "; cout << "\n";
+    for(int i=0; i<N; i++) 
+        cout <<  w[i] << " ";
+    cout << "\n";
 
-    for(int i=0; i<K; i++) cout <<  Q[i] << " "; cout << "\n";
-    for(int i=0; i<K; i++) cout <<  F[i] << " "; cout << "\n";
+    for(int i=0; i<K; i++) 
+        cout <<  Q[i] << " ";
+    cout << "\n";
+
+    for(int i=0; i<K; i++) 
+        cout <<  F[i] << " ";
+    cout << "\n";
 
     for(int i=0; i<= N; i++){
         for(int j=0; j<=N; j++)
@@ -64,15 +85,14 @@ void debugRead(double &mi, double &delta, int &N, int &K,
 
 void printSolution(const Solution &S, int N){
 
-    cout << "Solution Value: " << fixed << S.Value << "\n";
-    cout << "Solution Value: "  << S.Value << "\n";
+     cout << "Solution Value: " << fixed << S.Value << "\n";
 
     for(int i=0; i<N; i++) 
-        cout<<"V"<<S.M[0][i]<<" "; 
+        cout << "V" << S.M[0][i] << " "; 
     cout << "\n";
 
     for(int i=0; i<N; i++) 
-        cout<<"J"<<S.M[1][i]<<" "; 
+        cout << "J" << S.M[1][i] << " "; 
     cout << "\n\n";
 }
 

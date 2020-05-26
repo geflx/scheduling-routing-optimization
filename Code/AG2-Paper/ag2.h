@@ -38,13 +38,13 @@ void randomSolution(Solution &S, int N, int K)
     }
 }
 
+// Complexity: O( N + (K+N) ) = O(N)
 double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                     const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                     const vector<vector<int>> &t)
 {
-    double Ans;
-
     unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID , Sec: Jobs
+    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
 
     unordered_set<int> Vehicle;
     vector<int> Order;
@@ -59,9 +59,9 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
             Order.push_back( S.M[0][i] );
             Vehicle.insert( S.M[0][i] );
         }
+        accPTime[ S.M[0][i] ] += P[ S.M[1][i]-1 ];
     }
 
-    int accPTime = 0;
     for(int &idV: Order){
 
         UseCosts += F[ idV-1 ];      
@@ -69,7 +69,7 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
         int jobsNb = Schedule[idV].size();
 
         int SizeSum = 0; 
-        int RouteTime =0;
+        int RouteTime = 0;
         RouteTime += t[0][ Schedule[idV][0] ]; // Origin to First
 
         for(int i=0; i<jobsNb; i++){
@@ -77,32 +77,31 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
             int JobId = Schedule[idV][i];
 
             SizeSum += s[ JobId-1 ];
-            accPTime += P[ JobId-1 ];
 
-            int Delivery = accPTime + RouteTime;
-            if(Delivery > d[ JobId-1 ]){
+            int Delivery = accPTime[idV] + RouteTime;
+
+            if(Delivery > d[ JobId-1 ])
                 PenaltyCosts += (Delivery - d[ JobId-1 ]) * w[ JobId-1 ];
-            }
 
             if(i < jobsNb-1)
-                RouteTime += t[ Schedule[idV][i] ][ Schedule[idV][i+1] ];
+                RouteTime += t[ JobId ][ Schedule[idV][i+1] ]; // time: JobId -> NextJob
         }
-        
+
         if(SizeSum > Q[ idV-1 ])
             OverlapCosts += SizeSum - Q[ idV-1 ];
         
-
         RouteTime += t[ Schedule[idV][ jobsNb-1 ] ][ 0 ]; // Last to Origin
         TravelCosts += RouteTime;
     }
 
-    // ! cout << "UseCosts: " << UseCosts << "\n";
-    // ! cout << "TravelCosts: " << TravelCosts << "\n";
-    // ! cout << "PenaltyCosts: " << PenaltyCosts << "\n";
-    // ! cout << "OverlapCosts: " << OverlapCosts << "\n";
+    // cout << "TravelCosts: " << TravelCosts << "\n";
+    // cout << "UseCosts: " << UseCosts << "\n";
+    // cout << "PenaltyCosts: " << PenaltyCosts << "\n";
+    // cout << "OverlapCosts: " << OverlapCosts << "\n";
     return UseCosts + TravelCosts + PenaltyCosts + OverlapCosts;
 }
 
+// Complexity: O(N) due to Solution Evaluation
 Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                    const vector<vector<int>> &t)
@@ -117,7 +116,6 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
         MixJobs.insert( S.M[1][i] );
     
     int cont = point;
-
 
     for(int i=0; i<N; i++){
         
@@ -151,6 +149,7 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
 
 }
 
+// Complexity: O(N) due to Solution Evaluation
 Solution Mutation( Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                    const vector<vector<int>> &t)
