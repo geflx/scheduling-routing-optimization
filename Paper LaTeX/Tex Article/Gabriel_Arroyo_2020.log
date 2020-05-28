@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.29)  19 MAY 2020 17:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  28 MAY 2020 13:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -326,13 +326,13 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 )
 (./Gabriel_Arroyo_2020.aux
 
-LaTeX Warning: Label `eq:atc' multiply defined.
-
-
-LaTeX Warning: Label `eq:atc' multiply defined.
-
-
 LaTeX Warning: Label `ins-Q' multiply defined.
+
+
+LaTeX Warning: Label `eq:atc' multiply defined.
+
+
+LaTeX Warning: Label `eq:atc' multiply defined.
 
 
 LaTeX Warning: Label `algo:ilsrvnd' multiply defined.
@@ -364,20 +364,20 @@ LaTeX Warning: Label `sub@fig:d' multiply defined.
 )
 \openout1 = `Gabriel_Arroyo_2020.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count293
@@ -400,7 +400,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Overfull \hbox (0.30147pt too wide) in paragraph at lines 39--42
+Overfull \hbox (0.30147pt too wide) in paragraph at lines 41--44
 \OT1/cmr/m/n/9 fied as NP-Hard, de-mand-ing heuris-tics ap-proaches to ob-tain 
 near-optimal
  []
@@ -408,7 +408,7 @@ near-optimal
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (16.40498pt too wide) in paragraph at lines 86--87
+Overfull \hbox (16.40498pt too wide) in paragraph at lines 90--91
 \OT1/cmr/m/n/10 dist^ancia to-tal per-cor-rida e tempo to-tal de tra-jeto. Uma 
 nova for-mula^^Xc~ao mat^^Sematica
  []
@@ -417,49 +417,39 @@ nova for-mula^^Xc~ao mat^^Sematica
 <Images/SOL_REP2.png, id=32, 1790.69pt x 384.43625pt>
 File: Images/SOL_REP2.png Graphic file (type png)
 <use Images/SOL_REP2.png>
-Package pdftex.def Info: Images/SOL_REP2.png  used on input line 292.
+Package pdftex.def Info: Images/SOL_REP2.png  used on input line 296.
 (pdftex.def)             Requested size: 347.12354pt x 74.52188pt.
  [7] [8 <./Images/SOL_REP2.png>]
 <Images/VISUAL_REP2.pdf, id=46, 500.87125pt x 156.585pt>
 File: Images/VISUAL_REP2.pdf Graphic file (type pdf)
 <use Images/VISUAL_REP2.pdf>
-Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 348.
+Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 352.
 (pdftex.def)             Requested size: 347.12354pt x 108.524pt.
  [9 <./Images/VISUAL_REP2.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 431--433
+Underfull \hbox (badness 10000) in paragraph at lines 435--437
 
  []
 
 [10]
-Overfull \hbox (1.54263pt too wide) in paragraph at lines 476--477
+Overfull \hbox (1.54263pt too wide) in paragraph at lines 480--481
 \OT1/cmr/m/n/10 O pro-cesso de busca lo-cal visa ap-ri-morar uma solu^^Xc~ao at
 -ual ao con-sid-erar solu^^Xc~oes
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 489--490
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 491--492
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 
  []
 
 [11]
-Overfull \hbox (0.57149pt too wide) in paragraph at lines 498--499
+Overfull \hbox (0.57149pt too wide) in paragraph at lines 502--503
 \OT1/cmr/m/n/10 Du-rante o pro-cesso, as opera^^Xc~oes apli-cadas po-dem gerar 
 solu^^Xc~oes invi^^Saveis, por^^Sem
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 502--503
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 504--505
-
  []
 
 
@@ -472,44 +462,54 @@ Underfull \hbox (badness 10000) in paragraph at lines 508--509
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 510--511
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 512--513
+
+ []
+
 [12]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [13]
 [14] [15]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 635.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 639.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 706.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 710.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 706.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 710.
 
 [16]
 <Images/ILS_DIF.png, id=312, 1666.225pt x 382.42876pt>
 File: Images/ILS_DIF.png Graphic file (type png)
 <use Images/ILS_DIF.png>
-Package pdftex.def Info: Images/ILS_DIF.png  used on input line 716.
+Package pdftex.def Info: Images/ILS_DIF.png  used on input line 720.
 (pdftex.def)             Requested size: 119.97827pt x 27.53717pt.
 
 Underfull \vbox (badness 1924) has occurred while \output is active []
 
  [17 <./Images/ILS_DIF.png (PNG copy)>]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 783.
-
-
 LaTeX Warning: Command \textquoteright invalid in math mode on input line 787.
-
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 790.
 
 
 LaTeX Warning: Command \textquoteright invalid in math mode on input line 791.
 
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 794.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 795.
+
 [18] [19]
-Overfull \hbox (3.15486pt too wide) in paragraph at lines 857--859
+Overfull \hbox (3.15486pt too wide) in paragraph at lines 861--863
 []\OT1/cmr/m/n/10 Os re-sul-ta-dos foram anal-isa-dos por meio do teste n~ao-pa
 ram^^Setrico de Kruskall-
  []
@@ -520,7 +520,7 @@ File: Images/calibration/general rpd calib ilrs-rvnd-1 int.png Graphic file (ty
 pe png)
 <use Images/calibration/general rpd calib ilrs-rvnd-1 int.png>
 Package pdftex.def Info: Images/calibration/general rpd calib ilrs-rvnd-1 int.p
-ng  used on input line 862.
+ng  used on input line 866.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 [20]
 <Images/calibration/general rpd calib ilrs-rvnd-2 int.png, id=327, 433.62pt x 2
@@ -529,10 +529,10 @@ File: Images/calibration/general rpd calib ilrs-rvnd-2 int.png Graphic file (ty
 pe png)
 <use Images/calibration/general rpd calib ilrs-rvnd-2 int.png>
 Package pdftex.def Info: Images/calibration/general rpd calib ilrs-rvnd-2 int.p
-ng  used on input line 873.
+ng  used on input line 877.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 
-Overfull \hbox (2.57547pt too wide) in paragraph at lines 880--881
+Overfull \hbox (2.57547pt too wide) in paragraph at lines 884--885
 \OT1/cmr/m/n/10 con-jun-tos de val-ores destes par^ametros foram definidos em $
 \OML/cmm/m/it/10 PopSize \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 30\OML/cmm/m/it/10
  ; \OT1/cmr/m/n/10 50\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 70\OMS/cmsy/m/n/10 g$
@@ -544,7 +544,7 @@ File: Images/calibration/general rpd calib ga-ls int.png Graphic file (type png
 )
 <use Images/calibration/general rpd calib ga-ls int.png>
 Package pdftex.def Info: Images/calibration/general rpd calib ga-ls int.png  us
-ed on input line 884.
+ed on input line 888.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 
 Underfull \vbox (badness 1122) has occurred while \output is active []
@@ -555,25 +555,25 @@ s/calibration/general rpd calib ilrs-rvnd-2 int.png>]
 File: Images/small-instances/avg 10 jobs int.png Graphic file (type png)
 <use Images/small-instances/avg 10 jobs int.png>
 Package pdftex.def Info: Images/small-instances/avg 10 jobs int.png  used on in
-put line 906.
+put line 910.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/small-instances/avg 15 jobs int.png, id=338, 433.62pt x 289.08pt>
 File: Images/small-instances/avg 15 jobs int.png Graphic file (type png)
 <use Images/small-instances/avg 15 jobs int.png>
 Package pdftex.def Info: Images/small-instances/avg 15 jobs int.png  used on in
-put line 906.
+put line 910.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/small-instances/avg 20 jobs int.png, id=339, 433.62pt x 289.08pt>
 File: Images/small-instances/avg 20 jobs int.png Graphic file (type png)
 <use Images/small-instances/avg 20 jobs int.png>
 Package pdftex.def Info: Images/small-instances/avg 20 jobs int.png  used on in
-put line 910.
+put line 914.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/small-instances/general avg rpd int.png, id=340, 433.62pt x 289.08pt>
 File: Images/small-instances/general avg rpd int.png Graphic file (type png)
 <use Images/small-instances/general avg rpd int.png>
 Package pdftex.def Info: Images/small-instances/general avg rpd int.png  used o
-n input line 910.
+n input line 914.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
  [23 <./Images/calibration/general rpd calib ga-ls int.png>] [24 <./Images/smal
 l-instances/avg 10 jobs int.png> <./Images/small-instances/avg 15 jobs int.png>
@@ -583,28 +583,28 @@ al avg rpd int.png>]
 File: Images/large-instances/avg rpd 50 jobs int.png Graphic file (type png)
 <use Images/large-instances/avg rpd 50 jobs int.png>
 Package pdftex.def Info: Images/large-instances/avg rpd 50 jobs int.png  used o
-n input line 1022.
+n input line 1026.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/large-instances/avg rpd 80 jobs int.png, id=353, 433.62pt x 289.08pt>
 File: Images/large-instances/avg rpd 80 jobs int.png Graphic file (type png)
 <use Images/large-instances/avg rpd 80 jobs int.png>
 Package pdftex.def Info: Images/large-instances/avg rpd 80 jobs int.png  used o
-n input line 1022.
+n input line 1026.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/large-instances/avg rpd 100 jobs int.png, id=354, 433.62pt x 289.08pt>
 File: Images/large-instances/avg rpd 100 jobs int.png Graphic file (type png)
 <use Images/large-instances/avg rpd 100 jobs int.png>
 Package pdftex.def Info: Images/large-instances/avg rpd 100 jobs int.png  used 
-on input line 1026.
+on input line 1030.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <Images/large-instances/avg rpd all algos.png, id=355, 433.62pt x 289.08pt>
 File: Images/large-instances/avg rpd all algos.png Graphic file (type png)
 <use Images/large-instances/avg rpd all algos.png>
 Package pdftex.def Info: Images/large-instances/avg rpd all algos.png  used on 
-input line 1026.
+input line 1030.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 
-Overfull \hbox (5.7593pt too wide) in paragraph at lines 1030--1031
+Overfull \hbox (5.7593pt too wide) in paragraph at lines 1034--1035
 \OT1/cmr/m/n/10 mais, seguido do Al-go-ritmo Gen^^Setico GA$[]$LS e da se-gunda
  heur^^S^^Pstica ILS$[]$RVND$[]$2.
  []
@@ -612,7 +612,7 @@ Overfull \hbox (5.7593pt too wide) in paragraph at lines 1030--1031
 [25] [26 <./Images/large-instances/avg rpd 50 jobs int.png> <./Images/large-ins
 tances/avg rpd 80 jobs int.png> <./Images/large-instances/avg rpd 100 jobs int.
 png> <./Images/large-instances/avg rpd all algos.png>]
-Overfull \hbox (16.61047pt too wide) in paragraph at lines 1073--1114
+Overfull \hbox (16.61047pt too wide) in paragraph at lines 1077--1118
 \OT1/cmr/m/n/10 ILS$[]$RVND$[]$2 foi ex-ecutou com m^^Sedia mais r^^Sapida, seg
 uido do al-go-ritmo ILS$[]$RVND$[]$1
  []
@@ -625,7 +625,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  3740 strings out of 481239
  55608 string characters out of 5920377
- 320091 words of memory out of 5000000
+ 320072 words of memory out of 5000000
  18963 multiletter control sequences out of 15000+600000
  537715 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -651,7 +651,7 @@ pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmtt9.pfb>
-Output written on Gabriel_Arroyo_2020.pdf (30 pages, 624807 bytes).
+Output written on Gabriel_Arroyo_2020.pdf (30 pages, 624740 bytes).
 PDF statistics:
  450 PDF objects out of 1000 (max. 8388607)
  259 compressed objects within 3 object streams

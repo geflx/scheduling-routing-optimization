@@ -21,7 +21,9 @@
 %\graphicspath{ {images/} }
 \renewcommand{\tabcolsep}{3mm}
 
-\title{Heurísticas para um Problema Integrado de Sequenciamento da Produção e Roteamento de Veículos de Frota Heterogênea
+\title{
+%Heurísticas para um Problema Integrado de Sequenciamento da Produção e Roteamento de Veículos de Frota Heterogênea%
+Effective Heuristics for Integrated Job Scheduling and Heteregoneous Fleet Vehicle Routing Problem
 }
 \author{Gabriel de P. Felix  \and José E. C. Arroyo \ }
 \institute{Department of Computer Science, Universidade Federal de Viçosa,\\ Vi\c{c}osa - MG, 36570-900, Brazil\\
@@ -36,7 +38,7 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 %O problema é classificado como NP-Difícil no senso comum, exigindo a aplicação de heurísticas para solucioná-lo.
 %São propostas duas heurísticas Iterated Local Search, Algoritmo Genético (AG) e um modelo misto de programação linear inteira (MILP). Foram geradas instâncias de pequeno e grande porte (até cem clientes), sendo os resultados comparados com o Solver CPLEX. Análises estatísticas mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software a medida em que o número de clientes aumenta.
 
-This paper address an integrated job schedulling and vehicle routing problem, where jobs contains different sizes, penalties and due dates. To deliver them, there are vehicles from a limited heteregenous fleet (HFVRP). The minimization criteria are: total weighted penalty, transport costs and total distance traveled. 
+This paper address an integrated job scheduling and vehicle routing problem, where jobs contains different sizes, penalties and due dates. To deliver them, there are vehicles from a limited heteregenous fleet (HFVRP). The minimization criteria are: total weighted penalty, transport costs and total distance traveled. 
 The given problem is classified as NP-Hard, demanding heuristics approaches to obtain near-optimal solutions in reasonable computational time. There are proposed two versions of Iterated Local Search (ILS), one Genetic Algorithmn (GA) and a Mixed-Integer Linear Programming (MILP) model to solve it. In addition, were also generated small and big instances (with at most one hundred customers) and the results compared to CPLEX Solver. 
 Estathistical Analysis shows that heuristics approaches obtained better quality solutions in much less time than the solver.
 
@@ -45,8 +47,10 @@ Estathistical Analysis shows that heuristics approaches obtained better quality 
 
 \section{Introdução}\label{introduction}
 
-Para aumentar a competitividade no mercado global, as indústrias tem-se concentrado na otimização da cadeia de suprimentos.
-A cadeia de suprimentos é o conjunto de atividades/processos que envolvem a produção, armazenamento e transporte de produtos ou serviços. Estas atividades  incluem  a compra de matérias-primas, controle de estoque,  produção dos produtos, e entrega dos produtos aos clientes finais dentro dos prazos estabelecidos. 
+In order to improve competitive in the global market, industries have been focus in optimizing its supply chain.
+Supply chain is the set of tasks/activities envolving production, storage and products or services transportation.
+%Para aumentar a competitividade no mercado global, as indústrias tem-se concentrado na otimização da cadeia de suprimentos.
+%A cadeia de suprimentos é o conjunto de atividades/processos que envolvem a produção, armazenamento e transporte de produtos ou serviços. Estas atividades  incluem  a compra de matérias-primas, controle de estoque,  produção dos produtos, e entrega dos produtos aos clientes finais dentro dos prazos estabelecidos. 
 
 Todas essas atividades devem ser muito bem planejadas e otimizadas para que possam entregar produtos de qualidade e gerar resultados positivos. Os objetivos primordiais  que são buscados pela cadeia de suprimentos são: redução de custos, cumprimento de prazos e satisfação dos clientes.
 
