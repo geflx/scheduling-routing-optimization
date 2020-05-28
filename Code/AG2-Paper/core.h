@@ -1,6 +1,8 @@
 #ifndef CORE_H
 #define CORE_H
 
+using namespace std;
+
 void readInstance(ifstream &input, double &mi, double &delta, int &N, int &K,
                   vector<int> &P, vector<int> &d, vector<int> &s,
                   vector<double> &w, vector<int> &Q, vector<int> &F,

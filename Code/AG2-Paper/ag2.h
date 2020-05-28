@@ -1,14 +1,18 @@
 #ifndef AG2_H
 #define AG2_H
 
-#include <fstream>
-#include <assert.h>
-#include <limits>
-#include <iostream>
 #include <vector>
-#include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
+
+#include <fstream>
+#include <assert.h>
+#include <math.h>
+#include <limits>
+#include <iostream>
+#include <algorithm>
+#include <chrono>
+#include <random>
 
 //Select Method version
 #define CROSSOVER_OPTION 0
@@ -44,16 +48,15 @@ struct Solution{
 void randomSolution(Solution &S, int N, int K)
 {
     vector<int> permutation(N);
-    for(int i=1; i<=N; i++) permutation[i-1] = i; // * 1-indexed
+    for(int i=0; i<N; i++) permutation[i] = i; // * 0-indexed
 
     random_shuffle(permutation.begin(), permutation.end());
     
     for(int i=0; i<N; i++){
         S.M[1][i] = permutation[i];
-        S.M[0][i] = rand()%K + 1;
+        S.M[0][i] = rand()%K;
     }
 }
-
 
 double objFunction(const vector<vehicleLoaded> &vehicleOrder, const vector<data> &configuration,int ncars, int njobs, const vector<vector<int> > &time,
     const vector<double> &weight,const vector<int> &jobTardiness, const vector<int> &carPrices){
@@ -108,6 +111,7 @@ double objFunction(const vector<vehicleLoaded> &vehicleOrder, const vector<data>
     cout << "TRAVEL2: "<< travelCosts << "PENALTY2: " << penaltyCosts << "USE2: " << vehicleCosts <<endl;
     return (travelCosts+vehicleCosts+penaltyCosts) ;
 }
+
 vector<int > calculatingDeliveryTime(const vector<data> &config, vector<int> &startVehicleTime, const vector<vector<int> > &time,const vector<int> &procTime,
     const vector<vehicleLoaded> &vehicleOrder,int njobs){
     vector<int> deliveryTime(njobs,0);
@@ -126,7 +130,6 @@ vector<int > calculatingDeliveryTime(const vector<data> &config, vector<int> &st
     // 	cout<<u<<" ";
     // }cout<<endl;
 
-
     //Calculating the acumulated processing time for jobs and setting the starting time for vehicles.
     for(int i=0;i<vehicleOrder.size();i++){
         int whichCar=vehicleOrder[i].id; // Setting the delivery times by delivery sequence.
@@ -137,8 +140,7 @@ vector<int > calculatingDeliveryTime(const vector<data> &config, vector<int> &st
         }
         startVehicleTime[whichCar]=acumulatedProcessTime;
 
-
-    //Now calculating the travel time between delivered jobs
+        //Now calculating the travel time between delivered jobs
         int acumulatedDeliveryTime=0;
         int lastJob;
         // Leaving origin to first job
@@ -198,9 +200,7 @@ vector<int> calculatingJobTardiness(const vector<int> &deliveryTime,int njobs, c
     return T;
 }
 
-
-
-// Complexity: O( N + (K+N) ) = O(N)
+// Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
 double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                     const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                     const vector<vector<int>> &t)
@@ -219,10 +219,9 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
 
         accPTime[ S.M[0][i] ] += P[ i ];
         
-        JobPath[i+1] = S.M[0][i];
+        JobPath[i] = S.M[0][i];
 
     }
-
     for(int i=0; i<N; i++){
 
         Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
@@ -233,121 +232,117 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
         }
     }
 
+    for(int i=1; i < Order.size(); i++){
+        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
+    }
+
     for(int &idV: Order){
 
-        UseCosts += F[ idV-1 ];      
+        UseCosts += F[ idV ];      
         
         int jobsNb = Schedule[idV].size();
 
         int SizeSum = 0; 
         int RouteTime = 0;
-        RouteTime += t[0][ Schedule[idV][0] ]; // Origin to First
+        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
 
         for(int i=0; i<jobsNb; i++){
             
             int JobId = Schedule[idV][i];
 
-            SizeSum += s[ JobId-1 ];
+            SizeSum += s[ JobId ];
 
             int Delivery = accPTime[idV] + RouteTime;
 
-            if(Delivery > d[ JobId-1 ])
-                PenaltyCosts += (Delivery - d[ JobId-1 ]) * w[ JobId-1 ];
+            if(Delivery > d[ JobId ])
+                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
 
             if(i < jobsNb-1)
-                RouteTime += t[ JobId ][ Schedule[idV][i+1] ]; // time: JobId -> NextJob
+                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
         }
 
-        if(SizeSum > Q[ idV-1 ])
-            OverlapCosts += SizeSum - Q[ idV-1 ];
+        if(SizeSum > Q[ idV ])
+            OverlapCosts += SizeSum - Q[ idV ];
         
-        RouteTime += t[ Schedule[idV][ jobsNb-1 ] ][ 0 ]; // Last to Origin
+        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
         TravelCosts += RouteTime;
     }
 
-    // cout << "TravelCosts: " << TravelCosts << "\n";
-    // cout << "UseCosts: " << UseCosts << "\n";
-    // cout << "PenaltyCosts: " << PenaltyCosts << "\n";
-    // cout << "OverlapCosts: " << OverlapCosts << "\n";
+    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
+    
+    return UseCosts + TravelCosts + PenaltyCosts;
+}
 
-    if(OverlapCosts == 0){
+pair<double, double> tempObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
+                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+                    const vector<vector<int>> &t)
+{
+    unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID, Sec: Jobs
+    unordered_map<int, int> JobPath; // * First: JobId, Sec: Vehicle ID
+    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
+    
+    unordered_set<int> Vehicle;
+    vector<int> Order;
+
+    double UseCosts, TravelCosts, PenaltyCosts, OverlapCosts;
+    UseCosts = TravelCosts = PenaltyCosts = OverlapCosts = 0.0;
+
+    for(int i=0; i<N; i++){
+
+        accPTime[ S.M[0][i] ] += P[ i ];
         
-        for(int i=0;i<N;i++){
-            cout<<"V"<<S.M[0][i]-1<<" ";
-        }cout<<endl;
-        for(int i=0;i<N;i++){
-            cout<<"J"<<S.M[1][i]-1<<" ";
-        }cout<<endl;
-        cout<<"TRAVEL: "<< TravelCosts << "PENALTY: " << PenaltyCosts << "USE: " << UseCosts << "\n\n";
+        JobPath[i] = S.M[0][i];
 
-        vector<data> initialConfig;
-        unordered_set<int> yes;
-        
-        unordered_map<int, unordered_set<int>> carregoBurro;
-        vector<int> orderBurro;
-        for(int i=0; i<N; i++){
-            int v = S.M[0][i]-1;
-            carregoBurro[ v ].insert(i);
-            if(yes.find(v) == yes.end()){
-                orderBurro.push_back(v);
-                yes.insert(v);
-            }
-        }
-        for(int i=0; i<orderBurro.size(); i++){
-            cout << "veiculo "<< orderBurro[i] << " leva: ";
-            auto it = carregoBurro[ orderBurro[i]].begin();
-            while(it != carregoBurro[orderBurro[i]].end()  )
-            {
-                cout<< *it <<" ";
-                it++;
-            }cout << endl;
-        }
-
-        for(int i=0; i<orderBurro.size(); i++){
-            int v = orderBurro[i];
-            data Go1; Go1.job =false; Go1.id = v;
-            initialConfig.push_back( Go1 );
-            for(int j=0; j<N; j++){
-                if( !(carregoBurro[ v ].find(S.M[1][j]-1) == carregoBurro[v].end()) ){
-                    data Go2; Go2.job = true; Go2.id = S.M[1][j]-1;
-                    initialConfig.push_back( Go2 );
-                }
-            }
-        }
-
-
-        //complete
-        for(int i=0;i<K; i++){
-            if(yes.find(i) == yes.end()){
-                data Go;
-                Go.id = i;
-                yes.insert(i);
-                Go.job = false;
-                initialConfig.push_back( Go );
-            }
-        }
-        assert( yes.size() == K );
-        
-        for(int i=0;i<initialConfig.size();i++){
-            if(initialConfig[i].job){
-                cout<<"J"<<initialConfig[i].id<<" ";
-            }else{
-                cout<<"V"<<initialConfig[i].id<<" ";
-            }
-        } cout << endl;
-
-         vector<vehicleLoaded> vehicleOrder=generateVehicleOrder(initialConfig, K);//Generating info about vehicle transportation
-
-        vehicleOrder=generateVehicleOrder(initialConfig, K);//Generating info about vehicle transportation
-        vector<int> startVehicleTime(K,0);//Calculating Delivery time(D) and Starting time(Sk)
-        vector<int> deliveryTime = calculatingDeliveryTime(initialConfig,startVehicleTime,t,P,vehicleOrder, N);
-        vector<int> jobTardiness = calculatingJobTardiness(deliveryTime, N,d);//Generating Job Tardiness (T) of each job (O(N))
-        double finalObj= objFunction(vehicleOrder,initialConfig, K, N,t,w,jobTardiness,F);
-
-        cerr <<"FIRST: " << (TravelCosts + UseCosts + PenaltyCosts) << "SECOND: " << finalObj << "\n\n";
-        assert( (TravelCosts + UseCosts + PenaltyCosts) == finalObj );
     }
-    return UseCosts + TravelCosts + PenaltyCosts + OverlapCosts;
+    for(int i=0; i<N; i++){
+
+        Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
+
+        if(Vehicle.find(S.M[0][i]) == Vehicle.end()){
+            Order.push_back( S.M[0][i] );
+            Vehicle.insert( S.M[0][i] );
+        }
+    }
+
+    for(int i=1; i < Order.size(); i++){
+        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
+    }
+
+    for(int &idV: Order){
+
+        UseCosts += F[ idV ];      
+        
+        int jobsNb = Schedule[idV].size();
+
+        int SizeSum = 0; 
+        int RouteTime = 0;
+        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
+
+        for(int i=0; i<jobsNb; i++){
+            
+            int JobId = Schedule[idV][i];
+
+            SizeSum += s[ JobId ];
+
+            int Delivery = accPTime[idV] + RouteTime;
+
+            if(Delivery > d[ JobId ])
+                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
+
+            if(i < jobsNb-1)
+                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
+        }
+
+        if(SizeSum > Q[ idV ])
+            OverlapCosts += SizeSum - Q[ idV ];
+        
+        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
+        TravelCosts += RouteTime;
+    }
+
+    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
+    
+    return {UseCosts + TravelCosts + PenaltyCosts, OverlapCosts};
 }
 
 // Complexity: O(N) due to Solution Evaluation
@@ -391,7 +386,7 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
             }
         }
     }
-
+    assert( cont == N);
     S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
     return S;
@@ -459,19 +454,14 @@ Solution GA_Version_1 (int N, int K, int itNumber, int popSize,
         ++cont;
 
         int idP1, idP2;
-        idP1 = idP2 = -1;
+        idP1 = idP2 = rand() % popSize;
 
-        idP1 = rand() % popSize;
-        while(idP2 == idP1 || idP2 == -1)
+        while(idP2 == idP1)
             idP2 = rand() % popSize;
         
-        Solution P1, P2;  
-        P1 = PP[idP1];
-        P2 = PP[idP2];
-
         Solution OFF1, OFF2;
-        OFF1 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
-        OFF2 = CrossOver(P2, P1, N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
+        OFF1 = CrossOver(PP[idP1], PP[idP2], N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
+        OFF2 = CrossOver(PP[idP2], PP[idP1], N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
 
         Solution Local_S_best;
         if(OFF1.Value < OFF2.Value)
@@ -536,19 +526,14 @@ Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
         for(int i=0; i< popSize; i+= 2){ // ! i+=2 : adding two new solutions
 
             int idP1, idP2;
-            idP1 = idP2 = -1;
+            idP1 = idP2 = rand() % popSize;
 
-            idP1 = rand() % popSize;
-            while(idP2 == idP1 || idP2 == -1)
+            while(idP2 == idP1)
                 idP2 = rand() % popSize;
-            
-            Solution P1, P2;  
-            P1 = PP[idP1];
-            P2 = PP[idP2];
-
+                        
             Solution OFF1, OFF2;
-            OFF1 = CrossOver(P1, P2, N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
-            OFF2 = CrossOver(P2, P1, N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
+            OFF1 = CrossOver(PP[idP1], PP[idP2], N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
+            OFF2 = CrossOver(PP[idP2], PP[idP1], N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
 
             OFF1 = Mutation(OFF1, N, K, P, d, s, w, Q, F, t);
             OFF2 = Mutation(OFF2, N, K, P, d, s, w, Q, F, t);
@@ -565,7 +550,7 @@ Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
             }
         }
 
-        if(S_best.Value < Local_S_best.Value){
+        if(Local_S_best.Value < S_best.Value){
 
             S_best = Local_S_best;
             cont = 0;
