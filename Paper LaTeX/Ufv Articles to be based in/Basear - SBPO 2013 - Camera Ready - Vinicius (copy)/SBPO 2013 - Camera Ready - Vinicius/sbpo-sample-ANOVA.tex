@@ -1,0 +1,607 @@
+\documentclass [11pt]{articleSBPO}
+\usepackage{graphics}
+\usepackage[a4paper,top=3.3cm,left=2.9cm,right=2.9cm,bottom=2.5cm,noheadfoot]{geometry}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\newcommand{\up}[1]{\raisebox{1.3ex}[0pt]{#1}}
+
+% \usepackage{latex8}
+%\usepackage{subfloat}
+%\usepackage{color}
+%\usepackage{subfig}
+
+\usepackage{booktabs}
+\usepackage{natbib} % pacote que traz o formato das citações por autor (não por números, que é o default do LaTeX)
+
+\def\nohyphen{\pretolerance=1000 \tolerance=1000 \hyphenpenalty=1000 \exhyphenpenalty=1000}
+
+\setlength{\parindent}{1.50cm}
+
+%SBPO INCLUDES
+\usepackage{url}
+\usepackage[T1]{fontenc}
+\usepackage{ae} 
+\usepackage[brazil]{babel}   
+\usepackage[latin1]{inputenc} 
+
+
+%GECCO INCLUDES
+\usepackage{graphicx}
+\usepackage{epstopdf}
+
+%\usepackage{auto-pst-pdf}
+%\usepackage[labelfont=bf,font+=small]{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps,.pdf,.jpeg,.png}
+
+%\usepackage[cmex10]{amsmath}
+%\usepackage[english]{babel}
+%\usepackage[utf8]{inputenc}
+\usepackage[portuguese,ruled,longend,lined,noend]{algorithm2e} %%package para pseudocodigos
+\usepackage{icomma}%somente para portugues. Remove espaco de numero decimais com virgula
+%\usepackage[english,ruled,longend,lined,noend]{algorithm2e} %%package para pseudocodigos
+
+\usepackage{pgfgantt}
+
+%Define uma nova hachura de preenchimento com espa\c{c}amento diferente
+\pgfdeclarepatternformonly{hachura}{\pgfqpoint{-1pt}{-1pt}}{\pgfqpoint{10pt}{10pt}}{\pgfqpoint{4pt}{4pt}}%menor valo mais linhas inclinadas
+{
+ \pgfsetlinewidth{0.1pt}
+ \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+ \pgfpathlineto{\pgfqpoint{9.1pt}{9.1pt}}
+ \pgfusepath{stroke}
+}
+
+%\usepackage[]{hyperref}%pacote para fazer linkagem entre as referencias
+
+\usepackage{array}
+\usepackage{multirow}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor ins-tan-ces ins-tances fa-mi-ly se-tup ti-mes to-tal tar-di-ness ite-ra-ted}
+
+%definindo nomenclatura para as versoes do ILS
+\newcommand{\ILSA}{ILS\_Básico}
+\newcommand{\ILSC}{ILS\_Melhorado}
+\newcommand{\HGA}{HGA}
+%\renewcommand{\figurename}{Fig.}%somente para ICA sem o pocote babel
+%\addto\captionsenglish{\renewcommand{\figurename}{Fig.}}%somente para ICA com o pocote babel
+
+\begin{document}
+\pagestyle{empty}%tira a numeração das páginas
+
+\thispagestyle{empty}%tira a numeração da página em questão
+
+\begin{center}
+\LARGE{\textbf{\normalsize HEURÍSTICA BUSCA LOCAL ITERADA PARA O SEQUENCIAMENTO DE TAREFAS EM UMA MÁQUINA COM TEMPOS DE PREPARAÇÃO DEPENDENTES DA FAMÍLIA}}
+\end{center}
+
+\vspace{5mm}
+
+%\vspace{30mm}
+ \begin{center}
+ \textbf{Natan S. Garcias, André Gustavo dos Santos} \\
+ Departamento de Informática, Universidade Federal de Viçosa (UFV) \\
+ Campus Universitário, Viçosa -- Minas Gerais -- MG -- Brasil -- 36.570-000 \\
+ natan.garcias@ufv.br, andre@dpi.ufv.br
+ \par\end{center}
+
+\begin{center}
+{\bf RESUMO}
+\end{center}
+
+\nohyphen{ 
+Testee2 artigo aborda um problema de programação da produção em uma máquina com tempos de preparação (\textit{setup}) dependente da sequência das famílias de tarefas. Neste problema as tarefas são agrupadas em famílias de acordo com características de similaridade e um tempo de preparação é necessário entre o processamento de duas tarefas de famílias distintas. O critério a ser minimizado é o atraso total das tarefas com relação a suas datas de entrega. O problema é classificado como NP-Difícil no senso comum, então, heurísticas eficientes são necessárias para obter soluções próximas da ótima em tempo computacional razoável. Neste trabalho é proposta uma heurística baseada em \textit{Iterated Local Search} em que a perturbação é aplicada em níveis. O desempenho da heurística proposta é comparada com um Algoritmo Genético (AG) proposto na literatura para o mesmo problema. Depois de uma extensiva análise computacional e estatística conclui-se que a heurística proposta tem performance superior ao AG com respeito a qualidade das soluções encontradas.
+
+\noindent \textbf{PALAVRAS CHAVE}. Sequenciamento em uma máquina, Tempo de preparação dependente das famílias, Atraso total, Busca local iterada.
+
+\vspace{11pt}
+
+\noindent \textbf{Áreas Principais: MH - Metaheuristicas, OC - Otimização Combinatória.}
+}
+
+\begin{center}
+{\bf ABSTRACT}
+\end{center}
+
+\nohyphen{
+This paper addresses the single machine job scheduling problem with sequence dependent family setup time. In this problem the jobs are categorized into families according to their similarity characteristics and setup times are required on each occasion when the machine switches from processing jobs in one family to jobs in another family. The criterion to be minimized is the total tardiness. The problem is classified as NP-hard in the ordinary sense, thus, efficient heuristics are needed to obtain near-optimal solutions in reasonable computational time. In this work we propose an Iterated Local Search (ILS) heuristic in which the perturbation is applied in levels. The performance of the proposed heuristic is compared with a Genetic Algorithm (GA) proposed in the literature for the same problem. After extensive computational and statistical analysis we can conclude that the proposed heuristic performs better than GA with respect to quality of found solutions.
+
+\noindent \foreignlanguage{english}{\textbf{KEYWORDS:} Single machine scheduling, Family setup times, Total tardiness, Iterated local search.}
+
+\vspace{11pt}
+
+ \noindent \foreignlanguage{english}{\textbf{Main areas: MH - Metaheuristics, OC - Combinatorial Optimization.}}
+}
+
+\newpage %força uma quebra de página
+
+
+\section{Introdução}\label{sec:introduction}
+
+Na Seção \ref{sec:metodology}
+Meu problema tem como entrada o valor $V$ de veículos e $C$ de clientes.
+A função objetivo deste problema é:
+
+O somatório das capacidades é: $\sum{Q_i}$
+
+A função objetivo do problema é dada por:
+\begin{equation}
+	\sum{C} + \sum{Q_i}, \quad \forall i \in V
+\end{equation}
+E as variáveis são descritas como inteiras. O dolar está em alta pois o coronavírus afeta as importações do Brasil. Estou escrevendo alguma coisa.
+
+Este aqui é um novo parágrafo, estou escrevendo pra testar. Os meus valores gerados para números de veículos pertencem à $V$ $\in$ $\{1,2,3\}$. O veículo de maior capacidade de pessoas é $V_{max}$.
+
+\section{Revisão Literária}\label{sec:lit-review}
+
+
+\section{Heurística Proposta}\label{sec:metodology}
+
+%Neste trabalho é desenvolvido um algoritmo heurístico baseado na metaheurística \textit{Iterated Local Search} (ILS) para resolver o problema $1|ST_{sd,b}|\sum{T_j}$. ILS \citep{LourencoILS2003} é uma metaheurística simples e de aplicação geral que usa busca local em modificações da solução corrente. Quatro métodos básicos são necessários para derivar um algoritmo ILS: um método ``Gerar-Solução-Inicial'', que encontra uma solução inicial $S$, um método ``Perturbação'' que perturba a solução corrente $S$ levando a alguma solução intermediária $S_1$, um método de ``Busca Local'' que melhora $S_1$ obtendo um ótimo local $S_2$, e um critério de aceitação que decide para qual solução a próxima perturbação é aplicada. Geralmente, a solução $S_2$ retornada pela busca local é aceita se é melhor que a solução corrente $S$. ILS é uma poderosa técnica de otimização, e muitos bons resultados foram obtidos para uma variedade de problemas de otimização combinatória, tais como o problema do caixeiro viajante \citep{MartinOtoILStsp1996}, programação de tarefas no ambiente \textit{job shop} \citep{Lourenco1995ILSJobShop} e no ambiente \textit{flowshop} \citep{Dong2009ILSflowshop}.
+
+Neste trabalho é desenvolvido um algoritmo heurístico baseado na metaheurística \textit{Iterated Local Search} (ILS) para resolver o problema $1|ST_{sd,b}|\sum{T_j}$. ILS \citep{LourencoILS2003} é uma metaheurística simples e de aplicação geral que usa busca local em modificações da solução corrente. Quatro métodos básicos são necessários para derivar um algoritmo ILS: um método ``Gerar-Solução-Inicial'', que encontra uma solução inicial $S$, um método ``Perturbação'' que perturba a solução corrente $S$ levando a alguma solução intermediária $S_1$, um método de ``Busca Local'' que melhora $S_1$ obtendo um ótimo local $S_2$, e um critério de aceitação que decide para qual solução a próxima perturbação é aplicada. O critério de aceitação define um compromisso entre diversificação e intensificação. Uma intensificação muito forte é alcançada se apenas soluções melhores que a corrente são aceitas ($S_2$ melhor que $S$). No outro extremo, há grande diversificação quando soluções são aceitas aleatoriamente, independente do valor da função objetivo. ILS é uma poderosa técnica de otimização, e muitos bons resultados foram obtidos para uma variedade de problemas de otimização combinatória, tais como o problema do caixeiro viajante \citep{MartinOtoILStsp1996}, programação de tarefas no ambiente \textit{job shop} \citep{Lourenco1995ILSJobShop} e no ambiente \textit{flowshop} \citep{Dong2009ILSflowshop}.
+
+
+Na heurística proposta, é utilizado controle automático da perturbação cuja intensidade é aumentada à medida que o procedimento de busca local não consegue gerar novas soluções melhores. Nas próximas subseções, serão descritos os métodos da heurística ILS proposta.
+
+
+\subsection{Representação de uma Solução}
+
+Uma solução (sequenciamento) do problema de programação de tarefas é representado por uma permutação de $n$ tarefas $S = \lbrace j_1, j_2,..., j_n\rbrace$, onde $j_k$ é a $k$-ésima tarefa na sequência de processamento.
+Por exemplo, considere uma instância com $n=7$ tarefas que é especificada na \tablename~\ref{tab:input_data}. A família, o tempo de processamento e a data de entrega de cada tarefa estão na \tablename~\ref{tab:instance}, e os tempos de preparação entre as famílias são mostrados na \tablename~\ref{tab:setup_instance}. Para o sequenciamento $S = \lbrace7, 1, 5, 4, 2, 6, 3\rbrace$ os tempos de conclusão e atrasos das tarefas são ($C_7 = 2$, $C_1 = 5$, $C_5 = 10$, $C_4 = 12$, $C_2 = 14$, $C_6 = 19$, $C_3 = 23$) e ($T_7 = 0$, $T_1 = 3$, $T_5 = 2$,$T_4 = 1$, $T_2 = 7$, $T_6 = 4$, $T_3 = 5$), respectivamente. Logo, o atraso total é $22$. Este sequenciamento é ilustrado na \figurename~\ref{fig:ganttChart}. Note que há a formação de quatro lotes e três tempos de preparação são requeridos (não há tempo de preparação no início da sequência).
+
+
+
+
+
+\begin{table}[!htb]
+		%\caption{Input data for an instance.}\label{tab:input_data}
+		\caption{Dados de entrada para uma instância.}\label{tab:input_data}
+        \centering
+        \begin{subtable}[b]{0.5\linewidth}
+                \centering
+\resizebox{0.7\linewidth}{!}{                
+				\begin{tabular}{c|lllllll}
+				\hline
+				\textbf{Job $i$} 	& \textbf{1}     & \textbf{2}     & \textbf{3}     & \textbf{4}     & \textbf{5}     & \textbf{6}     & \textbf{7} \\
+				\hline
+				\textbf{$f(i)$}  		& 1     & 2     & 1     & 2     & 2     & 1     & 2 \\
+				\textbf{$d_i$}    		& 2    	& 7    	& 18   	& 11    & 8    	& 15    & 3 \\
+				\textbf{$p_i$}    		& 1     & 2     & 4     & 2     & 4     & 3     & 2 \\
+				\hline
+				\end{tabular}
+}
+				\caption{Família, data de entrega e tempo de processamento.}
+                %\caption{Family, due date and processing time.}
+                \label{tab:instance}
+        \end{subtable}
+        \qquad \begin{subtable}[b]{0.35\linewidth}
+                \centering
+\resizebox{0.4\linewidth}{!}{
+                \begin{tabular}{c|ll}
+				\hline
+				\textbf{$s_{ik}$}					& \textbf{1}     & \textbf{2}\\
+				\hline
+				\textbf{1}     							& 0     & 1\\
+				\textbf{2}     							& 2     & 0\\
+				\hline
+				\end{tabular}%
+}
+                \caption{Tempo de preparação entre famílias.}
+                \label{tab:setup_instance}
+        \end{subtable}
+\end{table}
+
+
+
+
+
+%\begin{table}[!htb]
+%		%\caption{Input data for an instance.}\label{tab:input_data}
+%		\caption{Dados de entrada para uma instância.}\label{tab:input_data}
+%        \centering
+%        \begin{subtable}[b]{\linewidth}
+%                \centering
+%				\begin{tabular}{c|p{0.5cm}p{0.5cm}p{0.5cm}p{0.5cm}p{0.5cm}p{0.5cm}p{0.5cm}}
+%				\hline
+%				\textbf{Job $i$} 	& \textbf{1}     & \textbf{2}     & \textbf{3}     & \textbf{4}     & \textbf{5}     & \textbf{6}     & \textbf{7} \\
+%				\hline
+%				\textbf{$f(i)$}  		& 1     & 2     & 1     & 2     & 2     & 1     & 2 \\
+%				\textbf{$d_i$}    		& 2    	& 7    	& 18   	& 11    & 8    	& 15    & 3 \\
+%				\textbf{$p_i$}    		& 1     & 2     & 4     & 2     & 4     & 3     & 2 \\
+%				\hline
+%				\end{tabular}
+%				\caption{Família, data de entrega e tempo de processamento.}
+%                %\caption{Family, due date and processing time.}
+%                \label{tab:instance}
+%        \end{subtable}%
+%        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+%          %(or a blank line to force the subfigure onto a new line)
+%          
+%        \begin{subtable}[b]{\linewidth}
+%                \centering
+%                \begin{tabular}{c|p{0.5cm}p{0.5cm}}
+%				\hline
+%				\textbf{$s_{ik}$}					& \textbf{1}     & \textbf{2}\\
+%				\hline
+%				\textbf{1}     							& 0     & 1\\
+%				\textbf{2}     							& 2     & 0\\
+%				\hline
+%				\end{tabular}%
+%                \caption{Tempo de preparação entre famílias.}
+%                \label{tab:setup_instance}
+%        \end{subtable}
+%\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN - GANTT CHART%%%%%%%%%%%%%%%
+\begin{figure}[!htb]
+\centering
+\resizebox{0.7\linewidth}{!}{
+\begin{ganttchart}[hgrid=false, vgrid, time slot modifier=0, inline, title/.style={draw=none, fill=none}, include title in canvas=false, title left shift =-1.0, title top shift=0.5, title label font={\small}]{24}
+
+%\gantttitlelist{1,...,30}{1} \\
+\gantttitlelist[title/.style={draw=none}]{0,...,23}{1} \\
+
+%colocar as tarefas
+\ganttbar[bar/.style={fill=white}]{\textbf{1}}{4}{5} %elem0
+\ganttbar[bar/.style={fill=gray}]{\textbf{2}}{12}{14} %elem1
+\ganttbar[bar/.style={fill=white}]{\textbf{3}}{19}{23} %elem2
+\ganttbar[bar/.style={fill=gray}]{\textbf{4}}{10}{12} %elem3
+\ganttbar[bar/.style={fill=gray}]{\textbf{5}}{6}{10} %elem4
+\ganttbar[bar/.style={fill=white}]{\textbf{6}}{16}{19} %elem5
+\ganttbar[bar/.style={fill=gray}]{\textbf{7}}{0}{2} %elem6
+
+%colocar aqui os tempos de preparacao
+%\ganttbar[bar/.style={pattern=hachura,draw=none},bar label font=\color{red}, bar label inline anchor/.style={left}]
+\ganttbar[bar/.style={pattern=hachura,draw=none},bar label font=\color{black}, bar label inline anchor/.style={above}]
+{\textbf{$s_{21}$}\quad\ \ }{2}{4} %elem7
+\ganttbar[bar/.style={pattern=hachura,draw=none},bar label font=\color{black}, bar label inline anchor/.style={above}]
+{\textbf{$s_{12}$}}{5}{6} %elem8
+\ganttbar[bar/.style={pattern=hachura,draw=none},bar label font=\color{black}, bar label inline anchor/.style={above}]
+{\textbf{$s_{21}$}\quad\ \ }{14}{16} %elem9
+
+\\
+%tempo de conclusao
+\ganttbar[bar/.style={draw=none}]{$T_1$=3}{5}{5} %elem10
+\ganttbar[bar/.style={draw=none}]{$T_2$=7}{14}{14} %elem11
+\ganttbar[bar/.style={draw=none}]{$T_3$=5}{23}{23} %elem12
+\ganttbar[bar/.style={draw=none}]{$T_4$=1}{12}{12} %elem13
+\ganttbar[bar/.style={draw=none}]{$T_5$=2}{10}{10} %elem14
+\ganttbar[bar/.style={draw=none}]{$T_6$=4}{19}{19} %elem15
+\ganttbar[bar/.style={draw=none}]{$T_7$=0}{2}{2} %elem16
+
+\setganttlinklabel{f-f}{}%remover o label padrao
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem0}{elem10}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem1}{elem11}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem1}{elem11}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem2}{elem12}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem3}{elem13}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem4}{elem14}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem5}{elem15}
+\ganttlink[link type=f-f, link label anchor/.style={anchor=east}]{elem6}{elem16}
+
+\end{ganttchart}
+}
+\caption{Sequenciamento $\mathbf{S = \lbrace7, 1, 5, 4, 2, 6, 3\rbrace}$.}
+%\caption{A schedule of the instance in \tablename~\ref{tab:input_data}.}
+\label{fig:ganttChart}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END - GANTT CHART%%%%%%%%%%%%%%%
+
+
+\subsection{Construção da Solução Inicial}
+
+Para construir uma solução inicial para o ILS, foi utilizado um algoritmo baseado na heurística NEH \citep{Nawaz198391} adaptada para a minimização do atraso total. Nesta heurística primeiramente as tarefas são arranjadas em ordem não-decrescente das suas datas de entrega (regra \textit{Earliest Due Date}) formando a lista ordenada $J=\{j_1, ...,j_n\}$ de tarefas. A primeira tarefa de $J$ é inserida na sequência parcial $S$ ($S = \{j_1\}$). Cada tarefa restante $j_i$ de $J$ ($i = 2,...,n$) é inserida em todas as posições possíveis da sequência $S$ gerando $i$ sequências parciais. Das $i$ sequências, a melhor (em relação ao atraso total parcial) é selecionada. A heurística termina quando todas as tarefas da lista $J$ são inseridas na sequência  $S$.
+
+\subsection{Busca Local}
+
+A busca local é usada para melhorar a solução inicial $S$ e as soluções obtidas pelo procedimento de perturbação. Busca local é um método que começa com uma solução $S$, e gera uma vizinhança que contém todas as soluções que são alcançadas através de movimentos individuais realizados na solução corrente. Desta vizinhança, a solução que é melhor que a solução corrente é selecionada. A solução escolhida torna-se a nova solução corrente e o processo continua até que um ótimo local seja alcançado.
+
+%Neste trabalho foi utilizado o procedimento de Busca Local (BL) proposto por Ruiz e Stutzle \cite{RuizStutzle2008} que é adaptado para sequenciamento em uma máquina e minimização do atraso total. O procedimento BL é baseado na vizinhança por inserção. Esta vizinhança consiste em remover uma tarefa $j$ da sua posição original e inserir ela nas $n-1$ posições restantes. Este movimento gera uma vizinhança de tamanho ${(n-1)}^2$. A solução corrente é substituída pela primeira solução vizinha que melhore o seu valor de atraso total. O procedimento é repetido enquanto há melhoria na solução corrente. O procedimento BL utilizado neste artigo é mostrado no Algoritmo \ref{algo:local_search_insertion}. Para reduzir o tamanho da vizinhança, nós usamos o parâmetro $\gamma$ que define a probabilidade para uma tarefa $j$ ser inserida em todas as posições da solução corrente da sequência. Se $\gamma = 1.0$, a vizinhança inteira é avaliada assim como em \cite{RuizStutzle2008}.
+
+Neste trabalho foi utilizado o procedimento de Busca Local proposto por \cite{RuizStutzle2008} que é adaptado para sequenciamento em uma máquina e minimização do atraso total. O procedimento de busca local é baseado na vizinhança por inserção. Esta vizinhança consiste em remover uma tarefa $j$ da sua posição original e inserir ela nas $n-1$ posições restantes. Este movimento gera uma vizinhança de tamanho ${(n-1)}^2$. A solução corrente é substituída por uma solução vizinha que melhore o valor do atraso total. O procedimento é repetido enquanto há melhoria na solução corrente. O procedimento de busca local utilizado neste artigo é mostrado no Algoritmo \ref{algo:local_search_insertion}. Para reduzir o tamanho da vizinhança,é utilizado o parâmetro $\gamma$ que define a probabilidade para uma tarefa $j$ ser inserida em todas as posições da solução corrente. Se $\gamma = 1.0$, a vizinhança inteira é avaliada assim como em \cite{RuizStutzle2008}. O algoritmo possui também o parâmetro $FFI$ (\textit{flag first improvement}) que define o critério de escolha da solução vizinha a ser explorada na próxima iteração. Note que se $FFI = 1$ (linha 14) na busca local é usada a estratégia de escolha do primeiro vizinho melhor (\textit{First Improvement}). Caso contrário, o melhor da vizinhança (\textit{Best Improvement}) é usado na próxima iteração da busca local.
+
+
+%Há também o parâmetro $FFI$ (\textit{flag first improvement} ou \textit{flag} primeiro aprimorante) define quando parar de avaliar a vizinhança para uma dada tarefa. Se $FFI = 1$, então, a solução retornada no passo da linha 10 do Algoritmo \ref{algo:local_search_insertion} será a primeira solução que melhore $S$, e caso $FFI = 0$ a solução retornada será o melhor vizinho de $S$.
+
+\SetAlgoSkip{}
+\begin{algorithm}
+\AlFnt \small 
+\LinesNumbered
+\caption{Busca\_Local ($S$, $\gamma$, $FFI$)}\label{algo:local_search_insertion}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{saída}
+%\Input{$S$, $\gamma$}
+%\Output{Improved solution $S$}
+\Output{Solução $S$ melhorada}
+\Inicio
+{
+	$melhora$ := true\;
+	
+	\Enqto{$melhora$}
+	{
+		$melhora$ := false\;
+		%$J := \lbrace j_1,...,j_n\rbrace$\ set of jobs determined at random\;
+		$J := \lbrace j_1,...,j_n\rbrace$\ conjunto de tarefas ordenadas aleatoriamente\;
+		\Para{i := 1 \emph{\textbf{até}} n}
+		{
+			%$j := $ randomly select a job from $J$\;
+			$j := $ aleatoriamente selecionar uma tarefa de $J$\;
+			$J := J - \lbrace j\rbrace\;$\;
+			\Se{$rand(0..1) \leq \gamma$}
+			{
+				%$S' :=$ best solution obtained by inserting $j$ in all position of $S$\;
+				$S' :=$ melhor solução obtida ao inserir $j$ em todas as posições de $S$\;
+				\Se{$f(S') < f(S)$}
+				{
+					$S := S'$\;
+					$melhora$ := true\;
+					%break (fim \textbf{para})\;
+					\Se{$FFI = 1$}{
+						Vá para a linha 4 /*Primeiro aprimorante*/
+					}
+				}
+			}
+		}
+	}
+	\Retorna{S}
+}
+\end{algorithm}
+  
+\subsection{Perturbação}
+
+O objetivo do método de perturbação em uma heurística ILS é escapar de uma solução ótimo local. A perturbação de uma solução deve ser forte o bastante para sair do mínimo local corrente e habilitar à busca local para encontrar um novo, possivelmente melhor, mínimo local. Ao mesmo tempo, a perturbação deve ser fraca o bastante para manter boas características do mínimo local corrente \citep{Gendreau2010}. Neste trabalho, foi utilizado um procedimento de perturbação similar ao proposto por \cite{Marconi2012}. Uma solução é perturbada realizando um número de trocas entre tarefas e é aplicado em níveis. Se a melhor solução não é melhorada pela busca local por um número de $N$ iterações consecutivas, o nível da perturbação é incrementado, caso contrário o nível da perturbação  retorna ao seu valor mais baixo.
+
+O nível $d$ da perturbação é um valor no intervalo $d \in [1, d_{max}]$, $d_{max} \leq (n/2 - 1)$. No nível $d$,  $d+1$ trocas são feitas na solução. Desta maneira, no primeiro nível duas trocas são aplicadas, enquanto que no nível mais alto $n/2$ trocas são feitas.
+
+%O nível $d$ da perturbação varia de $d = 1$ a $d = d_{max}$  ($d_{max} \leq  (n/2 -1))$. No nível $d$,  $d+1$ trocas são feitas na solução. Desta maneira, no primeiro nível duas trocas são aplicadas, enquanto que no nível mais alto $n/2$ trocas são feitas.
+
+Para perturbar uma solução $S$, uma posição $j$ ($0 \leq j \leq n - 2d - 2$) é aleatoriamente escolhida de $S$. As trocas são feitas no subconjunto de tarefas consecutivas de $S$ nas posições $j, j + 1,...,j + 2d + 1$. Então, as trocas são aplicadas entre os pares das posições: $(j, j+2d+1)$, $(j+1, j+2d)$,$...$,$(j+d, j+d+1)$. Desta maneira, $d+1$ movimentos de trocas são realizados em cada chamada do procedimento de perturbação.
+
+\subsection{Estrutura do algoritmo ILS com controle automático da pertubação}
+
+Uma descrição geral do pseudocódigo do algoritmo proposto com controle automático da perturbação (chamado \ILSC) é apresentado no Algoritmo \ref{algo:ils_3}. O algoritmo tem cinco parâmetros de entrada: o parâmetro $N$ (que controla a atualização do nível da pertubação), $d_{max}$ (o nível máximo da perturbação), $\gamma$ (probabilidade de uma solução escolhida na busca local ter sua vizinhança avaliada), $\beta$ (probabilidade de aceitação da solução melhorada mesmo que seja pior que a solução corrente) e $FFI$ (que define qual o critério de seleção do vizinho será utilizado na busca local). Na linha 2 uma solução inicial é construída e é melhorada pelo procedimento \textit{Busca Local} (linha 2). Na linha 4 o nível da perturbação é inicializado ($d=1$). As iterações do algoritmo ILS são computadas nas linhas 7-22 até que o critério de parada seja satisfeito. Durante cada iteração, a solução corrente $S$ é perturbada (linha 8) e melhorada pela \textit{Busca Local}, obtendo uma solução $S_2$ (linha 9). Nas linhas 10-13, se a solução $S_2$ melhora a melhor solução obtida até o momento, o nível da perturbação é alterado para o seu menor valor ($d=1$). Se a melhor solução não é melhorada durante $N$ iterações consecutivas, o nível da perturbação é incrementado (veja linhas 15 e 17). O maior valor para o nível da pertubação é $d_{max}$. Nas linhas 18-22 é testado o critério de aceitação. Se $S_2$ é melhor que a solução corrente $S$ então ela é aceita ($S_2$ substitui $S$), caso contrário ela pode ser aceita com uma pequena probabilidade $\beta$, de modo que haja um balanço entre diversificação e intensificação. A melhor solução encontrada durante todas as iterações é retornada pelo algoritmo (linha 23).
+
+
+%%%%%%%%%%%% ILS 1 %%%%%%%%%%%%%%%%
+\SetAlgoSkip{}
+\begin{algorithm}
+\AlFnt \small
+\LinesNumbered
+\caption{\ILSC~($N$, $d_{max}$, $\gamma$, $\beta$, $FFI$)}\label{algo:ils_3}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{saída}
+%\Input{$d$, $\beta$}
+\Output{Melhor solução}
+\Inicio
+{
+	$S$ := Gera\_Solução\_Inicial()\;
+	$S$ := Busca\_Local(S, $\gamma$, $FFI$)\;
+	$d$ := 1\;
+	$cont$ := 0\;
+	$S^*$ := $S$;  //melhor solução\
+
+	\Enqto{critério de parada}
+	{
+		$S_1$ := Perturbação($S$, $d$)\;
+		%$S_1$ := Perturb($S$, $d$)\;
+		$S_2$ := Busca\_Local(S, $\gamma$, $FFI$)\;
+		%$S_2$ :=  Local\_Search(S, $\gamma$, flag\_first\_improvement)\;
+		
+		\eSe{$f(S_2) < f(S^*)$}
+		{
+			$S^*$ := $S_2$\;
+			$cont$ := 0\;
+			$d$ := 1\;
+		}
+		{ 
+			$cont := cont+1$\;  
+			\Se{ $cont$ mod $N$ = 0 }
+			{
+				$d$ := min($d+1$, \emph{$d_{max}$});
+			}
+		}
+		
+		\eSe{ f($S_2$) $<$ f(S)}
+		{
+			$S$ := $S_2$\;
+		}
+		{
+			\Se{$rand(0..1) \leq \beta$}
+			{
+				$S$ := $S_2$\;
+			}
+		}
+	}
+	\Retorna{$S^*$}
+}
+\end{algorithm}
+
+
+\section{Experimentos Computacionais}\label{sec:experiments}
+
+Neste trabalho, foi comparado o algoritmo \ILSC~com o Algoritmo Genético Híbrido (HGA) proposto por \cite{Chantaravarapan_Gupta_Smith_2003} para resolver o problema $1|ST_{sd,b}|\sum{T_j}$ abordado neste trabalho. O algoritmo HGA foi reimplementado seguindo o artigo original \citep{Chantaravarapan_Gupta_Smith_2003}. Também é analisado a eficiência do controle automático da perturbação usado no algoritmo ILS; consequentemente foi comparado \ILSC~com a versão básica que usa um nível de perturbação fixo (chamado ILS\_Básico). Todos os algoritmos foram codificados em C++ e executados em uma máquina com processador Intel(R) Xeon(R) CPU X5650 @ 2.67GHz e 48 GB de RAM. 
+
+\subsection{Instâncias de teste}
+
+As instâncias do problema $1|ST_{sd,b}|\sum{T_j}$ foram geradas aleatoriamente de acordo com o trabalho de \cite{DBLPjournalsjorsJinGSW10}. Foram considerados problemas testes com o número de tarefas $n \in \lbrace 60,80,100 \rbrace$ e número de famílias $F \in \lbrace 2,3,4,5 \rbrace$.
+O tempo de processamento das tarefas ($p_j$) foram gerados aleatoriamente, com distribuição uniforme, sobre o intervalo $[1;99]$.
+Os tempos de preparação são uniformemente distribuídos em três classes de intervalos: \textbf{classe S} em $[11;20]$; \textbf{classe M} em $[51;100]$ e \textbf{classe L} em $[101;200]$. As datas de entrega são números inteiros no intervalo $[0; r\sum_{j=1}^{n}p_j]$, onde $r$ é um parâmetro usado para controlar a amplitude da data de entrega, $r \in \lbrace 0,5;1,5;2,5;3,5 \rbrace$. Combinando os parâmetros $n$, $F$, $r$ e classes de tempo de preparação, tem-se 144 configurações possíveis. Para cada configuração, 10 instâncias foram geradas. Portanto, um total de 1440 instâncias foram testadas.
+
+
+\subsection{Métrica para avaliação dos algoritmos}
+
+
+%A métrica comumente utilizada para avaliar a qualidade das soluções obtidas por algoritmos heurísticos é a medida do Desvio Percentual Relativo (RPD) \citep{Vallada2008MTT12902031290360}. No entanto, em problemas que consideram a minimização de atraso pode ocorrer divisão por zero (quando o atraso é zero para a melhor solução). Então, neste trabalho foi utilizado a medida do Índice de Desvio Relativo (RDI) \citep{Vallada2008MTT12902031290360} que é computada da seguinte maneira:
+
+A métrica comumente utilizada para avaliar a qualidade das soluções obtidas por algoritmos heurísticos é a medida do Desvio Percentual Relativo (RPD) \citep{Vallada2008MTT12902031290360}:
+\begin{equation}\label{eq:rpd}
+RPD=\frac{f_{method} -  f_{best}}{f_{best}}\times 100\%
+\end{equation}
+
+onde $f_{method}$ é o valor da função objetivo obtido por um dado algoritmo e $f_{best}$ é a melhor solução obtida entre todos os algoritmos comparados.
+
+%onde $f_{method}$ é a média das soluções (valor da função objetivo) obtido por um dado método (algoritmo) e $f_{best}$ é a melhor solução obtida entre todos os algoritmos comparados.
+
+A utilização da métrica RPD em problemas que consideram a minimização de atraso pode fazer com que ocorrera divisão por zero (quando o atraso é zero para a melhor solução). Então, neste trabalho foi utilizado a medida do Índice de Desvio Relativo (RDI) \citep{Vallada2008MTT12902031290360} que é computada da seguinte maneira:
+\begin{equation}\label{eq:rdi}
+RDI=\frac{f_{method} -  f_{best}}{f_{worst} - f_{best}}\times 100\%
+\end{equation}
+
+onde $f_{worst}$ é a pior solução obtida entre todos os algoritmos comparados. Com esta medida, um índice entre 0 e 100 é obtido para cada método tal que uma boa solução terá um índice muito próximo de 0. Note que se a pior e a melhor solução têm o mesmo valor, todos os métodos fornecem a melhor (mesma) solução e, assim, o valor do RDI será 0 para todos os métodos.
+ 
+\subsection{Calibração dos Parâmetros do algoritmo \ILSC}
+
+Para o algoritmo \ILSC, cinco parâmetros foram ajustados: $N$, $d_{max}$, $\gamma$, $\beta$ e $FFI$. Para o algoritmo ILS\_Básico foram analisados quatro parâmetros: $\gamma$, $\beta$, $FFI$ e  $d$. O parâmetro $d$ é um nível de perturbação fixo e que é utilizado somente no ILS\_Básico.
+ 
+Os parâmetros dos algoritmos foram analisados separadamente. Para o ILS\_Básico, os seguintes conjuntos de valores foram testados: $\gamma \in \{0,1; 0,3; 0,6; 1,0\}$, $\beta \in \{0; 0,3; 0,6; 1,0\}$, $FFI \in \{0; 1\}$ e $d \in \{n/100; n/20; n/10; n/7; n/5\}$. Já para o \ILSC, foram analisados os seguintes valores: $N \in \{1; 3; 5; 10\}$, $d_{max} \in \{n/10; n/5\}$, $\gamma \in \{0,1; 0,3; 0,6; 1,0\}$, $\beta \in \{0; 0,3; 0,6; 1,0\}$ e $FFI \in \{0; 1\}$.
+ 
+Para determinar a melhor configuração dos valores para os parâmetros de cada algoritmo, um experimento computacional foi realizado baseado na metodologia Desenho de Experimentos (DOE) \citep{Montgomery_2006} onde cada fator é um parâmetro controlado. O desenho fatorial completo é usado para todos os fatores de cada algoritmo. Note que ao todo foram testadas 160 e 256 configurações de parâmetros para os algoritmos ILS\_Básico e \ILSC, respectivamente.
+
+Os experimentos foram realizados utilizando uma amostra de 100 instâncias diferentes do problema. Para cada instância os algoritmos foram rodados cinco vezes utilizando cada configuração dos parâmetros, e a o valor da função objetivo é utilizado para calcular o RPD (equação \eqref{eq:rpd}) em cada uma das cinco execuções. A utilização do RPD se justifica por não se verificar experimentalmente, nestas 100 instâncias, o atraso total zero em qualquer rodada. Então, esta medida é considerada como a variável de resposta nos experimentos estatísticos. Os resultados foram analisados através da Análise de Variância (ANOVA) paramétrica. 
+
+%Os experimentos foram realizados utilizando uma amostra de 100 instâncias diferentes do problema. Para cada instância os algoritmos foram rodados cinco vezes utilizando cada configuração dos parâmetros, e a solução média (média da função objetivo das cinco execuções) é escolhida como saída final do algoritmo e usada para computar o RPD (equação \eqref{eq:rpd}). A utilização do RPD se justifica por não se verificar experimentalmente, nestas 100 instâncias, o atraso total zero em qualquer rodada. Então, esta medida é considerada como a variável de resposta nos experimentos estatísticos. Os resultados foram analisados usando o teste não paramétrico \textit{Kruskal-Wallis} e o teste de Comparações Múltiplas. 
+
+A \figurename~\ref{fig:meanPlotCalibrationILSC} mostra o gráfico de médias resultante do teste \textit{Tukey} da Diferença Honestamente Significativa HSD (\textit{Honestly Significant Difference}) com nível de confiança de 95\% para as configurações testadas no algoritmo \ILSC. Das 256 configurações testadas, por questão de facilidade de visualização, somente as configurações de 138 a 153 são mostradas no gráfico. Nesta figura é possível ver que existe diferença significativa entre as configurações pois há diversos intervalos que não se sobrepõe, mesmo embora não haja uma única configuração que seja estatisticamente melhor que todas as outras. Por exemplo, há diferença significativa entre as configurações 139 e 140 porque os respectivos intervalos não se sobrepõe. Para o algoritmo \ILSC~a configuração 142 apresentou a melhor média e corresponde aos valores $N = 1$, $d_{max} = n/5$, $\gamma = 0,6$, $\beta = 0,6$ e $FFI = 1$. Análise semelhante foi realizada para o algoritmo ILS\_Básico para o qual se chegou aos valores $\gamma = 0,6$, $\beta = 0,3$, $FFI = 1$ e $d = n/5$. Como os valores encontrados para os parâmetros $d = n/5$ e $d_{max} = n/5$ são valores limites (considerando os valores testados para os respectivos parâmetros) mais uma etapa de calibração foi realizada, visto que o maior valor possível de perturbação é $n/2 - 1$. Assim, mais três níveis para os parâmetros $d$ e $d_{max}$ foram testados: $d$ e $d_{max}$ $\in \{n/4; n/3; n/2 - 1\}$ sendo que aquele que na média obteve os melhores resultados foi $d = n/3$ e $d_{max} = n/3$. Após as duas etapas de calibração os valores  dos parâmetros utilizados nos experimentos finais para os algoritmos ILS\_Básico e \ILSC~foram ($\gamma = 0,6$, $\beta = 0,3$, $FFI = 1$ e $d = n/3$) e ($N = 1$, $d_{max} = n/3$, $\gamma = 0,6$, $\beta = 0,6$ e $FFI = 1$), respectivamente. 
+
+\begin{figure}[!htb]
+	\centering
+ 	%\includegraphics[width=0.70\columnwidth]{figs/multiple_sample_N_sizeElite_dmax_calib_ils_3}
+\includegraphics[width=0.60\columnwidth]{figs/meanPlot_calib_ils_1}
+	%\caption{Means Plot and Tukey HSD intervals at the 95\% confidence level for the 256 configurations of ILS\_PR.}
+	\caption{Gráfico de Médias e intervalos HSD de Tukey com nível de confiança de 95\% para as 256 configurações de \ILSC. Etapa 1 da calibração.}
+    \label{fig:meanPlotCalibrationILSC}
+\end{figure}
+
+\subsection{Resultados e Comparações}
+
+Os resultados obtidos pelos algoritmos ILS\_Básico, \ILSC~e HGA são comparados usando o RDI (equação \eqref{eq:rdi}). Todos os algoritmos foram executados com o mesmo critério de parada que é baseado em uma quantidade de tempo de CPU, que foi fixada em $500 \times n$ milissegundos. Para resolver cada instância, cada algoritmo foi executado 30 vezes. O RDI é calculado considerando o valor da função objetivo em cada repetição.
+
+\begin{table}[!ht]
+% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+%\caption{Mean Relative Deviation Index (RDI).}
+\caption{Índice de Desvio Relativo (RDI) Médio.}
+\label{tab:resultados_grouped}
+\centering
+\resizebox{0.60\linewidth}{!}{
+\begin{tabular}{crrrr}
+    \hline
+    %\textbf{Instance $n$ x $F$} & \textbf{HGA} & \textbf{\ILSA} &
+    \textbf{Instância $n$ x $F$} & \textbf{HGA} & \textbf{\ILSA} & \textbf{\ILSC}\\
+    \hline
+	60 x 2 & 12,67 & 1,78  & 1,91 \\
+	60 x 3 & 26,52 & 1,77  & 2,19 \\
+	60 x 4 & 35,41 & 2,87  & 3,05 \\
+	60 x 5 & 38,60 & 4,54  & 5,24 \\
+	80 x 2 & 22,38 & 3,98  & 3,68 \\
+	80 x 3 & 33,74 & 4,99  & 3,88 \\
+	80 x 4 & 43,30 & 4,42  & 4,42 \\
+	80 x 5 & 47,00 & 6,24  & 6,11 \\
+	100 x 2 & 28,86 & 4,83  & 3,22 \\
+	100 x 3 & 41,07 & 5,92  & 4,27 \\
+	100 x 4 & 45,21 & 4,09  & 3,23 \\
+	100 x 5 & 47,29 & 5,90  & 5,77 \\
+	\textbf{Média} & 35,17 & 4,28  & 3,91 \\
+    \hline
+    \end{tabular}
+}
+\end{table}
+
+
+A \tablename~\ref{tab:resultados_grouped} mostra os resultados médios encontrados para todas as instâncias de problemas. As 1440 instâncias são agrupadas em 12 conjuntos de acordo com número de tarefas e número de famílias (veja coluna ``Instância'' da \tablename~\ref{tab:resultados_grouped}). Esta tabela mostra o quanto a média das soluções de cada algoritmo difere da melhor solução conhecida. Claramente pode-se notar que os algoritmos propostos, ILS\_Básico e \ILSC, apresentam melhores resultados em comparação ao HGA para todos os problemas testados. O algoritmo \ILSC~apresenta um desempenho relativamente melhor que o ILS\_Básico.
+
+
+Para validar os resultados obtidos pelos três algoritmos e verificar se as diferenças observadas são estatisticamente significantes, foi realizada uma Análise de Variância (ANOVA) paramétrica. O \textit{teste-F} na tabela ANOVA irá testar se há qualquer diferença significante entre as médias do RDI (variável de resposta) encontradas pelos algoritmos (tratamentos). Foram verificadas as três pressuposições da ANOVA para que os resultados do teste sejam estatisticamente válidos: normalidade (pelo teste de \textit{Shapiro-Wilk W}), igualdade de variância (pelo teste de \textit{Levene}) e a independência dos resíduos (pela plotagem dos resíduos). 
+
+O resultado da ANOVA, pode ser visto na \tablename~\ref{tab:anova_comp_hga_ils0_ils1}. Esta tabela decompõe variação total entre todas as observações, na variação devido ao efeito dos tratamentos e na variação devida ao acaso ou resíduos (veja coluna ``Fonte da Variação'').  O valor de F, que neste caso é igual a $41050,92$, é o quociente entre o quadrado médio dos tratamentos pelo quadrado médio do resíduos. Uma vez que o valor-P do teste-F, que é o valor de interesse, é menor que 0,05, há uma diferença estatisticamente significante entre as médias do RDI de um algoritmo para outro, com um nível de significância de 95\%.
+
+
+\begin{table}[!htb]
+\caption{Tabela ANOVA para comparação dos algoritmos HGA, ILS\_Básico, ILS\_Melhorado.}
+\label{tab:anova_comp_hga_ils0_ils1}
+\centering
+
+\resizebox{0.90\linewidth}{!}{
+\begin{tabular}{
+p{0.15\linewidth}
+p{0.15\linewidth}
+p{0.14\linewidth}
+p{0.14\linewidth}
+p{0.13\linewidth}
+p{0.10\linewidth}
+}
+\hline
+\textbf{Fonte da Variação} & \textbf{Soma de Quadrados} & \textbf{Graus de Liberdade} & \textbf{Quadrados Médios} & \textbf{Valor de F} & \textbf{Valor-P} \\
+\hline
+Tratamentos & 19314,3 & 2   & 9657,16 & \textbf{41050,92} & \textbf{0,0000} \\
+Resíduos & 20,4666 & 87   & 0,235248 &       &  \\
+Total & 19334,8 & 89   &       &       &  \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+
+A ANOVA não especifica quais algoritmos são diferentes entre si, de modo que foi realizado um teste de Comparações Múltiplas para comparar cada par de médias com um nível de confiança de 95\%. A \tablename~\ref{tab:multipleRange} mostra o resultado deste teste. A coluna ``Diferença'' mostra a média das amostras do primeiro algoritmo menos as do segundo. A coluna ``+/- Limite'' corresponde ao intervalo de incerteza para a diferença. Para qualquer par de algoritmos para no qual o valor absoluto da diferença exceda o limite significa que os algoritmos são significativamente diferentes no nível de confiança selecionado de 95\%. Na tabela, a existência de diferença é indicado por um (*) na coluna ``Significante''. Pode-se ver que há diferença significativa entre todos os pares de médias. %Há uma diferença estatisticamente significante entre os pares de algoritmos HGA-ILS\_Básico, HGA-\ILSC~e ILS\_Básico-\ILSC.
+     
+\begin{table}[!htb]
+% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+%\caption{Multiple Comparisons tests for RDI.}
+\caption{Teste de comparações múltiplas para o RDI.}
+\label{tab:multipleRange}
+\centering
+\resizebox{0.7\linewidth}{!}{
+\begin{tabular}{lcrr}
+    \hline
+    %\textbf{Pair of algorithms}& \textbf{Significant} & \textbf{Diference} & \textbf{+/- Limits}\\
+    \textbf{Par de algoritmos}& \textbf{Significante} & \textbf{Diferença} & \textbf{+/-Limite}\\
+    \hline
+\HGA~- \ILSA 	& (*)	& 30,8922 	& 0,298623 \\
+\HGA~- \ILSC 	& (*)	& 31,2565 	& 0,298623 \\
+\ILSA~- \ILSC 	& (*)	& 0,364265	& 0,298623 \\
+    \hline
+    \end{tabular}
+}%end resizebox
+\end{table}
+
+A mesma análise pode ser mostrada na \figurename~\ref{fig:meanPlotA}. Esta figura mostra o gráfico de médias resultantes do teste \textit{Tukey} HSD. Uma vez que o intervalo para o algoritmo \HGA~não sobrepõe outros intervalos, a média do \HGA~é significativamente diferente das médias dos outros dois algoritmos. Isto é, as heurísticas propostas mostram desempenhos superiores ao método \HGA.
+
+\begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.74\columnwidth]{figs/meanPlot_HGA_ILS0_ILS1}
+        \caption{Gráfico de Médias e intervalos HSD de Tukey com nível de confiança de 95\% para comparação dos três algoritmos.}
+		%\caption{Means plot and Tukey's HSD intervals with 95\% confidence level for comparison of the three algorithms.}
+        \label{fig:meanPlotA}
+\end{figure}
+
+Para analisar a eficiência do controle automático da perturbação no algoritmo ILS, foi realizada uma comparação somente entre \ILSC~e ILS\_Básico (o RDI é recalculado conforme \eqref{eq:rdi} considerando somente estes dois algoritmos). Foi realizado um \textit{teste-t} para comparação das médias dos dois algoritmos. O nível de confiança utilizado foi de 95.0\%. O \textit{valor-P} computado foi 1,12033E-11 $ <  0,05$ mostrando que há uma diferença significativa entre os dois algoritmos. O teste \textit{Tukey} HSD com nível de confiança de 95\% mostrado na \figurename~\ref{fig:meanPlotB} também reforça o resultado. Note que a variante \ILSC~tem desempenho melhor que o ILS\_Básico, uma vez que não há sobreposição dos intervalos.
+
+\begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.50\columnwidth]{figs/meanPlot_ILS0_ILS1}
+        \caption{Gráfico de Médias e intervalos HSD de Tukey com nível de confiança de 95\% para comparação dos algoritmos \ILSA~e \ILSC.}
+		%\caption{Means plot and Tukey's HSD intervals with 95\% confidence level for comparison of the algorithms \ILSA~and \ILSC.}
+        \label{fig:meanPlotB}
+\end{figure}
+
+
+\section{Conclusões}\label{sec:conclusions}
+
+A proposta deste estudo foi examinar o problema de programação de tarefas em uma máquina com tempo de preparação dependente da sequência das famílias tal que o atraso total é minimizado. O problema $1|ST_{sd,b}|\sum{T_j}$ é um problema complexo de otimização combinatória com ampla aplicação nas indústrias. Em virtude da natureza NP-Difícil deste tipo de problema, um algoritmo baseado na metaheurística \textit{Iterated Local Search} (ILS), que mantém tanto simplicidade quando generalidade, é proposto. Também foi testada uma estratégia de controle automático da força de perturbação. Os parâmetros dos algoritmos foram analisados e determinados através da metodologia Desenho de Experimentos. Para avaliar a aplicabilidade das heurísticas ILS\_Básico e \ILSC~propostas, seus desempenhos foram comparados com o melhor algoritmo (algoritmo genético hibrido \HGA) disponível na literatura em um grande conjunto de problemas testes. Os resultados computacionais claramente indicam que a inclusão do controle automático da perturbação no ILS produz um melhoramento significativo no algoritmo. Os resultados obtidos também mostram que as heurísticas propostas são mais efetivas que o algoritmo \HGA. Os resultados computacionais foram validados através de análises estatísticas, mostrando que a variante \ILSC~é o melhor algoritmo. Como trabalhos futuros, devem ser feitas análises quanto ao tempo de execução do algoritmos bem como de outras distribuições na geração das instâncias e o comparativo com um modelo de programação inteira mista.
+
+%ACKNOWLEDGMENTS are optional
+\section*{Agradecimentos}
+
+Os autores agradecem o financiamento do CNPq, FAPEMIG e CAPES.
+
+\bibliographystyle{sbpo}
+\bibliography{bibliografia}  % sigproc.bib is the name of the Bibliography in this case
+
+\end{document}

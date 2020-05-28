@@ -1,0 +1,98 @@
+
+
+Ullrich  (2013) aborda um problema integrado que consiste  na programação de um conjunto de tarefas em máquinas paralelas com tempos de espera dependentes da máquina. As tarefas processadas são distribuídas utilizando uma frota heterogênea de veículos.  Este autor considera tempos de processamento, janelas de tempo de entrega e tempos de serviço. Para minimizar o atraso total das tarefas, o autor apresenta um modelo de PLIM, duas abordagens clássicas de decomposição e um Algoritmo Genético.
+
+
+Meinecke, Scholz-Reiter  apresentam uma heurística de decomposição e integração de múltiplos passos, e obtiveram  significativamente bons resultados quando comparados à heurísticas de agendamento sequenciais. (https://www.researchgate.net/profile/Christian_Meinecke/publication/260635008_A_Heuristic_for_the_Integrated_Production_and_Distribution_Scheduling_Problem/links/00b49531ddd7165cbc000000/A-Heuristic-for-the-Integrated-Production-and-Distribution-Scheduling-Problem.pdf)
+
+@article{meinecke2014heuristic,
+  title={A heuristic for the integrated production and distribution scheduling problem},
+  author={Meinecke, Christian and Scholz-Reiter, Bernd},
+  journal={International Science Index},
+  volume={8},
+  number={2},
+  pages={290--297},
+  year={2014}
+}
+
+
+Xiao, Konak (2015) \cite{xiao2015simulating} apresentaram o problema de Green Vehicle Routing and Schedulling (GVRSP) considerando condições depentendes do tempo de tráfego com múltiplas funções objetivo, como reduzir emissão total de CO_{2}, distância total percorrida e tempo total de trajeto. Uma nova formulação matématica é proposta, e também um algoritmo de Simulated Annealing (SA) para resolver instâncias de grande porte. Resultados mostram que até 50% da emissão de CO_{2} pode ser atingida, com reduções médias de 12\% e 28\% comparado à métodos tradicionais de roteamento.
+
+%EXCELLENT ABSTRACT!
+
+@article{xiao2015simulating,
+  title={A simulating annealing algorithm to solve the green vehicle routing \& scheduling problem with hierarchical objectives and weighted tardiness},
+  author={Xiao, Yiyong and Konak, Abdullah},
+  journal={Applied Soft Computing},
+  volume={34},
+  pages={372--388},
+  year={2015},
+  publisher={Elsevier}
+}
+
+Cheng, Leung and Li (2015) \cite{cheng2015integrated} estudaram o problema integrado de produção e entrega considerando o processamento em lotes em uma máquina, desde que respeite sua capacidade. Em seu trabalho, tamanhos das tarefas e tempos de processamento são arbitrários, e veículos com capacidades idênticas. Foi gerado um limite inferior (lower bound) para o custo total ideal, e implementado um algoritmo de Colônia de Formigas, obtendo bons resultados e executando em tempo curto para instâncias de grande porte.
+
+%200 tarefas em cinco segundos
+
+@article{cheng2015integrated,
+  title={Integrated scheduling of production and distribution to minimize total cost using an improved ant colony optimization method},
+  author={Cheng, Ba-Yi and Leung, Joseph Y-T and Li, Kai},
+  journal={Computers \& Industrial Engineering},
+  volume={83},
+  pages={217--225},
+  year={2015},
+  publisher={Elsevier}
+}
+
+
+Billaut, Croce and Ta (2017) \cite{billaut2017tabu} abordaram o problema integrado de agendamento de produção em entrega em um ambiente de produção Flow Shop com apenas um veículo disponível. Foi minimizado o atraso total das entregas, sendo implementados dois algoritmos de Tabu Search e uma mateurística (matheuristic). Experimentos foram realizados em conjuntos de dados aleatórios.
+
+@inproceedings{billaut2017tabu,
+  title={Tabu search and matheuristic algorithms for solving an integrated flow shop and vehicle routing problem},
+  author={Billaut, Jean-Charles and Della Croce, Federico and Ta, Quang Chieu},
+
+booktitle={ 12th Metaheuristics International Conference (MIC)},
+
+  year={2017}
+
+}
+
+Wang, Yao, Sheng and Yang (2019) \cite{wang2019minimizing} estudaram o problema integrado de produção e distribuição de tarefas para uma máquina linear e múltiplos veículos. Neste ambiente, é possível trocar uma máquina entre duas produções adjacentes. O objetivo de minimizar a emissão total de carbono foi acrescentado à minimizar os custos totais. Foram desenvolvidos um modelo MILP para a solução e em seguida um algoritmo híbrido de Busca Tabu. 
+
+@article{wang2019minimizing,
+  title={Minimizing total carbon emissions in an integrated machine scheduling and vehicle routing problem},
+  author={Wang, Jun and Yao, Song and Sheng, Jiachuan and Yang, Hongtao},
+  journal={Journal of Cleaner Production},
+  volume={229},
+  pages={1004--1017},
+  year={2019},
+  publisher={Elsevier}
+}
+
+
+Ghannadpour and Zarrabi (2019) \cite{ghannadpour2019multi} abordaram o problema multi-objetivo de frota heterogênea integrada a produção, com minimização de energia de acordo com novos requisitos sustentáveis. São apresentados dois casos de minimização, são tratados o número de veículos alugados e a satisfação dos clientes, acrescentado à minimização de energia (primeiro caso) e minimização de distância percorrida(segundo caso). É apresentada uma nova formulação matemática para o problema de roteamento de veículos com janelas de tempo (VRPTW) e desenvolvido uma nova solução baseada em um algoritmo evolucionário.
+
+
+@article{ghannadpour2019multi,
+  title={Multi-objective heterogeneous vehicle routing and scheduling problem with energy minimizing},
+  author={Ghannadpour, Seyed Farid and Zarrabi, Abdolhadi},
+  journal={Swarm and evolutionary computation},
+  volume={44},
+  pages={728--747},
+  year={2019},
+  publisher={Elsevier}
+}
+
+
+Liu, Wenli and Kunpeng Li, and Zou (2020) \cite{liu2020coordinated} estudaram o problema integrado de produção e entrega para uma máquina linear, com objetivo de minimizar a soma dos tempos de entrega. Neste trabalho, os veículos são limitados e possuem mesma capacidade. É proposto um algoritmo de Variable Neighborhood Search (VNS) e complementado com um algoritmo de Busca Tabu para intensificação. Os resultados são comparados com o Solver CPLEX e dois algoritmos de heurísticas na literatura, obtendo-se bons resultados.
+
+@article{liu2020coordinated,
+  title={A coordinated production and transportation scheduling problem with minimum sum of order delivery times},
+  author={Liu, Ling and Li, Wenli and Li, Kunpeng and Zou, Xuxia},
+  journal={Journal of Heuristics},
+  volume={26},
+  number={1},
+  pages={33--58},
+  year={2020},
+  publisher={Springer}
+}

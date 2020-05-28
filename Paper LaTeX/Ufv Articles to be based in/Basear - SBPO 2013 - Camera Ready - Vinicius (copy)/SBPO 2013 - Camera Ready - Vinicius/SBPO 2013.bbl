@@ -1,0 +1,143 @@
+\begin{thebibliography}{}
+
+\bibitem[Allahverdi et~al.(2008)]{allahverdi}
+\textbf{Allahverdi, A., Ng, C.~T., Cheng, T. C.~E., and Kovalyov, M.~Y.}
+  (2008).
+\newblock A survey of scheduling problems with setup times or costs.
+\newblock {\em European Journal of Operational Research}, pages 985--1032.
+
+\bibitem[Baker and Magazine(2000)]{MagazineBaker2000}
+\textbf{Baker, K.~R. and Magazine, M.~J.} (2000).
+\newblock Minimizing maximum lateness with job families.
+\newblock {\em European Journal of Operational Research}, 127(1):126 -- 139.
+
+\bibitem[Chantaravarapan et~al.(2003)]{Chantaravarapan_Gupta_Smith_2003}
+\textbf{Chantaravarapan, S., Gupta, J. N.~D., and Smith, M.~L.} (2003).
+\newblock A hybrid genetic algorithm for minimizing total tardiness on a single
+  machine with family setups.
+\newblock {\em POMS meeting}.
+
+\bibitem[Dong et~al.(2009)]{Dong2009ILSflowshop}
+\textbf{Dong, X., Huang, H., and Chen, P.} (2009).
+\newblock An iterated local search algorithm for the permutation flow-shop
+  problem with total flowtime criterion.
+\newblock {\em Computers and Operations Research}, 36:1664--1669.
+
+\bibitem[Du and Leung(1990)]{Du1990}
+\textbf{Du, J. and Leung, J.~Y.} (1990).
+\newblock Minimizing total tardiness on one machine is np-hard.
+\newblock {\em Math. Oper. Res.}, 15(3):483--495.
+
+\bibitem[Gendreau and Potvin(2010)]{Gendreau2010}
+\textbf{Gendreau, M. and Potvin, J.-Y.} (2010).
+\newblock {\em Handbook of Metaheuristics}.
+\newblock Springer Publishing Company, Incorporated, 2nd edition.
+
+\bibitem[Glover(1996)]{Glover-1996}
+\textbf{Glover, F.} (1996).
+\newblock Tabu search and adaptive memory programing - advances, applications
+  and challenges.
+\newblock {\em Interfaces in Computer Science and Operations Research}, pages
+  1--75.
+
+\bibitem[Graham et~al.(1979)]{Graham1979}
+\textbf{Graham, R., Lawler, E., Lenstra, J., and Kan, A.} (1979).
+\newblock Optimization and approximation in deterministic sequencing and
+  scheduling: a survey.
+\newblock volume~5 of {\em Annals of Discrete Mathematics}, pages 287 -- 326.
+  Elsevier.
+
+\bibitem[Jin et~al.(2010)]{DBLPjournalsjorsJinGSW10}
+\textbf{Jin, F., Gupta, J. N.~D., Song, S., and Wu, C.} (2010).
+\newblock Single machine scheduling with sequence-dependent family setups to
+  minimize maximum lateness.
+\newblock {\em JORS}, 61(7):1181--1189.
+
+\bibitem[Kacem(2006)]{Kacem2006}
+\textbf{Kacem, D.} (2006).
+\newblock Lower bounds for tardiness minimization on a single machine with
+  family setup times.
+\newblock In {\em Computational Engineering in Systems Applications, IMACS
+  Multiconference on}, volume~1, pages 1034 --1039.
+
+\bibitem[Karabat\&inodot and Akkan(2005)]{karabat2005minimizing}
+\textbf{Karabat\&inodot, S. and Akkan, C.} (2005).
+\newblock Minimizing sum of completion times on a single machine with
+  sequence-dependent family setup times.
+\newblock {\em Journal of the Operational Research Society}, 57(3):271--280.
+
+\bibitem[Laguna and Mart\'{i}(1999)]{Laguna-Marti-1999}
+\textbf{Laguna, M. and Mart\'{i}, R.} (1999).
+\newblock {GRASP} and path relinking for 2-layer straight line crossing
+  minimization.
+\newblock {\em INFORMS Journal on Computing}, 11:44--52.
+
+\bibitem[Lourenço(1995)]{Lourenco1995ILSJobShop}
+\textbf{Lourenço, H.~R.} (1995).
+\newblock Job-shop scheduling: computational study of local search and
+  large-step optimization methods.
+\newblock {\em European Journal of Operational Research}, 83:347--364.
+
+\bibitem[Lourenço et~al.(2003)]{LourencoILS2003}
+\textbf{Lourenço, H.~R., C., M.~O., and Stutzle, T.} (2003).
+\newblock {\em Iterated local search}.
+\newblock F. Glover Eds. Kluwer Academic.
+
+\bibitem[Martin and Otto(1996)]{MartinOtoILStsp1996}
+\textbf{Martin, O. and Otto, S.~W.} (1996).
+\newblock Combining simulated annealing with local search heuristics.
+\newblock {\em Annals of Operations Research}, 63:57--75.
+
+\bibitem[Montgomery(2006)]{Montgomery_2006}
+\textbf{Montgomery, D.~C.} (2006).
+\newblock {\em Design and Analysis of Experiments}.
+\newblock John Wiley \& Sons.
+
+\bibitem[Nawaz et~al.(1983)]{Nawaz198391}
+\textbf{Nawaz, M., Jr, E. E.~E., and Ham, I.} (1983).
+\newblock A heuristic algorithm for the m-machine, n-job flow-shop sequencing
+  problem.
+\newblock {\em Omega}, 11(1):91 -- 95.
+
+\bibitem[Pan and Su(1997)]{pan1997single}
+\textbf{Pan, J. C.-H. and Su, C.-S.} (1997).
+\newblock Single machine scheduling with due dates and class setups.
+\newblock {\em Journal of the Chinese Institute of Engineers}, 20(5):561--572.
+
+\bibitem[Resende and Ribeiro(2010)]{ResendeRibeiroMixedPR2010}
+\textbf{Resende, M. G.~C. and Ribeiro, C.~C.} (2010).
+\newblock {\em Greedy randomized adaptive search procedures: Advances,
+  hybridizations, and applications}.
+\newblock M. Gendreau and J.Y. Potvin Eds. Springer-Verlag, 2nd Edition.
+
+\bibitem[Ruiz and Stutzle(2008)]{RuizStutzle2008}
+\textbf{Ruiz, R. and Stutzle, T.} (2008).
+\newblock An iterated greedy heuristic for the sequence dependent setup times
+  flowshop problem with makespan and weighted tardiness objectives.
+\newblock {\em European Journal of Operational Research}, 187(3):1143--1159.
+
+\bibitem[Schaller(2007)]{schaller2007scheduling}
+\textbf{Schaller, J.} (2007).
+\newblock Scheduling on a single machine with family setups to minimize total
+  tardiness.
+\newblock {\em International Journal of Production Economics}, 105(2):329--344.
+
+\bibitem[Schaller and Gupta(2008)]{Schaller2008}
+\textbf{Schaller, J.~E. and Gupta, J.~N.} (2008).
+\newblock Single machine scheduling with family setups to minimize total
+  earliness and tardiness.
+\newblock {\em European Journal of Operational Research}, 187(3):1050 -- 1068.
+
+\bibitem[Vallada et~al.(2008)]{Vallada2008MTT12902031290360}
+\textbf{Vallada, E., Ruiz, R., and Minella, G.} (2008).
+\newblock Minimising total tardiness in the m-machine flowshop problem: A
+  review and evaluation of heuristics and metaheuristics.
+\newblock {\em Comput. Oper. Res.}, 35(4):1350--1373.
+
+\bibitem[van~der Veen et~al.(1998)]{van1998sequencing}
+\textbf{van~der Veen, J.~A., Woeginger, G.~J., and Zhang, S.} (1998).
+\newblock Sequencing jobs that require common resources on a single machine: a
+  solvable case of the tsp.
+\newblock {\em Mathematical programming}, 82(1-2):235--254.
+
+\end{thebibliography}
