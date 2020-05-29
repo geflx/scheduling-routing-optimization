@@ -45,31 +45,41 @@ Estathistical Analysis shows that heuristics approaches obtained better quality 
 \keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
 \end{abstract}
 
-\section{Introdução}\label{introduction}
+\section{Introduction}\label{introduction}
 
 In order to improve competitive in the global market, industries have been focus in optimizing its supply chain.
-Supply chain is the set of tasks/activities envolving production, storage and products or services transportation.
+Supply chain is the set of tasks/activities envolving production, storage and products or services transportation. These activities includes buying raw material, stock control, production and product delivery to final customers according to due dates.
 %Para aumentar a competitividade no mercado global, as indústrias tem-se concentrado na otimização da cadeia de suprimentos.
 %A cadeia de suprimentos é o conjunto de atividades/processos que envolvem a produção, armazenamento e transporte de produtos ou serviços. Estas atividades  incluem  a compra de matérias-primas, controle de estoque,  produção dos produtos, e entrega dos produtos aos clientes finais dentro dos prazos estabelecidos. 
 
-Todas essas atividades devem ser muito bem planejadas e otimizadas para que possam entregar produtos de qualidade e gerar resultados positivos. Os objetivos primordiais  que são buscados pela cadeia de suprimentos são: redução de custos, cumprimento de prazos e satisfação dos clientes.
+All activies must be well planned and optimized to generate and delivery high quality products and obtain good resullts. The supply chain primordial objectives are: costs reduction, satisfy pre-established dates and customer satisfaction.
+%Todas essas atividades devem ser muito bem planejadas e otimizadas para que possam entregar produtos de qualidade e gerar resultados positivos. Os objetivos primordiais  que são buscados pela cadeia de suprimentos são: redução de custos, cumprimento de prazos e satisfação dos clientes.
 
+This work's objective is to propose a decision making approach for the integrated job schedulling and vehicle routing problem.
+In this problem, a set of jobs with different sizes must be processed in a machine (avaiable in a factory) and delivery to respective customers by a heterogeneous vehicle fleet, considering due dates.
+%Este trabalho tem como objetivo propor uma abordagem de tomada de decisão para um problema integrado de programação da produção e transporte (roteamento de veículos). 
+ %Neste problema integrado, um determinado conjunto de tarefas de tamanhos diferentes deve ser processado em uma máquina (disponível numa fábrica) e entregue aos respectivos clientes por uma frota heterogênea de veículos, levando em consideração os prazos de entrega. 
 
-Este trabalho tem como objetivo propor uma abordagem de tomada de decisão para um problema integrado de programação da produção e transporte (roteamento de veículos). 
- Neste problema integrado, um determinado conjunto de tarefas de tamanhos diferentes deve ser processado em uma máquina (disponível numa fábrica) e entregue aos respectivos clientes por uma frota heterogênea de veículos, levando em consideração os prazos de entrega. 
+The main objective is to minimize total penalty weight and delivery costs (considering different vehicle use costs and routes time/costs). Separately, the job schedulling in a linear machine minimizing total tardiness is proved as NP-Hard (Du and Leung, 1990)\cite{du1990}. Thus, this approach is also NP-Hard.
+%O objetivo é minimizar o atraso total ponderado e os custos de transporte (com relação aos custos variáveis dos veículos e custos/tempos de viagem dos veículos). Isoladamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990)\cite{du1990}, consequentemente, esta abordagem também é NP-Difícil.
 
-O objetivo é minimizar o atraso total ponderado e os custos de transporte (com relação aos custos variáveis dos veículos e custos/tempos de viagem dos veículos). Isoladamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990)\cite{du1990}, consequentemente, esta abordagem também é NP-Difícil.
+Job schedulling problems and vehicle routing problems are well studied combinatory optimization problems in literature, and are usually studied separately.
+%Problemas de programação de produção e roteamento de veículos são dois problemas de otimização combinatória bem estudados na literatura e geralmente são estudados de forma separada.
 
-Problemas de programação de produção e roteamento de veículos são dois problemas de otimização combinatória bem estudados na literatura e geralmente são estudados de forma separada.
+To the best of authors’ knowledge here, the integrated problem of job schedulling  in a linear machine and vehicle routing with vehicles having different capacities and variable costs, jobs with heterogeneous sizes, and focusing on minimize total penalty weigth and delivery costs, is not addressed and discussed yet in literature. The main contributions of this article consist of:
 
-Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamento em uma máquina simples e roteamento com veículos de capacidades e custos variáveis,  tarefas de diferentes tamanhos, e  com o objetivo de minimizar o atraso ponderado total e custos de entrega, ainda não foi abordado na literatura. São componentes deste trabalho:
+%Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamento em uma máquina simples e roteamento com veículos de capacidades e custos variáveis,  tarefas de diferentes tamanhos, e  com o objetivo de minimizar o atraso ponderado total e custos de entrega, ainda não foi abordado na literatura. São componentes deste trabalho:
 
 \begin{itemize}
-  \item Duas abordagens heurísticas de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.).
-  \item Um modelo de programação linear para solução dos problemas integrados.
+  \item Two Iterated Local Search (ILS) heuristic approaches and one Genetic Algorithm (GA)
+  %Duas abordagens heurísticas de Iterated Local Search (ILS) e um Algoritmo Genético (G.A.).
+  \item A mixed integer linear programming for solving the integrated problem.
+  %Um modelo de programação linear para solução dos problemas integrados.
 \end{itemize}
 
-Na Seção \ref{lit-review} são apresentados estudos prévios na literatura. Em seguida, nas Seções \ref{problemdescription} e \ref{mathematicalmodel} a descrição do problema e o modelo MILP proposto. A Seção \ref{solutionrepresentation} e Subseção \ref{hipcase} contém a representação de solução escolhida e um caso hipotético do problema, respectivamente. 
+This article is organized as follows: in Section \ref{lit-review} are presented previous studies 
+
+%Na Seção \ref{lit-review} são apresentados estudos prévios na literatura. Em seguida, nas Seções \ref{problemdescription} e \ref{mathematicalmodel} a descrição do problema e o modelo MILP proposto. A Seção \ref{solutionrepresentation} e Subseção \ref{hipcase} contém a representação de solução escolhida e um caso hipotético do problema, respectivamente. 
 
 Na Seção \ref{instancesgen} é detalhamente explicitada a geração de instâncias. Os operadores de vizinhança e métodos de busca local RVND são apresentados na Seção \ref{nboperators}. A solução inicial utilizada nos algoritmos é citada na Seção \ref{solutionapproach}.
 
