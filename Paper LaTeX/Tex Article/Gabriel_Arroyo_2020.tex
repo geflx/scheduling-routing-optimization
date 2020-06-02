@@ -38,35 +38,31 @@ gabriel.felix@ufv.br,  jarroyo@dpi.ufv.br}
 %O problema é classificado como NP-Difícil no senso comum, exigindo a aplicação de heurísticas para solucioná-lo.
 %São propostas duas heurísticas Iterated Local Search, Algoritmo Genético (AG) e um modelo misto de programação linear inteira (MILP). Foram geradas instâncias de pequeno e grande porte (até cem clientes), sendo os resultados comparados com o Solver CPLEX. Análises estatísticas mostram que as heurísticas aplicadas possuem performance em tempo e qualidade superior às soluções do software a medida em que o número de clientes aumenta.
 
-This paper address an integrated job scheduling and vehicle routing problem, where jobs contains different sizes, penalties and due dates. To deliver them, there are vehicles from a limited heteregenous fleet (HFVRP). The minimization criteria are: total weighted penalty, transport costs and total distance traveled. 
-The given problem is classified as NP-Hard, demanding heuristics approaches to obtain near-optimal solutions in reasonable computational time. There are proposed two versions of Iterated Local Search (ILS), one Genetic Algorithmn (GA) and a Mixed-Integer Linear Programming (MILP) model to solve it. In addition, were also generated small and big instances (with at most one hundred customers) and the results compared to CPLEX Solver. 
-Estathistical Analysis shows that heuristics approaches obtained better quality solutions in much less time than the solver.
+This paper address an integrated job scheduling and vehicle routing problem, where jobs contain different sizes, penalties and due dates. To deliver them, there are vehicles from a limited heterogeneous fleet (HFVRP). The minimization criteria are total weighted penalty, transport costs and total distance traveled. The given problem is classified as NP-Hard, demanding heuristics approaches to obtain near-optimal solutions in reasonably computational time. There are proposed two versions of Iterated Local Search (ILS), one Genetic Algorithm (GA) and a Mixed-Integer Linear Programming (MILP) model to solve it. In addition, were also generated small and big instances (with at most one hundred customers) and the results compared to CPLEX Solver. Statistical Analysis shows that heuristics approaches obtained better quality solutions in much less time than the solver.
 
 \keywords{Single machine scheduling, vehicle routing, heterogeneous fleet, time windows, linear programming, meta-heuristics.}
 \end{abstract}
 
 \section{Introduction}\label{introduction}
 
-In order to improve competitive in the global market, industries have been focus in optimizing its supply chain.
-Supply chain is the set of tasks/activities envolving production, storage and products or services transportation. These activities includes buying raw material, stock control, production and product delivery to final customers according to due dates.
+In order to improve competition in the global market, industries have been focusing on optimizing their supply chains. A supply chain is the set of tasks/activities involving production, storage and products or services transportation. These activities include buying raw material, stock control, production and delivery products to final customers according to due dates.
 %Para aumentar a competitividade no mercado global, as indústrias tem-se concentrado na otimização da cadeia de suprimentos.
 %A cadeia de suprimentos é o conjunto de atividades/processos que envolvem a produção, armazenamento e transporte de produtos ou serviços. Estas atividades  incluem  a compra de matérias-primas, controle de estoque,  produção dos produtos, e entrega dos produtos aos clientes finais dentro dos prazos estabelecidos. 
 
-All activies must be well planned and optimized to generate and delivery high quality products and obtain good resullts. The supply chain primordial objectives are: costs reduction, satisfy pre-established dates and customer satisfaction.
+All activities must be well-planned and optimized to generate and delivery high quality products and obtain good results. The supply chains primordial objectives are costs reduction, follow pre established dates and customer satisfaction.
 %Todas essas atividades devem ser muito bem planejadas e otimizadas para que possam entregar produtos de qualidade e gerar resultados positivos. Os objetivos primordiais  que são buscados pela cadeia de suprimentos são: redução de custos, cumprimento de prazos e satisfação dos clientes.
 
-This work's objective is to propose a decision making approach for the integrated job schedulling and vehicle routing problem.
-In this problem, a set of jobs with different sizes must be processed in a machine (avaiable in a factory) and delivery to respective customers by a heterogeneous vehicle fleet, considering due dates.
+This work's objective is to propose a solution approach for the integrated job scheduling and vehicle routing problem.In this problem, a set of jobs with different sizes must be processed in a machine (available in a factory) and delivery to respective customers by a heterogeneous vehicle fleet, considering due dates.
 %Este trabalho tem como objetivo propor uma abordagem de tomada de decisão para um problema integrado de programação da produção e transporte (roteamento de veículos). 
  %Neste problema integrado, um determinado conjunto de tarefas de tamanhos diferentes deve ser processado em uma máquina (disponível numa fábrica) e entregue aos respectivos clientes por uma frota heterogênea de veículos, levando em consideração os prazos de entrega. 
 
-The main objective is to minimize total penalty weight and delivery costs (considering different vehicle use costs and routes time/costs). Separately, the job schedulling in a linear machine minimizing total tardiness is proved as NP-Hard (Du and Leung, 1990)\cite{du1990}. Thus, this approach is also NP-Hard.
+The main objective is to minimize total penalty weight and delivery costs (considering different vehicle use costs and routes time/costs). Separately, the job scheduling in a linear machine minimizing total tardiness is proved as NP-Hard (Du and Leung, 1990)\cite{du1990}. Thus, this approach is also NP-Hard.
 %O objetivo é minimizar o atraso total ponderado e os custos de transporte (com relação aos custos variáveis dos veículos e custos/tempos de viagem dos veículos). Isoladamente, o problema de agendamento em uma máquina linear com minimização do atraso total é provado como NP-Difícil (Du and Leung, 1990)\cite{du1990}, consequentemente, esta abordagem também é NP-Difícil.
 
-Job schedulling problems and vehicle routing problems are well studied combinatory optimization problems in literature, and are usually studied separately.
+Job scheduling problems and vehicle routing problems are well-studied combinatorial optimization problems in literature, and are usually studied separately.
 %Problemas de programação de produção e roteamento de veículos são dois problemas de otimização combinatória bem estudados na literatura e geralmente são estudados de forma separada.
 
-To the best of authors’ knowledge here, the integrated problem of job schedulling  in a linear machine and vehicle routing with vehicles having different capacities and variable costs, jobs with heterogeneous sizes, and focusing on minimize total penalty weigth and delivery costs, is not addressed and discussed yet in literature. The main contributions of this article consist of:
+To the best of authors’ knowledge here, the integrated problem of job scheduling  in a linear machine and vehicle routing with vehicles having different capacities and variable costs, jobs with heterogeneous sizes, and focusing on minimize total penalty weight and delivery costs, is not addressed and discussed yet in literature. The main contributions of this article consist of:
 
 %Pelo conhecimento dos autores deste artigo, o problema integrado de sequenciamento em uma máquina simples e roteamento com veículos de capacidades e custos variáveis,  tarefas de diferentes tamanhos, e  com o objetivo de minimizar o atraso ponderado total e custos de entrega, ainda não foi abordado na literatura. São componentes deste trabalho:
 
@@ -77,18 +73,24 @@ To the best of authors’ knowledge here, the integrated problem of job schedull
   %Um modelo de programação linear para solução dos problemas integrados.
 \end{itemize}
 
-This article is organized as follows: in Section \ref{lit-review} are presented previous studies 
+This article is organized as follows: in Section \ref{lit-review} are presented previous studies in literature. Following, in Sections \ref{problemdescription} and \ref{mathematicalmodel} the problem description and the MILP model are shown. Solution representation is described in Section \ref{solutionrepresentation} added to a hypothetical case in Section \ref{hipcase}.
 
 %Na Seção \ref{lit-review} são apresentados estudos prévios na literatura. Em seguida, nas Seções \ref{problemdescription} e \ref{mathematicalmodel} a descrição do problema e o modelo MILP proposto. A Seção \ref{solutionrepresentation} e Subseção \ref{hipcase} contém a representação de solução escolhida e um caso hipotético do problema, respectivamente. 
 
-Na Seção \ref{instancesgen} é detalhamente explicitada a geração de instâncias. Os operadores de vizinhança e métodos de busca local RVND são apresentados na Seção \ref{nboperators}. A solução inicial utilizada nos algoritmos é citada na Seção \ref{solutionapproach}.
+In Section \ref{instancesgen} are described the instances' generation. In sequence, RVND local search methods and neighborhood operators are presented in Section \ref{nboperators}. The initial solutions criteria are shown in Section \ref{solutionapproach}.
+%Na Seção \ref{instancesgen} é detalhamente explicitada a geração de instâncias. Os operadores de vizinhança e métodos de busca local RVND são apresentados na Seção \ref{nboperators}. A solução inicial utilizada nos algoritmos é citada na Seção \ref{solutionapproach}.
 
-As duas versões de Iterated Local Search são descritas na Seção \ref{ils}, e o Algoritmo Genético na Seção \ref{genalgo}. Em seguida, experimentos computacionais são mostrados na Seção \ref{experiments}, sendo a calibração de parâmetros descrita na Subseção \ref{parameters-calibration} e os resultados dos algoritmos nas Subseções \ref{small-instances-results} e \ref{large-instances-results}. Por fim, o trabalho é concluido na Seção \ref{conclusions}.
+Both Iterated Local Search versions are described in \ref{ils}, and the Genetic Algorithm in Section \ref{genalgo}. Following, computational experiments and parameters calibration are reported in Section \ref{experiments}. Results for small and large instances are presented in Subsections \ref{small-instances-results} and \ref{large-instances-results}, respectively. 
+
+Finally, the studied problem is concluded in Section \ref{conclusions}.
+
+%As duas versões de Iterated Local Search são descritas na Seção \ref{ils}, e o Algoritmo Genético na Seção \ref{genalgo}. Em seguida, experimentos computacionais são mostrados na Seção \ref{experiments}, sendo a calibração de parâmetros descrita na Subseção \ref{parameters-calibration} e os resultados dos algoritmos nas Subseções \ref{small-instances-results} e \ref{large-instances-results}. Por fim, o trabalho é concluido na Seção \ref{conclusions}.
 
 
 \section{Revisão Literária}\label{lit-review}
 
-Na literatura existem alguns trabalhos sobre o problema integrado de agendamento de produção e entrega.
+In literature there are some previous works about the integrated job schedulling and vehicle routing problem.
+%Na literatura existem alguns trabalhos sobre o problema integrado de agendamento de produção e entrega.
 
 %inserir aqui os problemas de agendamento
 Hall and Potts (2003) \cite{hall2003supply} abordaram o problema integrado de agendamento de produção e entre de lotes, com vários clientes e manufaturas, e definiram assim a área de Supply Chain Scheduling. Em seu trabalho, o objetivo principal era minimizar os custos de agendamento e entrega, utilizando diversos objetivos clássicos de agendamento. A cooperação entre a manufatura e o fornecedor foi apresentada como fator importante de diminuição de custos no agendamento.
@@ -873,7 +875,7 @@ Dessa forma, foram geradas 24 combinações de parâmetros, sendo cada uma delas
 
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-1 int} 
+    \includegraphics[width=1\textwidth]{"Images/calibration/general rpd calib ils-rvnd-1 int".png} 
      \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS$\_$RVND$\_$1 experiment.}
   	\label{fig:calib-algo1}
 \end{figure}
@@ -884,7 +886,7 @@ De forma análoga, para o segundo algoritmo ILS$\_$RVND$\_$2, foram utilizadas a
 
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ilrs-rvnd-2 int} 
+    \includegraphics[width=1\textwidth]{"Images/calibration/general rpd calib ils-rvnd-2 int".png} 
      \caption[]{Mean plot and confidence intervals at 95\% confidence level for ILS$\_$RVND$\_$2 experiment.}
   	\label{fig:calib-algo2}
 \end{figure}
@@ -895,7 +897,7 @@ O terceiro algoritmo, GA$\_$LS, utiliza dois parâmetros: $PopSize$ e $MaxIter$,
 
 \begin{figure}[ht]
 	\centering
-    \includegraphics[width=1\textwidth]{Images/calibration/general rpd calib ga-ls int} 
+    \includegraphics[width=1\textwidth]{"Images/calibration/general rpd calib ga-ls int".png} 
       \caption[]{Mean plot and confidence intervals at 95\% confidence level for GA$\_$LS experiment.}
   	\label{fig:calib-algo3}
 \end{figure}
@@ -915,12 +917,12 @@ Os resultados para as quatro implementações foram analisados pelo teste de Kru
 \begin{figure}
 \centering     %%% not \center
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{Images/small-instances/avg 10 jobs int}}
-\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=78mm]{Images/small-instances/avg 15 jobs int}} 
+\subfigure[Average RPD with $N = 10$]{\label{fig:a}\includegraphics[width=78mm]{"Images/small-instances/avg 10 jobs int".png}}
+\subfigure[Average RPD with $N = 15$]{\label{fig:b}\includegraphics[width=78mm]{"Images/small-instances/avg 15 jobs int".png}} 
 }
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=78mm]{Images/small-instances/avg 20 jobs int}} 
-\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/small-instances/general avg rpd int}} 
+\subfigure[Average RPD with $N = 20$]{\label{fig:c}\includegraphics[width=78mm]{"Images/small-instances/avg 20 jobs int".png}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{"Images/small-instances/general avg rpd int".png}} 
 }
 \caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de pequeno porte.}
 \label{graphics:small}
@@ -1031,12 +1033,12 @@ Os algoritmos se comportam de forma semelhante à medida em que o número de cli
 \label{graphics:large}
 \centering     %%% not \center
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 50$]{\label{fig:a}\includegraphics[width=78mm]{Images/large-instances/avg rpd 50 jobs int}}
-\subfigure[Average RPD with $N = 80$]{\label{fig:b}\includegraphics[width=78mm]{Images/large-instances/avg rpd 80 jobs int}} 
+\subfigure[Average RPD with $N = 50$]{\label{fig:a}\includegraphics[width=78mm]{"Images/large-instances/avg rpd 50 jobs int".png}}
+\subfigure[Average RPD with $N = 80$]{\label{fig:b}\includegraphics[width=78mm]{"Images/large-instances/avg rpd 80 jobs int".png}} 
 }
 \makebox[\textwidth][c]{
-\subfigure[Average RPD with $N = 100$]{\label{fig:c}\includegraphics[width=78mm]{Images/large-instances/avg rpd 100 jobs int}} 
-\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{Images/large-instances/avg rpd all algos}} 
+\subfigure[Average RPD with $N = 100$]{\label{fig:c}\includegraphics[width=78mm]{"Images/large-instances/avg rpd 100 jobs int".png}} 
+\subfigure[General Average RPD]{\label{fig:d}\includegraphics[width=78mm]{"Images/large-instances/avg rpd all algos".png}} 
 }
 \caption{Gráfico médio e intervalos de confiança com nível de confiança de 95\% para instâncias de grande porte.}
 \end{figure}
