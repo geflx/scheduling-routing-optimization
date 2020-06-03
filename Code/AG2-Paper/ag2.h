@@ -17,7 +17,7 @@
 
 //Select Method version
 #define CROSSOVER_OPTION 0
-#define MUTATION_OPTION 0
+#define MUTATION_OPTION 1
 
 using namespace std;
 
@@ -240,7 +240,6 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
             if( MixJobs.find(S2.M[1][i]) != MixJobs.end() ){
 
                 S.M[1][cont] = S2.M[1][i];
-
                 ++cont;
             }
         }

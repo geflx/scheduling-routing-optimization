@@ -31,11 +31,11 @@ int main(){
             time_t iniTime, endTime;
             time(&iniTime);
 
-            Solution S;
-            if( gaVersion == 1)
+            Solution S, S2;
+            // if( gaVersion == 1)
                 S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-            else if( gaVersion == 2)
-                S = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            // else if( gaVersion == 2)
+                S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
                 
             //printSolution(S, N);
             
@@ -47,6 +47,7 @@ int main(){
             double timeSpent = difftime(endTime, iniTime);
 
             pair<double, double> Ans = tempObj(S, N, K, P, d, s, w, Q, F, t);
+            pair<double, double> Ans2 = tempObj(S2, N, K, P, d, s, w, Q, F, t);
             
             double multiplier = 0;
 
@@ -57,7 +58,7 @@ int main(){
             else if( N >= 50 && N <= 100)
                 multiplier = 1000;
             
-            cout << Ans.first + multiplier * Ans.second << " " << timeSpent << "\n";
+            cout << Ans.first + multiplier * Ans.second << " " << Ans.second << " " << Ans2.first + multiplier * Ans2.second << " " << Ans2.second << "\n";
             
         } 
     }
