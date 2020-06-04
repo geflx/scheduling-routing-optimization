@@ -31,12 +31,12 @@ int main(){
             time_t iniTime, endTime;
             time(&iniTime);
 
-            Solution S, S2;
+            Solution S, S2, S3;
             // if( gaVersion == 1)
-                S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            //    S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
             // else if( gaVersion == 2)
-                S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-                
+            //    S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+                S3 = New_GA_Version_2(N, K, itNumber, popSize, 0.50, P, d, s, w, Q, F, t);
             //printSolution(S, N);
             
 
@@ -46,8 +46,9 @@ int main(){
             time(&endTime);
             double timeSpent = difftime(endTime, iniTime);
 
-            pair<double, double> Ans = tempObj(S, N, K, P, d, s, w, Q, F, t);
-            pair<double, double> Ans2 = tempObj(S2, N, K, P, d, s, w, Q, F, t);
+            // pair<double, double> Ans = tempObj(S, N, K, P, d, s, w, Q, F, t);
+            // pair<double, double> Ans2 = tempObj(S2, N, K, P, d, s, w, Q, F, t);
+            pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
             
             double multiplier = 0;
 
@@ -58,8 +59,8 @@ int main(){
             else if( N >= 50 && N <= 100)
                 multiplier = 1000;
             
-            cout << Ans.first + multiplier * Ans.second << " " << Ans.second << " " << Ans2.first + multiplier * Ans2.second << " " << Ans2.second << "\n";
-            
+            // cout << Ans.first + multiplier * Ans.second << " " << Ans.second << " " << Ans2.first + multiplier * Ans2.second << " " << Ans2.second << "\n";
+            cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << timeSpent << "\n";
         } 
     }
 
