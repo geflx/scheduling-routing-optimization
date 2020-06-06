@@ -1,53 +1,7 @@
 #ifndef AG2_H
 #define AG2_H
 
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <queue>
-
-#include <fstream>
-#include <assert.h>
-#include <math.h>
-#include <limits>
-#include <iostream>
-#include <algorithm>
-#include <chrono>
-#include <random>
-#include <time.h>
-
-//Select Method version
-#define CROSSOVER_OPTION 1
-#define MUTATION_OPTION 0
-
-#define EPS 1e-9
-
 using namespace std;
-
-struct data{
-    bool job; //If it is a job: 1, otherwise it is a Vehicle
-    int id;  //Job or vehicle identification
-    data(){
-        job=true; //By default, the position is a job.
-        id=-1;
-    }
-};
-
-struct vehicleLoaded{
-    int id;
-    int initialPos;
-    int finalPos;
-};
-
-struct Solution{
-
-    vector<vector<int>> M;
-    double Value = -1;
-
-    void alocate(int N){
-        M.resize(2, vector<int>(N, -1));
-    }
-};
 
 void randomSolution(Solution &S, int N, int K)
 {
@@ -247,7 +201,7 @@ Solution CrossOver(const Solution &S1, const Solution &S2, int N, int K, const v
             }
         }
     }
-    assert( cont == N);
+    
     S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
     return S;
@@ -426,60 +380,10 @@ Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
     return S_best;
 }
 
-// * 1 Review
-bool isFeasible(const Solution &S, int N, int K, const vector<int> &s, const vector<int> &Q)
-{
-    unordered_map<int, int> accSize; // * First: vehicle ID, Second: job sizes sum in vehicle 
-
-    for(int i=0; i<N; i++){
-
-        accSize[ S.M[0][i] ] += s[i];
-
-        if( Q[ S.M[0][i] ] < accSize[ S.M[0][i] ]){
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-// * 1 Review
-bool isSolution(const Solution &S, int N, int K){
-    
-    unordered_set<int> jobs;
-
-    if(S.M[0].size() != N || S.M[1].size() != N){
-
-        cout << "Positions not allocated properly \n";
-        return false;
-    }
-
-    for(int i=0; i<N; i++){
-        
-        if( S.M[0][i] > K ){
-            cout << "Not existing vehicle in use \n";
-            return false;
-        }
-
-        if( jobs.find(S.M[1][i]) != jobs.end() ){
-            cout << "Duplicated job! \n";
-            return false;
-        }
-        jobs.insert( S.M[1][i] );
-    }
-
-    if( jobs.size() != N ){
-        cout << "A Job is missing \n";
-        return false;
-    }
-
-    return true;
-}
-
-// * 1 Review
+// Complexity: O(max(N, K))
 pair<vector<int>, int> getOverloadStatus(Solution &S, int N, int K, const vector<int> &s, const vector<int> &Q){
     
-    vector<int> accSize (K, 0); // * acc job size per vehicle
+    vector<int> accSize (K, 0); // * Acc job size per vehicle
 
     for(int i=0; i<N; i++)
         accSize[ S.M[0][i] ] += s[i];
@@ -493,25 +397,25 @@ pair<vector<int>, int> getOverloadStatus(Solution &S, int N, int K, const vector
     return {accSize, countOver};
 }
 
-// * 1 Review
+// Complexity: O(N*K) , N and K being maximum
 void makeFeasible(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
-                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
-                    const vector<vector<int>> &t)
+            const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+            const vector<vector<int>> &t)
 {
     pair<vector<int>, int> status = getOverloadStatus(S, N, K, s, Q); // * First: job size sum (size: K), Second: total overload
 
-    vector<vector<int>> m( K, vector<int>()); // Matrix with K vectors of carried jobs (disabled pos == -1)
+    vector<vector<int>> m( K, vector<int>()); // Matrix with K vectors indicating carried jobs (disabled pos == -1)
     
-    for(int i=0; i<N; i++)
+    for(int i=0; i<N; i++) // Assign job to vehicle
         m[ S.M[0][i] ].push_back( i );
-    
+     
     for(int i=0; i<K; i++){
-        if( status.first[i] <= Q[i] ) // Vehicle carried Job Size is OK
+        if( status.first[i] <= Q[i] ) // If Vehicle is OK, ignore it
             continue;
 
-        for(int j=0; j<m[i].size(); j++){ //For each job in it
+        for(int j=0; j<m[i].size(); j++){ //For each job
 
-            if(status.first[i] <= Q[i]) // Not a problem anymore!
+            if(status.first[i] <= Q[i]) // Check if vehicle is OK now
                 break;
 
             if(m[i][j] == -1) // ! Ignore disabled job positions 
@@ -519,10 +423,10 @@ void makeFeasible(Solution &S, int N, int K, const vector<int> &P, const vector<
 
             for(int k=0; k<K; k++){
  
-                if(i == k)  // ! If its the same vehicle
+                if(i == k)  // ! Same vehicle? continue ...
                     continue;
 
-                if( (status.first[k] + s[ m[i][j] ]) <= Q[k] ){
+                if( (status.first[k] + s[ m[i][j] ]) <= Q[k] ){ // * If job fits in vehicle k:
                     
                     status.first[i] -= s[ m[i][j] ];
                     status.first[k] += s[ m[i][j] ];
@@ -534,47 +438,18 @@ void makeFeasible(Solution &S, int N, int K, const vector<int> &P, const vector<
                 }
             }
         }
-        
     }
 
-    unordered_set<int> checkJobs;
-
-    for(int i=0; i<K; i++){
-        for(int j=0; j<m[i].size(); j++){
-            
-            if(m[i][j] != -1){
-                assert( checkJobs.find(m[i][j]) == checkJobs.end() );
-                
-                checkJobs.insert(m[i][j]);
+    for(int i=0; i<K; i++)
+        for(int j=0; j<m[i].size(); j++)
+            if(m[i][j] != -1)
                 S.M[0][ m[i][j] ] = i; // Assign job m[i][j] to vehicle i
-            }
-        }
-    }
-
-    assert( checkJobs.size() == N );
-
-    assert( isSolution(S, N, K) == true );
-
-    pair<vector<int>, int> finalStatus = getOverloadStatus(S, N, K, s, Q);
-    
-    // if(finalStatus.second > 0)
-    //     cout << "Can't make solution feasible \n";
-    // else
-    //     cout << "Solution is now feasible \n";
-
+        
     S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
 }
 
-bool compareSolution(const Solution &S1, const Solution &S2)
-{   
-    if( S1.Value < S2.Value)
-        return true;
-    else 
-        return false;
-}
-
-// * 1 Review
+// Complexity: O( itNumber * ( 2*popSize + O(N*K) ) )
 Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutateProb,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
@@ -591,9 +466,11 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
         randomSolution(S, N, K);
         S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
 
-        if(S_best.Value > S.Value){
+        if( !isFeasible(S, N, K, s, Q) )
+            makeFeasible(S, N, K, P, d, s, w, Q, F, t);
+
+        if(S_best.Value > S.Value)
             S_best = S;
-        }
     }
     
     int cont = 0;
@@ -663,17 +540,13 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
 
         }
 
-        // ! Adding P solutions to P' and sorting P'
+        // ! Adding size(P) solutions to P' and then sorting it
         for(int i=0; i<PP.size(); i++)
             P_New.push_back( PP[i] );
 
         sort(P_New.begin(), P_New.end(), compareSolution); // ! Increasing results:  0 -> 0.001 -> 0.002 ...
 
-        assert(P_New[0].Value <= P_New[1].Value);
-
         PP.clear();
-
-        assert(PP.size() == 0);
 
         for(int i=0; i<popSize; i++){
             PP.push_back( P_New[i] );

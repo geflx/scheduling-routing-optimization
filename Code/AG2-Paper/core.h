@@ -1,7 +1,38 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+
+#include <fstream>
+#include <assert.h>
+#include <math.h>
+#include <limits>
+#include <iostream>
+#include <algorithm>
+#include <chrono>
+#include <random>
+#include <time.h>
+
+//Select Method version
+#define CROSSOVER_OPTION 1
+#define MUTATION_OPTION 0
+
+#define EPS 1e-9
+
 using namespace std;
+
+struct Solution{
+
+    vector<vector<int>> M;
+    double Value = -1;
+
+    void alocate(int N){
+        M.resize(2, vector<int>(N, -1));
+    }
+};
 
 void readInstance(ifstream &input, double &mi, double &delta, int &N, int &K,
                   vector<int> &P, vector<int> &d, vector<int> &s,
@@ -121,4 +152,70 @@ void getVariables(string &fileName, ifstream& input, int &gaVersion, int &runNb,
 
 }
 
+bool compareSolution(const Solution &S1, const Solution &S2)
+{   
+    if( S1.Value < S2.Value)
+        return true;
+    else 
+        return false;
+}
+
+// Complexity: O(N)
+bool isSolution(const Solution &S, int N, int K){
+    
+    unordered_set<int> jobs;
+
+    if(S.M[0].size() != N || S.M[1].size() != N){
+        cout << "Positions not allocated properly \n";
+        return false;
+    }
+
+    for(int i=0; i<N; i++){
+        
+        if( S.M[0][i] > K ){
+            cout << "Non-existing vehicle in use \n";
+            return false;
+        }
+
+        if( jobs.find(S.M[1][i]) != jobs.end() ){
+            cout << "Duplicated job! \n";
+            return false;
+        }
+        jobs.insert( S.M[1][i] );
+    }
+
+    if( jobs.size() != N ){
+        cout << "A Job is missing \n";
+        return false;
+    }
+
+    return true;
+}
+
+// Complexity: O(N)
+bool isFeasible(const Solution &S, int N, int K, const vector<int> &s, const vector<int> &Q)
+{
+    unordered_map<int, int> accSize; // * First: vehicle ID, Second: job sizes sum in vehicle 
+
+    for(int i=0; i<N; i++){
+
+        accSize[ S.M[0][i] ] += s[i];
+
+        if( Q[ S.M[0][i] ] < accSize[ S.M[0][i] ])
+            return false;
+        
+    }
+    
+    return true;
+}
+
+int getMultiplier(int N){
+    
+     if(N == 8 || N == 10)
+            return 100;
+        else if( N ==15 || N == 20)
+            return 500;
+        else if( N >= 50 && N <= 100)
+            return 1000;
+}
 #endif

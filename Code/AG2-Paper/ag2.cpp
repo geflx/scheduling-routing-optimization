@@ -1,5 +1,5 @@
-#include "ag2.h"
 #include "core.h"
+#include "ag2.h"
 
 int main(){
 
@@ -9,6 +9,7 @@ int main(){
     int instNumber;
     double mi, delta;
 
+    // Setup information
     int N, K;
     vector<double> w;
     vector<int> F, Q, s, d, P;
@@ -24,7 +25,6 @@ int main(){
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
-        //debugRead(mi, delta, N, K, P, d, s, w, Q, F, t);
 
         for(int i=0; i<runNb; i++){
             
@@ -50,15 +50,9 @@ int main(){
             // pair<double, double> Ans2 = tempObj(S2, N, K, P, d, s, w, Q, F, t);
             pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
             
-            double multiplier = 0;
+            double multiplier = getMultiplier(N);
 
-            if(N == 8 || N == 10)
-                multiplier = 100;
-            else if( N ==15 || N == 20)
-                multiplier = 500;
-            else if( N >= 50 && N <= 100)
-                multiplier = 1000;
-            
+           
             // cout << Ans.first + multiplier * Ans.second << " " << Ans.second << " " << Ans2.first + multiplier * Ans2.second << " " << Ans2.second << "\n";
             cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << timeSpent << "\n";
         } 
