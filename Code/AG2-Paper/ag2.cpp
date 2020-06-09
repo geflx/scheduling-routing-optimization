@@ -20,43 +20,44 @@ int main(){
     string fileName;
     int gaVersion, runNb, itNumber, popSize;
 
+
     getVariables(fileName, input, gaVersion, runNb, itNumber, popSize);
-   
+
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
 
         for(int i=0; i<runNb; i++){
             
-            time_t iniTime, endTime;
-            time(&iniTime);
+            Solution S, S2;
+            // if( gaVersion == 1)  S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            // else if( gaVersion == 2) S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
 
-            Solution S, S2, S3;
-            // if( gaVersion == 1)
-            //    S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-            // else if( gaVersion == 2)
-            //    S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-                S3 = New_GA_Version_2(N, K, itNumber, popSize, 0.50, P, d, s, w, Q, F, t);
-            //printSolution(S, N);
+            vector<double> probMut = {0.1, 0.2, 0.3, 0.5};
+
+            for(auto prob: probMut){
+
+                        
+                time_t iniTime, endTime;
+                time(&iniTime);
+
+                Solution S3 = New_GA_Version_2(N, K, itNumber, popSize, prob, P, d, s, w, Q, F, t);
+                
+                time(&endTime);
+                double timeSpent = difftime(endTime, iniTime);
+
+                pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
+                
+                double multiplier = getMultiplier(N);
+
             
-
-
-            // Solution S = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-
-            time(&endTime);
-            double timeSpent = difftime(endTime, iniTime);
-
-            // pair<double, double> Ans = tempObj(S, N, K, P, d, s, w, Q, F, t);
-            // pair<double, double> Ans2 = tempObj(S2, N, K, P, d, s, w, Q, F, t);
-            pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
-            
-            double multiplier = getMultiplier(N);
-
-           
-            // cout << Ans.first + multiplier * Ans.second << " " << Ans.second << " " << Ans2.first + multiplier * Ans2.second << " " << Ans2.second << "\n";
-            cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << timeSpent << "\n";
+                cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << timeSpent << " ";
+            }
+            cout << "\n";
         } 
     }
 
     input.close();
+
+    
 }
