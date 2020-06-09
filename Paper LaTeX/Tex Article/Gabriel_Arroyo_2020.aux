@@ -6,22 +6,23 @@
 \@writefile{toc}{\contentsline {author}{Gabriel de P. Felix \and Jos\IeC {\'e} E. C. Arroyo \ }{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
 \newlabel{introduction}{{1}{1}}
+\citation{hall2003supply}
 \citation{ullrich2013}
 \citation{condotta2013tabu}
-\citation{xiao2015simulating}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Revis\IeC {\~a}o Liter\IeC {\'a}ria}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Literature Review}{2}}
 \newlabel{lit-review}{{2}{2}}
+\citation{xiao2015simulating}
 \citation{cheng2015integrated}
 \citation{billaut2017tabu}
 \citation{wang2019minimizing}
 \citation{ghannadpour2019multi}
 \citation{liu2020coordinated}
 \citation{tamannaei2019}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Descri\IeC {\c c}\IeC {\~a}o do Problema}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problem Description}{4}}
 \newlabel{problemdescription}{{3}{4}}
 \citation{tamannaei2019}
 \newlabel{eq:objfull}{{1}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Modelo Matem\IeC {\'a}tico}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Mathematical Model}{5}}
 \newlabel{mathematicalmodel}{{4}{5}}
 \newlabel{mm:obj}{{1}{5}}
 \newlabel{mm:come-out-1-time}{{2}{5}}
@@ -30,7 +31,7 @@
 \newlabel{mm:come-in-and-out}{{5}{5}}
 \newlabel{mm:proc-order-1}{{6}{5}}
 \newlabel{mm:proc-order-2}{{7}{5}}
-\newlabel{mm:comp-time}{{8}{6}}
+\newlabel{mm:comp-time}{{8}{5}}
 \newlabel{mm:big-m}{{9}{6}}
 \newlabel{mm:big-m-2}{{10}{6}}
 \newlabel{mm:big-m-3}{{11}{6}}
@@ -44,111 +45,113 @@
 \newlabel{mm:sk-geq-zero}{{19}{6}}
 \newlabel{mm:tardiness-geq-zero}{{20}{6}}
 \newlabel{mm:dest-time-geq-zero}{{21}{6}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Representa\IeC {\c c}\IeC {\~a}o de Solu\IeC {\c c}\IeC {\~a}o}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Solution Representation}{7}}
 \newlabel{solutionrepresentation}{{5}{7}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces }}{7}}
 \newlabel{fig:solutionrep}{{1}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Exemplo Num\IeC {\'e}rico}{8}}
-\newlabel{hipcase}{{5.1}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Numerical Example}{7}}
+\newlabel{hipcase}{{5.1}{7}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Euclidian distance (ED) between two points in the network.}}{8}}
 \newlabel{table:ed}{{1}{8}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Jobs and vehicles detailed informations.}}{8}}
 \newlabel{table:jobvehicleinfo}{{2}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces }}{9}}
-\newlabel{fig:ganttchart1}{{2}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces }}{8}}
+\newlabel{fig:ganttchart1}{{2}{8}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Gera\IeC {\c c}\IeC {\~a}o de Inst\IeC {\^a}ncias}{9}}
 \newlabel{instancesgen}{{6}{9}}
 \newlabel{ins-P}{{1}{9}}
 \newlabel{ins-s}{{2}{9}}
-\newlabel{ins-d}{{3}{10}}
-\newlabel{ins-pi}{{4}{10}}
+\newlabel{ins-d}{{3}{9}}
+\newlabel{ins-pi}{{4}{9}}
 \newlabel{ins-w}{{5}{10}}
 \newlabel{ins-Q}{{6}{10}}
 \newlabel{ins-Q}{{7}{10}}
 \newlabel{ins-origin}{{8}{10}}
 \newlabel{ins-customers}{{9}{10}}
 \newlabel{ins-small-parameters}{{10}{10}}
-\newlabel{ins-large-parameters}{{11}{11}}
+\newlabel{ins-large-parameters}{{11}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Busca Local e Vizinhan\IeC {\c c}as}{11}}
 \newlabel{nboperators}{{7}{11}}
 \newlabel{eq:invalidsol}{{13}{11}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Vizinhan\IeC {\c c}as Intra-Rota}{11}}
 \newlabel{intraroutenb}{{7.1}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Vizinhan\IeC {\c c}as Inter-Rota}{11}}
+\newlabel{interroutenb}{{7.2}{11}}
 \citation{mladenovic1997variable}
-\citation{penna2013iterated}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Vizinhan\IeC {\c c}as Inter-Rota}{12}}
-\newlabel{interroutenb}{{7.2}{12}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Abordagens de RVND}{12}}
 \newlabel{rvndapproaches}{{7.3}{12}}
+\newlabel{algo:rvnd}{{1}{12}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces RVND($S$)}}{12}}
+\citation{penna2013iterated}
+\newlabel{algo:rvnd2}{{2}{13}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces RVND-Custom($S$)}}{13}}
 \citation{penna2013iterated}
 \citation{talbi2009metaheuristics}
 \citation{molina2016grasp}
-\newlabel{algo:rvnd}{{1}{13}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces RVND($S$)}}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Abordagens de Solu\IeC {\c c}\IeC {\~a}o}{13}}
-\newlabel{solutionapproach}{{8}{13}}
-\newlabel{algo:rvnd2}{{2}{14}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces RVND-Custom($S$)}}{14}}
 \citation{talbi2009metaheuristics}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Solu\IeC {\c c}\IeC {\~o}es Iniciais}{15}}
-\newlabel{initialsolutions}{{8.1}{15}}
-\newlabel{eq:atc}{{14}{15}}
-\newlabel{eq:atc}{{15}{15}}
-\newlabel{eq:atc}{{16}{15}}
-\newlabel{eq:wmdd}{{17}{15}}
-\newlabel{eq:wedd}{{18}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Abordagens de Solu\IeC {\c c}\IeC {\~a}o}{14}}
+\newlabel{solutionapproach}{{8}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Solu\IeC {\c c}\IeC {\~o}es Iniciais}{14}}
+\newlabel{initialsolutions}{{8.1}{14}}
+\newlabel{eq:atc}{{14}{14}}
+\newlabel{eq:atc}{{15}{14}}
+\newlabel{eq:atc}{{16}{14}}
+\newlabel{eq:wmdd}{{17}{14}}
+\newlabel{eq:wedd}{{18}{14}}
 \@writefile{toc}{\contentsline {section}{\numberline {9}Iterated Local Search}{15}}
 \newlabel{ils}{{9}{15}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {9.1}ILS-RVND}{15}}
+\newlabel{algo:ilsrvnd}{{3}{15}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces ILS-RVND ($ \alpha , MaxIter,MaxIterILS$)}}{15}}
 \citation{penna2013iterated}
-\newlabel{algo:ilsrvnd}{{3}{16}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces ILS-RVND ($ \alpha , MaxIter,MaxIterILS$)}}{16}}
+\newlabel{algo:ilsrvnd}{{4}{16}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces ILS-RVND ($ \alpha , MaxIter,MaxIterILS$)}}{16}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {9.2}ILS-RVND com Aprimoramento de Rota Interna}{16}}
 \newlabel{ilsrvnd2}{{9.2}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces }}{16}}
+\newlabel{fig:ilsdif}{{3}{16}}
 \citation{talbi2009metaheuristics}
-\newlabel{algo:ilsrvnd}{{4}{17}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces ILS-RVND ($ \alpha , MaxIter,MaxIterILS$)}}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces }}{17}}
-\newlabel{fig:ilsdif}{{3}{17}}
 \@writefile{toc}{\contentsline {section}{\numberline {10}Algoritmo Gen\IeC {\'e}tico}{17}}
 \newlabel{genalgo}{{10}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Busca Local R\IeC {\'a}pida}{17}}
+\newlabel{fastlocalsearch}{{10.1}{17}}
 \newlabel{algo:genalgo}{{5}{18}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Genetic Algorithm ($PopSize,MaxIter$)}}{18}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Busca Local R\IeC {\'a}pida}{19}}
-\newlabel{fastlocalsearch}{{10.1}{19}}
-\newlabel{algo:fastlocalsearch}{{6}{19}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Fast Local Search($S$)}}{19}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}Experimentos Computacionais}{20}}
-\newlabel{experiments}{{11}{20}}
-\newlabel{rpd}{{19}{20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.1}Calibra\IeC {\c c}\IeC {\~a}o de Par\IeC {\^a}metros}{20}}
-\newlabel{parameters-calibration}{{11.1}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces }}{21}}
-\newlabel{fig:calib-algo1}{{4}{21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces }}{22}}
-\newlabel{fig:calib-algo2}{{5}{22}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.2}Resultados em Inst\IeC {\^a}ncias Pequenas}{22}}
-\newlabel{small-instances-results}{{11.2}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces }}{23}}
-\newlabel{fig:calib-algo3}{{6}{23}}
-\newlabel{fig:a}{{7(a)}{24}}
-\newlabel{sub@fig:a}{{(a)}{24}}
-\newlabel{fig:b}{{7(b)}{24}}
-\newlabel{sub@fig:b}{{(b)}{24}}
-\newlabel{fig:c}{{7(c)}{24}}
-\newlabel{sub@fig:c}{{(c)}{24}}
-\newlabel{fig:d}{{7(d)}{24}}
-\newlabel{sub@fig:d}{{(d)}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Gr\IeC {\'a}fico m\IeC {\'e}dio e intervalos de confian\IeC {\c c}a com n\IeC {\'\i }vel de confian\IeC {\c c}a de 95\% para inst\IeC {\^a}ncias de pequeno porte.}}{24}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Average RPD with $N = 10$}}}{24}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Average RPD with $N = 15$}}}{24}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {Average RPD with $N = 20$}}}{24}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {General Average RPD}}}{24}}
-\newlabel{graphics:small}{{7}{24}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Best RPD and Avg. RPD analyisis over small instances.}}{25}}
-\newlabel{table:small-results}{{3}{25}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.3}Resultados em Inst\IeC {\^a}ncias Grandes}{25}}
-\newlabel{large-instances-results}{{11.3}{25}}
+\newlabel{algo:fastlocalsearch}{{6}{18}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Fast Local Search($S$)}}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Experimentos Computacionais}{19}}
+\newlabel{experiments}{{11}{19}}
+\newlabel{rpd}{{19}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1}Calibra\IeC {\c c}\IeC {\~a}o de Par\IeC {\^a}metros}{19}}
+\newlabel{parameters-calibration}{{11.1}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces }}{20}}
+\newlabel{fig:calib-algo1}{{4}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces }}{21}}
+\newlabel{fig:calib-algo2}{{5}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2}Resultados em Inst\IeC {\^a}ncias Pequenas}{21}}
+\newlabel{small-instances-results}{{11.2}{21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces }}{22}}
+\newlabel{fig:calib-algo3}{{6}{22}}
+\newlabel{fig:a}{{7(a)}{23}}
+\newlabel{sub@fig:a}{{(a)}{23}}
+\newlabel{fig:b}{{7(b)}{23}}
+\newlabel{sub@fig:b}{{(b)}{23}}
+\newlabel{fig:c}{{7(c)}{23}}
+\newlabel{sub@fig:c}{{(c)}{23}}
+\newlabel{fig:d}{{7(d)}{23}}
+\newlabel{sub@fig:d}{{(d)}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Gr\IeC {\'a}fico m\IeC {\'e}dio e intervalos de confian\IeC {\c c}a com n\IeC {\'\i }vel de confian\IeC {\c c}a de 95\% para inst\IeC {\^a}ncias de pequeno porte.}}{23}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Average RPD with $N = 10$}}}{23}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Average RPD with $N = 15$}}}{23}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {Average RPD with $N = 20$}}}{23}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {General Average RPD}}}{23}}
+\newlabel{graphics:small}{{7}{23}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Best RPD and Avg. RPD analyisis over small instances.}}{24}}
+\newlabel{table:small-results}{{3}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.3}Resultados em Inst\IeC {\^a}ncias Grandes}{24}}
+\newlabel{large-instances-results}{{11.3}{24}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Runtime Average Analysis over small instances.}}{25}}
+\newlabel{table:time-small}{{4}{25}}
 \newlabel{graphics:large}{{11.3}{26}}
 \newlabel{fig:a}{{8(a)}{26}}
 \newlabel{sub@fig:a}{{(a)}{26}}
@@ -163,14 +166,10 @@
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Average RPD with $N = 80$}}}{26}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {Average RPD with $N = 100$}}}{26}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {General Average RPD}}}{26}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Runtime Average Analysis over small instances.}}{27}}
-\newlabel{table:time-small}{{4}{27}}
-\@writefile{toc}{\contentsline {section}{\numberline {12}Conclus\IeC {\~o}es}{27}}
-\newlabel{conclusions}{{12}{27}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Best RPD and Avg. RPD analysis over large instances.}}{28}}
-\newlabel{table:large-results}{{5}{28}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Runtime Average Analysis over large instances.}}{28}}
-\newlabel{table:time-large}{{6}{28}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Best RPD and Avg. RPD analysis over large instances.}}{27}}
+\newlabel{table:large-results}{{5}{27}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Runtime Average Analysis over large instances.}}{27}}
+\newlabel{table:time-large}{{6}{27}}
 \bibstyle{ieeetr}
 \bibdata{Bibliography/papers.bib}
 \bibcite{du1990}{1}
@@ -182,6 +181,8 @@
 \bibcite{billaut2017tabu}{7}
 \bibcite{wang2019minimizing}{8}
 \bibcite{ghannadpour2019multi}{9}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Conclus\IeC {\~o}es}{28}}
+\newlabel{conclusions}{{12}{28}}
 \bibcite{liu2020coordinated}{10}
 \bibcite{tamannaei2019}{11}
 \bibcite{mladenovic1997variable}{12}
