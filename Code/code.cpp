@@ -590,7 +590,6 @@ vector<data> generateGreedy(const string &which, const vector<int> &jobSize, int
 
     for(int i=0; i<ncars; i++){
         vehiclePrice.push( make_pair( (-1) * carPrices[i], i ) ); //Ascending order ( *(-1) )
-
     }
 
 

@@ -16,6 +16,131 @@ void randomSolution(Solution &S, int N, int K)
     }
 }
 
+void greedySolution(Solution &S, const string &rule, const bool random, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
+                   const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+                   const vector<vector<int>> &t)
+{
+    //Variables to generate processing order of jobs:
+    vector<int> jobOrder(N);
+    vector<bool> visiJob(N, false);
+    
+    int accD = 0;
+    double PAvg = 0.0;
+
+    for(int i=0; i<N; i++) 
+        PAvg += P[i];
+    PAvg /= N;
+
+    for(int i=0; i<N; i++){
+
+        priority_queue<pair<double, int>> pq;
+
+        for(int j=0; j<N; j++){
+
+            if(visiJob[j]) 
+                continue;
+
+            double ruleValue;
+
+            if(rule == "atc"){
+
+                ruleValue = (w[j] / P[j]) * exp( (-1) * (max(d[j]- P[j]- accD , 0)) / PAvg);
+                pq.push( {ruleValue, j} );
+
+            }else if(rule == "wmdd"){
+
+                ruleValue=  (1 / w[j]) * max(P[j], d[j] - accD) ;
+                pq.push( {-1 * ruleValue, j} );
+
+            }else if(rule == "wedd"){
+
+                ruleValue = d[j] / w[j];
+                pq.push( {-1 * ruleValue,j} );
+                
+            }
+        }
+
+        jobOrder[i] = pq.top().second;
+        visiJob[ jobOrder[i] ] = true;
+
+        accD += P[ jobOrder[i] ];
+    }
+
+    for(int i=0; i<N; i++)
+        S.M[1][i] = jobOrder[i];
+
+    int currV, currJob, currInsert, remainingCap;
+    if(!random){
+
+        priority_queue<pair<int, int>> vehicles; // * First: -Q[k]; Second: k
+        for(int i=0; i<K; i++)
+            vehicles.push( { -1 * Q[i], i});
+       
+        currInsert = 0;
+
+        currV = vehicles.top().second;
+        remainingCap = Q[currV];
+        vehicles.pop();
+
+        while(currInsert < N){
+
+            currJob = jobOrder[currInsert];
+            
+            if((remainingCap - s[currJob]) < 0){
+                currV = vehicles.top().second;
+                vehicles.pop();
+                remainingCap = Q[currV];
+            }
+
+            while((remainingCap - s[ currJob ]) >= 0){
+
+                remainingCap -= s[ currJob ];
+                S.M[0][currJob] = currV;
+
+                ++currInsert;
+            }                        
+        }
+
+    }else{
+
+        vector<int> vehicles(K);
+        for(int i=0; i<K; i++) vehicles[i] = i;
+        random_shuffle(vehicles.begin(), vehicles.end());
+
+        double rangeConst;
+        if( N <= 20)
+            rangeConst = 0.2;
+        else
+            rangeConst = 0.1;
+
+        currV = 0;
+        remainingCap = Q[currV];
+
+        while(jobOrder.size() > 0){
+
+            int posiCurrJob = min( (int)jobOrder.size()-1, (int)ceil(rangeConst * N));
+            currJob = jobOrder[ posiCurrJob ];
+
+            for(int i = posiCurrJob; i < jobOrder.size()-1; i++){ //Remove currJob
+                jobOrder[i] = jobOrder[i+1]; 
+            }
+            jobOrder.pop_back();
+
+            if((remainingCap - s[currJob]) >= 0){
+
+                remainingCap -= s[currJob];
+
+            }else{
+
+                ++currV;
+                remainingCap = Q[currV] - s[currJob];
+
+            }
+            S.M[0][currJob] = currV;
+        }
+    }
+    assert( isSolution(S, N, K) == true);
+}
 // Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
 double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                     const vector<double> &w, const vector<int> &Q, const vector<int> &F,
