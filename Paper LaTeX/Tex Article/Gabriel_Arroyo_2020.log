@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.5.30)  9 JUN 2020 13:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.5.30)  11 JUN 2020 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -560,18 +560,372 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 \subfig@top=\skip54
 \subfig@bottom=\skip55
 )
+(/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2016/04/27 v1.618033 publication quality tables
+\heavyrulewidth=\dimen139
+\lightrulewidth=\dimen140
+\cmidrulewidth=\dimen141
+\belowrulesep=\dimen142
+\belowbottomsep=\dimen143
+\aboverulesep=\dimen144
+\abovetopsep=\dimen145
+\cmidrulesep=\dimen146
+\cmidrulekern=\dimen147
+\defaultaddspace=\dimen148
+\@cmidla=\count132
+\@cmidlb=\count133
+\@aboverulesep=\dimen149
+\@belowrulesep=\dimen150
+\@thisruleclass=\count134
+\@lastruleclass=\count135
+\@thisrulewidth=\dimen151
+)
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2018/02/21 L3 programming layer (loader) 
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3-code.tex
+Package: expl3 2018/02/21 L3 programming layer (code)
+\c_max_int=\count136
+\l_tmpa_int=\count137
+\l_tmpb_int=\count138
+\g_tmpa_int=\count139
+\g_tmpb_int=\count140
+\g__intarray_font_int=\count141
+\g__prg_map_int=\count142
+\c_log_iow=\count143
+\l_iow_line_count_int=\count144
+\l__iow_line_target_int=\count145
+\l__iow_one_indent_int=\count146
+\l__iow_indent_int=\count147
+\c_zero_dim=\dimen152
+\c_max_dim=\dimen153
+\l_tmpa_dim=\dimen154
+\l_tmpb_dim=\dimen155
+\g_tmpa_dim=\dimen156
+\g_tmpb_dim=\dimen157
+\c_zero_skip=\skip56
+\c_max_skip=\skip57
+\l_tmpa_skip=\skip58
+\l_tmpb_skip=\skip59
+\g_tmpa_skip=\skip60
+\g_tmpb_skip=\skip61
+\c_zero_muskip=\muskip11
+\c_max_muskip=\muskip12
+\l_tmpa_muskip=\muskip13
+\l_tmpb_muskip=\muskip14
+\g_tmpa_muskip=\muskip15
+\g_tmpb_muskip=\muskip16
+\l_keys_choice_int=\count148
+\c__fp_leading_shift_int=\count149
+\c__fp_middle_shift_int=\count150
+\c__fp_trailing_shift_int=\count151
+\c__fp_big_leading_shift_int=\count152
+\c__fp_big_middle_shift_int=\count153
+\c__fp_big_trailing_shift_int=\count154
+\c__fp_Bigg_leading_shift_int=\count155
+\c__fp_Bigg_middle_shift_int=\count156
+\c__fp_Bigg_trailing_shift_int=\count157
+\c__fp_rand_size_int=\count158
+\c__fp_rand_four_int=\count159
+\c__fp_rand_eight_int=\count160
+\l__sort_length_int=\count161
+\l__sort_min_int=\count162
+\l__sort_top_int=\count163
+\l__sort_max_int=\count164
+\l__sort_true_max_int=\count165
+\l__sort_block_int=\count166
+\l__sort_begin_int=\count167
+\l__sort_end_int=\count168
+\l__sort_A_int=\count169
+\l__sort_B_int=\count170
+\l__sort_C_int=\count171
+\l__tl_build_start_index_int=\count172
+\l__tl_build_index_int=\count173
+\l__tl_analysis_normal_int=\count174
+\l__tl_analysis_index_int=\count175
+\l__tl_analysis_nesting_int=\count176
+\l__tl_analysis_type_int=\count177
+\l__regex_internal_a_int=\count178
+\l__regex_internal_b_int=\count179
+\l__regex_internal_c_int=\count180
+\l__regex_balance_int=\count181
+\l__regex_group_level_int=\count182
+\l__regex_mode_int=\count183
+\c__regex_cs_in_class_mode_int=\count184
+\c__regex_cs_mode_int=\count185
+\l__regex_catcodes_int=\count186
+\l__regex_default_catcodes_int=\count187
+\c__regex_catcode_D_int=\count188
+\c__regex_catcode_S_int=\count189
+\c__regex_catcode_L_int=\count190
+\c__regex_catcode_O_int=\count191
+\c__regex_catcode_A_int=\count192
+\c__regex_all_catcodes_int=\count193
+\l__regex_show_lines_int=\count194
+\l__regex_min_state_int=\count195
+\l__regex_max_state_int=\count196
+\l__regex_left_state_int=\count197
+\l__regex_right_state_int=\count198
+\l__regex_capturing_group_int=\count199
+\l__regex_min_pos_int=\count266
+\l__regex_max_pos_int=\count267
+\l__regex_curr_pos_int=\count268
+\l__regex_start_pos_int=\count269
+\l__regex_success_pos_int=\count270
+\l__regex_curr_char_int=\count271
+\l__regex_curr_catcode_int=\count272
+\l__regex_last_char_int=\count273
+\l__regex_case_changed_char_int=\count274
+\l__regex_curr_state_int=\count275
+\l__regex_step_int=\count276
+\l__regex_min_active_int=\count277
+\l__regex_max_active_int=\count278
+\l__regex_replacement_csnames_int=\count279
+\l__regex_match_count_int=\count280
+\l__regex_min_submatch_int=\count281
+\l__regex_submatch_int=\count282
+\l__regex_zeroth_submatch_int=\count283
+\g__regex_trace_regex_int=\count284
+\c_empty_box=\box56
+\l_tmpa_box=\box57
+\l_tmpb_box=\box58
+\g_tmpa_box=\box59
+\g_tmpb_box=\box60
+\l__box_top_dim=\dimen158
+\l__box_bottom_dim=\dimen159
+\l__box_left_dim=\dimen160
+\l__box_right_dim=\dimen161
+\l__box_top_new_dim=\dimen162
+\l__box_bottom_new_dim=\dimen163
+\l__box_left_new_dim=\dimen164
+\l__box_right_new_dim=\dimen165
+\l__box_internal_box=\box61
+\l__coffin_internal_box=\box62
+\l__coffin_internal_dim=\dimen166
+\l__coffin_offset_x_dim=\dimen167
+\l__coffin_offset_y_dim=\dimen168
+\l__coffin_x_dim=\dimen169
+\l__coffin_y_dim=\dimen170
+\l__coffin_x_prime_dim=\dimen171
+\l__coffin_y_prime_dim=\dimen172
+\c_empty_coffin=\box63
+\l__coffin_aligned_coffin=\box64
+\l__coffin_aligned_internal_coffin=\box65
+\l_tmpa_coffin=\box66
+\l_tmpb_coffin=\box67
+\l__coffin_display_coffin=\box68
+\l__coffin_display_coord_coffin=\box69
+\l__coffin_display_pole_coffin=\box70
+\l__coffin_display_offset_dim=\dimen173
+\l__coffin_display_x_dim=\dimen174
+\l__coffin_display_y_dim=\dimen175
+\l__coffin_bounding_shift_dim=\dimen176
+\l__coffin_left_corner_dim=\dimen177
+\l__coffin_right_corner_dim=\dimen178
+\l__coffin_bottom_corner_dim=\dimen179
+\l__coffin_top_corner_dim=\dimen180
+\l__coffin_scaled_total_height_dim=\dimen181
+\l__coffin_scaled_width_dim=\dimen182
+)
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3pdfmode.def
+File: l3pdfmode.def 2017/03/18 v L3 Experimental driver: PDF mode
+\l__driver_color_stack_int=\count285
+\l__driver_tmp_box=\box71
+))
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+Package: xparse 2018/02/21 L3 Experimental document command parser
+\l__xparse_current_arg_int=\count286
+\g__xparse_grabber_int=\count287
+\l__xparse_m_args_int=\count288
+\l__xparse_mandatory_args_int=\count289
+\l__xparse_v_nesting_int=\count290
+)
+Package: siunitx 2017/11/26 v2.7k A comprehensive (SI) units package
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+Package: array 2016/10/06 v2.4d Tabular extension package (FMi)
+\col@sep=\dimen183
+\extrarowheight=\dimen184
+\NC@list=\toks26
+\extratabsurround=\skip62
+\backup@length=\skip63
+)
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+Package: l3keys2e 2018/02/21 LaTeX2e option processing using LaTeX3 keys
+)
+\l__siunitx_tmp_box=\box72
+\l__siunitx_tmp_dim=\dimen185
+\l__siunitx_tmp_int=\count291
+\l__siunitx_number_mantissa_length_int=\count292
+\l__siunitx_number_uncert_length_int=\count293
+\l__siunitx_round_int=\count294
+\l__siunitx_process_decimal_int=\count295
+\l__siunitx_process_uncertainty_int=\count296
+\l__siunitx_process_fixed_int=\count297
+\l__siunitx_process_integer_min_int=\count298
+\l__siunitx_process_precision_int=\count299
+\l__siunitx_group_min_int=\count300
+\l__siunitx_angle_marker_box=\box73
+\l__siunitx_angle_unit_box=\box74
+\l__siunitx_angle_marker_dim=\dimen186
+\l__siunitx_angle_unit_dim=\dimen187
+\l__siunitx_unit_int=\count301
+\l__siunitx_unit_denominator_int=\count302
+\l__siunitx_unit_numerator_int=\count303
+\l__siunitx_unit_prefix_int=\count304
+\l__siunitx_unit_prefix_base_int=\count305
+\l__siunitx_unit_prefix_gram_int=\count306
+\l__siunitx_number_product_int=\count307
+\c__siunitx_one_fill_skip=\skip64
+\l__siunitx_table_unit_align_skip=\skip65
+\l__siunitx_table_exponent_dim=\dimen188
+\l__siunitx_table_integer_dim=\dimen189
+\l__siunitx_table_mantissa_dim=\dimen190
+\l__siunitx_table_marker_dim=\dimen191
+\l__siunitx_table_result_dim=\dimen192
+\l__siunitx_table_uncert_dim=\dimen193
+\l__siunitx_table_fill_pre_dim=\dimen194
+\l__siunitx_table_fill_post_dim=\dimen195
+\l__siunitx_table_fill_mid_dim=\dimen196
+\l__siunitx_table_pre_box=\box75
+\l__siunitx_table_post_box=\box76
+\l__siunitx_table_mantissa_box=\box77
+\l__siunitx_table_result_box=\box78
+\l__siunitx_table_number_align_skip=\skip66
+\l__siunitx_table_text_align_skip=\skip67
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareBinaryPrefix with sig. 'mmm' on line 7250.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIPostPower with sig. 'mm' on line 7253.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIPrefix with sig. 'mmm' on line 7256.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIPrePower with sig. 'mm' on line 7259.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIQualifier with sig. 'mm' on line 7262.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIUnit with sig. 'O{}mm' on line 7265.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \DeclareSIUnitWithOptions with sig. 'mmm' on line 7268.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \ang with sig. 'o>{\SplitArgument {2}{;}}m' on line 7283.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \num with sig. 'om' on line 7292.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \numlist with sig. 'o>{\SplitList {;}}m' on line 7301.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \numrange with sig. 'omm' on line 7310.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SIlist with sig. 'o>{\SplitList {;}}mm' on line 7322.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SIrange with sig. 'ommm' on line 7334.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SI with sig. 'omom' on line 7346.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \sisetup with sig. 'm' on line 7349.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \tablenum with sig. 'om' on line 7364.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \si with sig. 'om' on line 7376.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \numInBookmark with sig. 'om' on line 7423.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \numrangeInBookmark with sig. 'omm' on line 7425.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SIInBookmark with sig. 'omom' on line 7427.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SIlistInBookmark with sig. 'omm' on line 7429.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \SIrangeInBookmark with sig. 'ommm' on line 7431.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \siInBookmark with sig. 'om' on line 7432.
+.................................................
+\g__file_internal_ior=\read1
+
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator.sty
+Package: translator 2018/01/04 v1.12 Easy translation of strings in LaTeX
+))
 (/usr/share/texlive/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
 Package: algorithm2e 2017/07/18 v5.2 algorithms environments
-\c@AlgoLine=\count132
+\c@AlgoLine=\count308
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\algocf@hangindent=\skip56
+\algocf@hangindent=\skip68
 
 (/usr/share/texlive/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count133
+\c@checkoddpage=\count309
 )
 (/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
@@ -579,41 +933,41 @@ Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 (/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2013/03/29 ver 4.1
 )
-\skiptotal=\skip57
-\skiplinenumber=\skip58
-\skiprule=\skip59
-\skiphlne=\skip60
-\skiptext=\skip61
-\skiplength=\skip62
-\algomargin=\skip63
-\skipalgocfslide=\skip64
-\algowidth=\dimen139
-\inoutsize=\dimen140
-\inoutindent=\dimen141
-\interspacetitleruled=\dimen142
-\interspacealgoruled=\dimen143
-\interspacetitleboxruled=\dimen144
-\algocf@ruledwidth=\skip65
-\algocf@inoutbox=\box56
-\algocf@inputbox=\box57
-\AlCapSkip=\skip66
-\AlCapHSkip=\skip67
-\algoskipindent=\skip68
-\algocf@nlbox=\box58
-\algocf@hangingbox=\box59
-\algocf@untilbox=\box60
-\algocf@skipuntil=\skip69
-\algocf@capbox=\box61
-\algocf@lcaptionbox=\skip70
-\algoheightruledefault=\skip71
-\algoheightrule=\skip72
-\algotitleheightruledefault=\skip73
-\algotitleheightrule=\skip74
-\c@algocfline=\count134
-\c@algocfproc=\count135
-\c@algocf=\count136
-\algocf@algoframe=\box62
-\algocf@algobox=\box63
+\skiptotal=\skip69
+\skiplinenumber=\skip70
+\skiprule=\skip71
+\skiphlne=\skip72
+\skiptext=\skip73
+\skiplength=\skip74
+\algomargin=\skip75
+\skipalgocfslide=\skip76
+\algowidth=\dimen197
+\inoutsize=\dimen198
+\inoutindent=\dimen199
+\interspacetitleruled=\dimen256
+\interspacealgoruled=\dimen257
+\interspacetitleboxruled=\dimen258
+\algocf@ruledwidth=\skip77
+\algocf@inoutbox=\box79
+\algocf@inputbox=\box80
+\AlCapSkip=\skip78
+\AlCapHSkip=\skip79
+\algoskipindent=\skip80
+\algocf@nlbox=\box81
+\algocf@hangingbox=\box82
+\algocf@untilbox=\box83
+\algocf@skipuntil=\skip81
+\algocf@capbox=\box84
+\algocf@lcaptionbox=\skip82
+\algoheightruledefault=\skip83
+\algoheightrule=\skip84
+\algotitleheightruledefault=\skip85
+\algotitleheightrule=\skip86
+\c@algocfline=\count310
+\c@algocfproc=\count311
+\c@algocf=\count312
+\algocf@algoframe=\box85
+\algocf@algobox=\box86
 )
 (./Gabriel_Arroyo_2020.aux
 
@@ -655,31 +1009,31 @@ LaTeX Warning: Label `sub@fig:d' multiply defined.
 )
 \openout1 = `Gabriel_Arroyo_2020.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count137
-\scratchdimen=\dimen145
-\scratchbox=\box64
-\nofMPsegments=\count138
-\nofMParguments=\count139
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count140
-\MPscratchDim=\dimen146
-\MPnumerator=\count141
-\makeMPintoPDFobject=\count142
-\everyMPtoPDFconversion=\toks27
+\scratchcounter=\count313
+\scratchdimen=\dimen259
+\scratchbox=\box87
+\nofMPsegments=\count314
+\nofMParguments=\count315
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count316
+\MPscratchDim=\dimen260
+\MPnumerator=\count317
+\makeMPintoPDFobject=\count318
+\everyMPtoPDFconversion=\toks28
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -736,16 +1090,101 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+Now handling font encoding TS1 ...
+... processing UTF-8 mapping file for font encoding TS1
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2017/01/28 v1.1t UTF-8 support for inputenc
+   defining Unicode char U+00A2 (decimal 162)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00A4 (decimal 164)
+   defining Unicode char U+00A5 (decimal 165)
+   defining Unicode char U+00A6 (decimal 166)
+   defining Unicode char U+00A7 (decimal 167)
+   defining Unicode char U+00A8 (decimal 168)
+   defining Unicode char U+00A9 (decimal 169)
+   defining Unicode char U+00AA (decimal 170)
+   defining Unicode char U+00AC (decimal 172)
+   defining Unicode char U+00AE (decimal 174)
+   defining Unicode char U+00AF (decimal 175)
+   defining Unicode char U+00B0 (decimal 176)
+   defining Unicode char U+00B1 (decimal 177)
+   defining Unicode char U+00B2 (decimal 178)
+   defining Unicode char U+00B3 (decimal 179)
+   defining Unicode char U+00B4 (decimal 180)
+   defining Unicode char U+00B5 (decimal 181)
+   defining Unicode char U+00B6 (decimal 182)
+   defining Unicode char U+00B7 (decimal 183)
+   defining Unicode char U+00B9 (decimal 185)
+   defining Unicode char U+00BA (decimal 186)
+   defining Unicode char U+00BC (decimal 188)
+   defining Unicode char U+00BD (decimal 189)
+   defining Unicode char U+00BE (decimal 190)
+   defining Unicode char U+00D7 (decimal 215)
+   defining Unicode char U+00F7 (decimal 247)
+   defining Unicode char U+0192 (decimal 402)
+   defining Unicode char U+02C7 (decimal 711)
+   defining Unicode char U+02D8 (decimal 728)
+   defining Unicode char U+02DD (decimal 733)
+   defining Unicode char U+0E3F (decimal 3647)
+   defining Unicode char U+2016 (decimal 8214)
+   defining Unicode char U+2020 (decimal 8224)
+   defining Unicode char U+2021 (decimal 8225)
+   defining Unicode char U+2022 (decimal 8226)
+   defining Unicode char U+2030 (decimal 8240)
+   defining Unicode char U+2031 (decimal 8241)
+   defining Unicode char U+203B (decimal 8251)
+   defining Unicode char U+203D (decimal 8253)
+   defining Unicode char U+2044 (decimal 8260)
+   defining Unicode char U+204E (decimal 8270)
+   defining Unicode char U+2052 (decimal 8274)
+   defining Unicode char U+20A1 (decimal 8353)
+   defining Unicode char U+20A4 (decimal 8356)
+   defining Unicode char U+20A6 (decimal 8358)
+   defining Unicode char U+20A9 (decimal 8361)
+   defining Unicode char U+20AB (decimal 8363)
+   defining Unicode char U+20AC (decimal 8364)
+   defining Unicode char U+20B1 (decimal 8369)
+   defining Unicode char U+2103 (decimal 8451)
+   defining Unicode char U+2116 (decimal 8470)
+   defining Unicode char U+2117 (decimal 8471)
+   defining Unicode char U+211E (decimal 8478)
+   defining Unicode char U+2120 (decimal 8480)
+   defining Unicode char U+2122 (decimal 8482)
+   defining Unicode char U+2126 (decimal 8486)
+   defining Unicode char U+2127 (decimal 8487)
+   defining Unicode char U+212E (decimal 8494)
+   defining Unicode char U+2190 (decimal 8592)
+   defining Unicode char U+2191 (decimal 8593)
+   defining Unicode char U+2192 (decimal 8594)
+   defining Unicode char U+2193 (decimal 8595)
+   defining Unicode char U+2329 (decimal 9001)
+   defining Unicode char U+232A (decimal 9002)
+   defining Unicode char U+2422 (decimal 9250)
+   defining Unicode char U+25E6 (decimal 9702)
+   defining Unicode char U+25EF (decimal 9711)
+   defining Unicode char U+266A (decimal 9834)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-basic-dictionary
+-English.dict
+Dictionary: translator-basic-dictionary, Language: English 
+)
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg
+File: siunitx-abbreviations.cfg 2017/11/26 v2.7k siunitx: Abbreviated units
+)
+\c__siunitx_mathsf_int=\count319
+\c__siunitx_mathtt_int=\count320
+
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (0.43257pt too wide) in paragraph at lines 98--100
+Overfull \hbox (0.43257pt too wide) in paragraph at lines 99--101
 []\OT1/cmr/m/n/10 Ullrich (2013) [3] ap-proached an in-te-grated prob-lem which
  con-sists in schedul-
  []
 
 [2]
-Overfull \hbox (6.14104pt too wide) in paragraph at lines 116--118
+Overfull \hbox (6.14104pt too wide) in paragraph at lines 117--119
 []\OT1/cmr/m/n/10 Ghannadpour and Zarrabi (2019) [9] ap-proached the in-te-grat
 ed multi-objective
  []
@@ -758,92 +1197,92 @@ Underfull \vbox (badness 3601) has occurred while \output is active []
 <Images/SOL_REP2.png, id=32, 1790.69pt x 384.43625pt>
 File: Images/SOL_REP2.png Graphic file (type png)
 <use Images/SOL_REP2.png>
-Package pdftex.def Info: Images/SOL_REP2.png  used on input line 326.
+Package pdftex.def Info: Images/SOL_REP2.png  used on input line 327.
 (pdftex.def)             Requested size: 347.12354pt x 74.52188pt.
  [7 <./Images/SOL_REP2.png>]
 <Images/VISUAL_REP2.pdf, id=40, 500.87125pt x 156.585pt>
 File: Images/VISUAL_REP2.pdf Graphic file (type pdf)
 <use Images/VISUAL_REP2.pdf>
-Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 386.
+Package pdftex.def Info: Images/VISUAL_REP2.pdf  used on input line 387.
 (pdftex.def)             Requested size: 347.12354pt x 108.524pt.
  [8 <./Images/VISUAL_REP2.pdf>] [9]
-Underfull \hbox (badness 10000) in paragraph at lines 475--477
+Underfull \hbox (badness 10000) in paragraph at lines 476--478
 
  []
 
 
-Overfull \hbox (1.54263pt too wide) in paragraph at lines 520--521
+Overfull \hbox (1.54263pt too wide) in paragraph at lines 521--522
 \OT1/cmr/m/n/10 O pro-cesso de busca lo-cal visa ap-ri-morar uma solu^^Xc~ao at
 -ual ao con-sid-erar solu^^Xc~oes
  []
 
 [10]
-Underfull \hbox (badness 10000) in paragraph at lines 533--534
+Underfull \hbox (badness 10000) in paragraph at lines 534--535
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 535--536
+Underfull \hbox (badness 10000) in paragraph at lines 536--537
 
  []
 
 
-Overfull \hbox (0.57149pt too wide) in paragraph at lines 542--543
+Overfull \hbox (0.57149pt too wide) in paragraph at lines 543--544
 \OT1/cmr/m/n/10 Du-rante o pro-cesso, as opera^^Xc~oes apli-cadas po-dem gerar 
 solu^^Xc~oes invi^^Saveis, por^^Sem
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 546--547
+Underfull \hbox (badness 10000) in paragraph at lines 547--548
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 548--549
+Underfull \hbox (badness 10000) in paragraph at lines 549--550
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 550--551
+Underfull \hbox (badness 10000) in paragraph at lines 551--552
 
  []
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 552--553
+Underfull \hbox (badness 10000) in paragraph at lines 553--554
 
  []
 
 [12] [13] [14]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 679.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 680.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 750.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 751.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 750.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 751.
 
 [15]
 <Images/ILS_DIF.png, id=309, 1666.225pt x 382.42876pt>
 File: Images/ILS_DIF.png Graphic file (type png)
 <use Images/ILS_DIF.png>
-Package pdftex.def Info: Images/ILS_DIF.png  used on input line 760.
+Package pdftex.def Info: Images/ILS_DIF.png  used on input line 761.
 (pdftex.def)             Requested size: 119.97827pt x 27.53717pt.
  [16 <./Images/ILS_DIF.png (PNG copy)>]
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 827.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 828.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 831.
-
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 834.
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 832.
 
 
 LaTeX Warning: Command \textquoteright invalid in math mode on input line 835.
 
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 836.
+
 [17] [18]
-Overfull \hbox (3.15486pt too wide) in paragraph at lines 901--903
+Overfull \hbox (3.15486pt too wide) in paragraph at lines 902--904
 []\OT1/cmr/m/n/10 Os re-sul-ta-dos foram anal-isa-dos por meio do teste n~ao-pa
 ram^^Setrico de Kruskall-
  []
@@ -854,7 +1293,7 @@ File: "Images/calibration/general rpd calib ils-rvnd-1 int".png Graphic file (t
 ype png)
 <use "Images/calibration/general rpd calib ils-rvnd-1 int".png>
 Package pdftex.def Info: "Images/calibration/general rpd calib ils-rvnd-1 int".
-png  used on input line 906.
+png  used on input line 907.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 [19]
 <"Images/calibration/general rpd calib ils-rvnd-2 int".png, id=324, 433.62pt x 
@@ -863,10 +1302,10 @@ File: "Images/calibration/general rpd calib ils-rvnd-2 int".png Graphic file (t
 ype png)
 <use "Images/calibration/general rpd calib ils-rvnd-2 int".png>
 Package pdftex.def Info: "Images/calibration/general rpd calib ils-rvnd-2 int".
-png  used on input line 917.
+png  used on input line 918.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
 
-Overfull \hbox (2.57547pt too wide) in paragraph at lines 924--925
+Overfull \hbox (2.57547pt too wide) in paragraph at lines 925--926
 \OT1/cmr/m/n/10 con-jun-tos de val-ores destes par^ametros foram definidos em $
 \OML/cmm/m/it/10 PopSize \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 30\OML/cmm/m/it/10
  ; \OT1/cmr/m/n/10 50\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 70\OMS/cmsy/m/n/10 g$
@@ -879,33 +1318,33 @@ File: "Images/calibration/general rpd calib ga-ls int".png Graphic file (type p
 ng)
 <use "Images/calibration/general rpd calib ga-ls int".png>
 Package pdftex.def Info: "Images/calibration/general rpd calib ga-ls int".png  
-used on input line 928.
+used on input line 929.
 (pdftex.def)             Requested size: 347.12354pt x 231.4275pt.
  [21 <./Images/calibration/general rpd calib ils-rvnd-2 int.png>]
 <"Images/small-instances/avg 10 jobs int".png, id=334, 433.62pt x 289.08pt>
 File: "Images/small-instances/avg 10 jobs int".png Graphic file (type png)
 <use "Images/small-instances/avg 10 jobs int".png>
 Package pdftex.def Info: "Images/small-instances/avg 10 jobs int".png  used on 
-input line 950.
+input line 951.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/small-instances/avg 15 jobs int".png, id=335, 433.62pt x 289.08pt>
 File: "Images/small-instances/avg 15 jobs int".png Graphic file (type png)
 <use "Images/small-instances/avg 15 jobs int".png>
 Package pdftex.def Info: "Images/small-instances/avg 15 jobs int".png  used on 
-input line 950.
+input line 951.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/small-instances/avg 20 jobs int".png, id=336, 433.62pt x 289.08pt>
 File: "Images/small-instances/avg 20 jobs int".png Graphic file (type png)
 <use "Images/small-instances/avg 20 jobs int".png>
 Package pdftex.def Info: "Images/small-instances/avg 20 jobs int".png  used on 
-input line 954.
+input line 955.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/small-instances/general avg rpd int".png, id=337, 433.62pt x 289.08pt>
 
 File: "Images/small-instances/general avg rpd int".png Graphic file (type png)
 <use "Images/small-instances/general avg rpd int".png>
 Package pdftex.def Info: "Images/small-instances/general avg rpd int".png  used
- on input line 954.
+ on input line 955.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
  [22 <./Images/calibration/general rpd calib ga-ls int.png>] [23 <./Images/smal
 l-instances/avg 10 jobs int.png> <./Images/small-instances/avg 15 jobs int.png>
@@ -916,14 +1355,14 @@ al avg rpd int.png>] [24]
 File: "Images/large-instances/avg rpd 50 jobs int".png Graphic file (type png)
 <use "Images/large-instances/avg rpd 50 jobs int".png>
 Package pdftex.def Info: "Images/large-instances/avg rpd 50 jobs int".png  used
- on input line 1066.
+ on input line 1073.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/large-instances/avg rpd 80 jobs int".png, id=353, 433.62pt x 289.08pt>
 
 File: "Images/large-instances/avg rpd 80 jobs int".png Graphic file (type png)
 <use "Images/large-instances/avg rpd 80 jobs int".png>
 Package pdftex.def Info: "Images/large-instances/avg rpd 80 jobs int".png  used
- on input line 1066.
+ on input line 1073.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/large-instances/avg rpd 100 jobs int".png, id=354, 433.62pt x 289.08pt
 >
@@ -931,42 +1370,51 @@ File: "Images/large-instances/avg rpd 100 jobs int".png Graphic file (type png)
 
 <use "Images/large-instances/avg rpd 100 jobs int".png>
 Package pdftex.def Info: "Images/large-instances/avg rpd 100 jobs int".png  use
-d on input line 1070.
+d on input line 1077.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 <"Images/large-instances/avg rpd all algos".png, id=355, 433.62pt x 289.08pt>
 File: "Images/large-instances/avg rpd all algos".png Graphic file (type png)
 <use "Images/large-instances/avg rpd all algos".png>
 Package pdftex.def Info: "Images/large-instances/avg rpd all algos".png  used o
-n input line 1070.
+n input line 1077.
 (pdftex.def)             Requested size: 221.93149pt x 147.95375pt.
 
-Overfull \hbox (5.7593pt too wide) in paragraph at lines 1074--1075
+Overfull \hbox (5.7593pt too wide) in paragraph at lines 1081--1082
 \OT1/cmr/m/n/10 mais, seguido do Al-go-ritmo Gen^^Setico GA$[]$LS e da se-gunda
  heur^^S^^Pstica ILS$[]$RVND$[]$2.
  []
 
 
-Overfull \hbox (16.61047pt too wide) in paragraph at lines 1117--1158
+Overfull \hbox (53.43483pt too wide) in paragraph at lines 1086--1128
+ [][] 
+ []
+
+
+Overfull \hbox (16.61047pt too wide) in paragraph at lines 1130--1171
 \OT1/cmr/m/n/10 ILS$[]$RVND$[]$2 foi ex-ecutou com m^^Sedia mais r^^Sapida, seg
 uido do al-go-ritmo ILS$[]$RVND$[]$1
  []
 
-[25] [26 <./Images/large-instances/avg rpd 50 jobs int.png> <./Images/large-ins
-tances/avg rpd 80 jobs int.png> <./Images/large-instances/avg rpd 100 jobs int.
-png> <./Images/large-instances/avg rpd all algos.png>] [27]
+
+Underfull \vbox (badness 3058) has occurred while \output is active []
+
+ [25]
+[26 <./Images/large-instances/avg rpd 50 jobs int.png> <./Images/large-instance
+s/avg rpd 80 jobs int.png> <./Images/large-instances/avg rpd 100 jobs int.png> 
+<./Images/large-instances/avg rpd all algos.png>] [27]
 (./Gabriel_Arroyo_2020.bbl [28]) [29] (./Gabriel_Arroyo_2020.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4237 strings out of 492982
- 59412 string characters out of 6134896
- 149044 words of memory out of 5000000
- 7719 multiletter control sequences out of 15000+600000
- 9017 words of font info for 33 fonts, out of 8000000 for 9000
+ 14964 strings out of 492982
+ 299157 string characters out of 6134896
+ 348047 words of memory out of 5000000
+ 18396 multiletter control sequences out of 15000+600000
+ 537832 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,23n,42p,900b,627s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,23n,42p,10370b,653s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texli
@@ -988,7 +1436,7 @@ pe1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmtt9.pfb>
-Output written on Gabriel_Arroyo_2020.pdf (29 pages, 623620 bytes).
+Output written on Gabriel_Arroyo_2020.pdf (29 pages, 624185 bytes).
 PDF statistics:
  447 PDF objects out of 1000 (max. 8388607)
  257 compressed objects within 3 object streams
