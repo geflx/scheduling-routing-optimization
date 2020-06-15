@@ -172,6 +172,11 @@ bool isSolution(const Solution &S, int N, int K){
 
     for(int i=0; i<N; i++){
         
+        if(S.M[0][i] == -1 || S.M[1][i] == -1){
+            cout << "Invalid value in position: " << i << "\n";
+            return false;
+        }
+
         if( S.M[0][i] > K ){
             cout << "Non-existing vehicle in use \n";
             return false;

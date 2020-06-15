@@ -33,26 +33,24 @@ int main(){
             // if( gaVersion == 1)  S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
             // else if( gaVersion == 2) S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
 
-            vector<double> probMut = {0.1, 0.2, 0.3, 0.5};
+          
+    
+            // time_t iniTime, endTime;
+            // time(&iniTime);
 
-            for(auto prob: probMut){
-
-                        
-                time_t iniTime, endTime;
-                time(&iniTime);
-
-                Solution S3 = New_GA_Version_2(N, K, itNumber, popSize, prob, P, d, s, w, Q, F, t);
-                
-                time(&endTime);
-                double timeSpent = difftime(endTime, iniTime);
-
-                pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
-                
-                double multiplier = getMultiplier(N);
-
+            db_fea_after_inf = db_gen = db_inf_fixed = db_inf_random = 0;
+            Solution S3 = New_GA_Version_2(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
             
-                cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << timeSpent << " ";
-            }
+            // time(&endTime);
+            // double timeSpent = difftime(endTime, iniTime);
+
+            pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
+            
+            double multiplier = getMultiplier(N);
+
+        
+            cout << Ans3.first + multiplier * Ans3.second << " " << Ans3.second << " " << db_gen << " " << db_inf_fixed << " " << db_inf_random << " " << db_fea_after_inf << " ";
+        
             cout << "\n";
         } 
     }
