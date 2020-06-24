@@ -3,10 +3,7 @@
 
 using namespace std;
 
-long long int db_gen;
-long long int db_inf_fixed;
-long long int db_inf_random;
-long long int db_fea_after_inf;
+long long int genPop;
 
 // Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
 double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
@@ -239,8 +236,6 @@ void greedySolution(Solution &S, const string &ruleParam, const bool random, int
                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                    const vector<vector<int>> &t)
 {
-    db_gen++;
-
     //Variables to generate processing order of jobs:
     vector<int> jobOrder(N);
     vector<bool> visiJob(N, false);
@@ -432,21 +427,10 @@ void greedySolution(Solution &S, const string &ruleParam, const bool random, int
         }
     }  
     
-    assert( isSolution(S, N, K) == true);
+    // assert( isSolution(S, N, K) == true);
 
     if( !isFeasible(S, N, K, s, Q)){
-        
-        if(random){
-            db_inf_random++;
-        }else{
-            db_inf_fixed++;
-        }
         makeFeasible(S, N, K, P, d, s, w, Q, F, t);
-        if( isFeasible(S, N, K, s, Q) ){
-            db_fea_after_inf++;
-        }
-        
-    
     }
 
 
@@ -724,6 +708,7 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
 
     while(cont < itNumber){
 
+        genPop++;
         ++cont;
 
         vector<Solution> P_New;
@@ -783,8 +768,8 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
         if(Local_S_best.Value < S_best.Value){
 
             S_best = Local_S_best;
-            cont = 0;
-
+            // cont = 0; // ! Fixed iterations...
+            
         }
 
         // ! Adding size(P) solutions to P' and then sorting it
