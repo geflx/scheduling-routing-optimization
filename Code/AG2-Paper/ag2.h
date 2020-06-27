@@ -788,4 +788,135 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
     return S_best;
 }
 
+// Implementing ...
+Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mutateProb,
+              const vector<int> &P, const vector<int> &d, const vector<int> &s,
+              const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+              const vector<vector<int>> &t)
+{
+    Solution S_best;
+    S_best.alocate(N);
+    S_best.Value = numeric_limits<double>::infinity();
+
+    vector<Solution> PP(popSize);
+
+    int contS = 0;
+
+    for(Solution &S: PP){
+
+        S.alocate(N);
+        
+        if(contS == 0){
+
+           greedySolution(S, "atc", false, N, K, P, d, s, w, Q, F, t);
+
+        }else if(contS == 1){
+
+           greedySolution(S, "wmdd", false, N, K, P, d, s, w, Q, F, t);
+
+        }else if(contS == 2){
+
+            greedySolution(S, "wedd", false, N, K, P, d, s, w, Q, F, t);
+
+        }else if(contS <= 0.7 * popSize){
+
+           greedySolution(S, " ", true, N, K, P, d, s, w, Q, F, t);
+           
+        }else{
+            randomSolution(S, N, K);
+            S.Value = calculateObj(S, N, K, P, d, s, w, Q, F, t);
+        }
+        
+        contS++;
+
+        if( !isFeasible(S, N, K, s, Q) )
+            makeFeasible(S, N, K, P, d, s, w, Q, F, t);
+
+        if(S_best.Value > S.Value)
+            S_best = S;
+    }
+    
+    int cont = 0;
+
+    while(cont < itNumber){
+
+        genPop++;
+        ++cont;
+
+        vector<Solution> P_New;
+
+        Solution Local_S_best;
+        Local_S_best.Value = numeric_limits<double>::infinity();
+
+        for(int i=0; i<popSize; i+=2){ // ! i+=2
+
+            int idP1, idP2;
+            idP1 = idP2 = rand() % popSize;
+
+            while(idP2 == idP1)
+                idP2 = rand() % popSize;
+            
+            Solution OFF1, OFF2;
+            OFF1 = CrossOver(PP[idP1], PP[idP2], N, K, P, d, s, w, Q, F, t); // ! CO(P1, P2)
+            OFF2 = CrossOver(PP[idP2], PP[idP1], N, K, P, d, s, w, Q, F, t); // ! CO(P2, P1)
+
+            double R = ( rand()%101 ) / 100.0;
+
+            if( R <= mutateProb ){
+
+                OFF1 = Mutation(OFF1, N, K, P, d, s, w, Q, F, t);
+                OFF2 = Mutation(OFF2, N, K, P, d, s, w, Q, F, t);
+
+            }
+            bool feasibleOFF1 = isFeasible(OFF1, N, K, s, Q);
+            bool feasibleOFF2 = isFeasible(OFF2, N, K, s, Q);
+
+            if( !feasibleOFF1 || !feasibleOFF2 ){
+
+                int B = rand()%2; // * 0 or 1
+
+                // * if(B == 0) penalize obj functions: Ok.
+
+                if(B == 1){
+
+                    if(!feasibleOFF1)
+                        makeFeasible(OFF1, N, K, P, d, s, w, Q, F, t);
+                    
+                    if(!feasibleOFF2)
+                        makeFeasible(OFF2, N, K, P, d, s, w, Q, F, t);
+                }
+            }
+            P_New.push_back( OFF1 );
+            P_New.push_back( OFF2 );
+
+            if(OFF1.Value < OFF2.Value)
+                if(OFF1.Value < Local_S_best.Value)
+                    Local_S_best = OFF1;
+            else
+                if(OFF2.Value < Local_S_best.Value)
+                    Local_S_best = OFF2;
+            
+        }
+        if(Local_S_best.Value < S_best.Value){
+
+            S_best = Local_S_best;
+            // cont = 0; // ! Fixed iterations...
+            
+        }
+
+        // ! Adding size(P) solutions to P' and then sorting it
+        for(int i=0; i<PP.size(); i++)
+            P_New.push_back( PP[i] );
+
+        sort(P_New.begin(), P_New.end(), compareSolution); // ! Increasing results:  0 -> 0.001 -> 0.002 ...
+
+        PP.clear();
+
+        for(int i=0; i<popSize; i++){
+            PP.push_back( P_New[i] );
+        }
+    }
+
+    return S_best;
+}
 #endif

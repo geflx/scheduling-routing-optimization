@@ -2,9 +2,10 @@
 #define CORE_H
 
 #include <vector>
+#include <set>
+#include <queue>
 #include <unordered_map>
 #include <unordered_set>
-#include <queue>
 
 #include <fstream>
 #include <assert.h>
@@ -223,4 +224,5 @@ int getMultiplier(int N){
         else if( N >= 50 && N <= 100)
             return 1000;
 }
+
 #endif
