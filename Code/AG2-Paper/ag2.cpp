@@ -23,72 +23,34 @@ int main(){
     string fileName;
     int gaVersion, runNb, itNumber, popSize;
 
-
-    // getVariables(fileName, input, gaVersion, runNb, itNumber, popSize);
+    getVariables(fileName, input, gaVersion, runNb, itNumber, popSize);
     
-    cout << "input filename: \n";
-    getline(cin, fileName);
-    input.open(fileName);
-
-    vector<double> param_probMut  = {0.2, 0.3, 0.5};
-    vector<int> param_psize = {40, 50, 70};
-    vector<int> param_numIt = {500, 800, 1000};
-
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
 
-        // for(int i=0; i<runNb; i++){
+        for(int i=0; i<runNb; i++){
             
-            Solution S, S2;
-            // if( gaVersion == 1)  S = GA_Version_1(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
-            // else if( gaVersion == 2) S2 = GA_Version_2(N, K, itNumber, popSize, P, d, s, w, Q, F, t);
+            time_t iniTime, endTime;
+            time(&iniTime);
 
-            vector<double> ans;
-            vector<double> ans_over;
-            vector<int> ans_time;
+            Solution S3 = New_GA_Version_2_LS(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
 
-            for(int paramPSIZE : param_psize){
-                for(double paramPROB : param_probMut){
-                    for(int paramNUMIT : param_numIt){
-                        time_t iniTime, endTime;
-                        time(&iniTime);
+            time(&endTime);
+            double timeSpent = difftime(endTime, iniTime);
 
-                        Solution S3 = New_GA_Version_2(N, K, paramNUMIT, paramPSIZE, paramPROB, P, d, s, w, Q, F, t);
-                        
-                        time(&endTime);
-                        double timeSpent = difftime(endTime, iniTime);
-
-                        pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
-                        
-                        double multiplier = getMultiplier(N);
-
-                        ans.push_back(Ans3.first + multiplier * Ans3.second);
-                        ans_over.push_back(Ans3.second);
-                        ans_time.push_back(timeSpent);
-                    }
-                }
-            }
-            int sz = ans.size();
-            for(int i=0; i<sz; i++){
-                cout << ans[i] << " ";
-            }
-            for(int i=0; i<sz; i++){
-                cout << ans_over[i] << " ";
-            }
-            for(int i=0; i<sz; i++){
-                cout << ans_time[i];
-                if(i!= sz-1){
-                    cout << " ";
-                }else{
-                    cout << "\n";
-                }
-            }
+            pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
             
-        // } 
+            double multiplier = getMultiplier(N);
+
+            double value, overlap;
+            value = (Ans3.first + multiplier * Ans3.second);
+            overlap = (Ans3.second);
+
+            cout << value << " " << overlap << " " << timeSpent << "\n";
+
+            
+        }
     }
-
     input.close();
-
-    
 }

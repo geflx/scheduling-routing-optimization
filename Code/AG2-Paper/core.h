@@ -133,21 +133,21 @@ void printSolution(const Solution &S, int N){
 void getVariables(string &fileName, ifstream& input, int &gaVersion, int &runNb, int &itNumber, int &popSize){
 
     
-    cout << "Input file name with '.txt' :  ";
+    cout << "File name (with extension):  ";
     getline(cin, fileName);
 
     input.open(fileName);
 
-    cout << "Which GA Version (1,2)? ";
+    cout << "G.A. Version (1,2,3): ";
     cin >> gaVersion;
 
-    cout << "How many times to run? ";
+    cout << "Run times: ";
     cin >> runNb;
 
     cout << "Iterations: ";
     cin >> itNumber;
     
-    cout << "Population Size: ";
+    cout << "Pop. Size: ";
     cin >> popSize;
 
 
@@ -224,5 +224,164 @@ int getMultiplier(int N){
         else if( N >= 50 && N <= 100)
             return 1000;
 }
+
+// Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
+double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
+                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+                    const vector<vector<int>> &t)
+{
+    unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID, Sec: Jobs
+    unordered_map<int, int> JobPath; // * First: JobId, Sec: Vehicle ID
+    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
+    
+    unordered_set<int> Vehicle;
+    vector<int> Order;
+
+    double UseCosts, TravelCosts, PenaltyCosts, OverlapCosts;
+    UseCosts = TravelCosts = PenaltyCosts = OverlapCosts = 0.0;
+
+    for(int i=0; i<N; i++){
+
+        accPTime[ S.M[0][i] ] += P[ i ];
+        
+        JobPath[i] = S.M[0][i];
+
+    }
+    for(int i=0; i<N; i++){
+
+        Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
+
+        if(Vehicle.find(S.M[0][i]) == Vehicle.end()){
+            Order.push_back( S.M[0][i] );
+            Vehicle.insert( S.M[0][i] );
+        }
+    }
+
+    for(int i=1; i < Order.size(); i++){
+        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
+    }
+
+    for(int &idV: Order){
+
+        UseCosts += F[ idV ];      
+        
+        int jobsNb = Schedule[idV].size();
+
+        int SizeSum = 0; 
+        int RouteTime = 0;
+        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
+
+        for(int i=0; i<jobsNb; i++){
+            
+            int JobId = Schedule[idV][i];
+
+            SizeSum += s[ JobId ];
+
+            int Delivery = accPTime[idV] + RouteTime;
+
+            if(Delivery > d[ JobId ])
+                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
+
+            if(i < jobsNb-1)
+                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
+        }
+
+        if(SizeSum > Q[ idV ])
+            OverlapCosts += SizeSum - Q[ idV ];
+        
+        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
+        TravelCosts += RouteTime;
+    }
+
+    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
+    
+    return UseCosts + TravelCosts + PenaltyCosts;
+}
+
+pair<double, double> tempObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
+                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+                    const vector<vector<int>> &t)
+{
+    unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID, Sec: Jobs
+    unordered_map<int, int> JobPath; // * First: JobId, Sec: Vehicle ID
+    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
+    
+    unordered_set<int> Vehicle;
+    vector<int> Order;
+
+    double UseCosts, TravelCosts, PenaltyCosts, OverlapCosts;
+    UseCosts = TravelCosts = PenaltyCosts = OverlapCosts = 0.0;
+
+    for(int i=0; i<N; i++){
+
+        accPTime[ S.M[0][i] ] += P[ i ];
+        
+        JobPath[i] = S.M[0][i];
+
+    }
+    for(int i=0; i<N; i++){
+
+        Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
+
+        if(Vehicle.find(S.M[0][i]) == Vehicle.end()){
+            Order.push_back( S.M[0][i] );
+            Vehicle.insert( S.M[0][i] );
+        }
+    }
+
+    for(int i=1; i < Order.size(); i++){
+        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
+    }
+
+    for(int &idV: Order){
+
+        UseCosts += F[ idV ];      
+        
+        int jobsNb = Schedule[idV].size();
+
+        int SizeSum = 0; 
+        int RouteTime = 0;
+        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
+
+        for(int i=0; i<jobsNb; i++){
+            
+            int JobId = Schedule[idV][i];
+
+            SizeSum += s[ JobId ];
+
+            int Delivery = accPTime[idV] + RouteTime;
+
+            if(Delivery > d[ JobId ])
+                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
+
+            if(i < jobsNb-1)
+                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
+        }
+
+        if(SizeSum > Q[ idV ])
+            OverlapCosts += SizeSum - Q[ idV ];
+        
+        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
+        TravelCosts += RouteTime;
+    }
+
+    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
+    
+    return {UseCosts + TravelCosts + PenaltyCosts, OverlapCosts};
+}
+
+void randomSolution(Solution &S, int N, int K)
+{
+    vector<int> permutation(N);
+    for(int i=0; i<N; i++) permutation[i] = i; // * 0-indexed
+
+    random_shuffle(permutation.begin(), permutation.end());
+    
+    for(int i=0; i<N; i++){
+        S.M[1][i] = permutation[i];
+        S.M[0][i] = rand()%K;
+    }
+}
+
 
 #endif

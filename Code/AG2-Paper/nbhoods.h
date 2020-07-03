@@ -1,6 +1,8 @@
 #ifndef NBHOODS_H
 #define NBHOODS_H
 
+#define GRAVACAO 1
+
     using namespace std;
     
     /*  Neighborhood 1: Swap sequential jobs inside a vehicle */
@@ -1044,19 +1046,34 @@
     Solution fastLS(const Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                     const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                     const vector<vector<int>> &t){
-        Solution answer;
-
+        
         double objF = S.Value;
         vector<data> newRep = solution_to_data(S, N, K);
 
+        // // ! In analysis
+        // checkD(newRep);
+        // checkS(S);
+        // assert( validConfig(newRep, Q, s, N, K) == true );
+
         vector<vehicleLoaded> vehiOrder = generateVehicleOrder(newRep, K);//Generating info about vehicle transportation
 
-        nbhood1('B', newRep, vehiOrder, N, K, w, P, t, F, d);
-        nbhood2('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s);
-        nbhood3('B', newRep, vehiOrder, N, K, w, P, t, F, d);
-        nbhood4('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s);
-        nbhood5('B', newRep, vehiOrder, N, K, w, P, t, F, d);
-        nbhood6('B', newRep, vehiOrder, N, K, w, P, t, F, d);
+        x:{}
+        if(nbhood1('B', newRep, vehiOrder, N, K, w, P, t, F, d))
+            goto x;
+        if(nbhood2('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s))
+            goto x;
+
+        if(nbhood3('B', newRep, vehiOrder, N, K, w, P, t, F, d))
+            goto x;
+
+        if(nbhood4('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s))
+            goto x;
+
+        if(nbhood5('B', newRep, vehiOrder, N, K, w, P, t, F, d))
+            goto x;
+
+        if(nbhood6('B', newRep, vehiOrder, N, K, w, P, t, F, d))
+            goto x;
 
 
         // Calculate new OBJ Function.
@@ -1064,14 +1081,19 @@
         vector<int> Sk(K, 0);
         vector<int> D = calculatingDeliveryTime(newRep, Sk, t, P, vehiOrder, N);
         vector<int> T = calculatingJobTardiness(D, N, d);
+     
+        Solution STemp = data_to_solution(newRep, N, K);
+        STemp.Value = calculateObj(STemp, N, K, P, d, s, w, Q, F, t);
 
-        double finalObj = objFunction(vehiOrder, newRep, K, N, t, w, T, F);
+        if(STemp.Value < objF){
 
-        if(finalObj < objF){
-            answer = data_to_solution(newRep, N, K);
-            answer.Value = finalObj;
+            if(GRAVACAO == 1)
+                cout << "Melhorei " << objF-STemp.Value <<" .... pois fui de " << objF << " para " << STemp.Value << "\n";
+
+            return STemp;
+        }else{
+            return S;
         }
-        return answer;
     }
 
 #endif

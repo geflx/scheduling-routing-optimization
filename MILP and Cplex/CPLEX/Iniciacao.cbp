@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Iniciacao" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Iniciacao" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DIL_STD" />
+					<Add directory="../../../Documents/cplex_instalation/cplex/include" />
+					<Add directory="../../../Documents/cplex_instalation/concert/include" />
+				</Compiler>
+				<Linker>
+					<Add library="ilocplex" />
+					<Add library="cplex" />
+					<Add library="concert" />
+					<Add library="m" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add directory="../../../Documents/cplex_instalation/cplex/lib/x86-64_linux/static_pic" />
+					<Add directory="../../../Documents/cplex_instalation/concert/lib/x86-64_linux/static_pic" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Iniciacao" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

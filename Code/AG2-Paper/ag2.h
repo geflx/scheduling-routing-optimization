@@ -5,164 +5,6 @@ using namespace std;
 
 long long int genPop;
 
-// Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
-double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
-                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
-                    const vector<vector<int>> &t)
-{
-    unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID, Sec: Jobs
-    unordered_map<int, int> JobPath; // * First: JobId, Sec: Vehicle ID
-    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
-    
-    unordered_set<int> Vehicle;
-    vector<int> Order;
-
-    double UseCosts, TravelCosts, PenaltyCosts, OverlapCosts;
-    UseCosts = TravelCosts = PenaltyCosts = OverlapCosts = 0.0;
-
-    for(int i=0; i<N; i++){
-
-        accPTime[ S.M[0][i] ] += P[ i ];
-        
-        JobPath[i] = S.M[0][i];
-
-    }
-    for(int i=0; i<N; i++){
-
-        Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
-
-        if(Vehicle.find(S.M[0][i]) == Vehicle.end()){
-            Order.push_back( S.M[0][i] );
-            Vehicle.insert( S.M[0][i] );
-        }
-    }
-
-    for(int i=1; i < Order.size(); i++){
-        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
-    }
-
-    for(int &idV: Order){
-
-        UseCosts += F[ idV ];      
-        
-        int jobsNb = Schedule[idV].size();
-
-        int SizeSum = 0; 
-        int RouteTime = 0;
-        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
-
-        for(int i=0; i<jobsNb; i++){
-            
-            int JobId = Schedule[idV][i];
-
-            SizeSum += s[ JobId ];
-
-            int Delivery = accPTime[idV] + RouteTime;
-
-            if(Delivery > d[ JobId ])
-                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
-
-            if(i < jobsNb-1)
-                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
-        }
-
-        if(SizeSum > Q[ idV ])
-            OverlapCosts += SizeSum - Q[ idV ];
-        
-        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
-        TravelCosts += RouteTime;
-    }
-
-    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
-    
-    return UseCosts + TravelCosts + PenaltyCosts;
-}
-
-pair<double, double> tempObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
-                    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
-                    const vector<vector<int>> &t)
-{
-    unordered_map<int, vector<int>> Schedule; // * First: Vehicle ID, Sec: Jobs
-    unordered_map<int, int> JobPath; // * First: JobId, Sec: Vehicle ID
-    unordered_map<int, int> accPTime; // * First: Vehicle ID, Sec: acumulated P 
-    
-    unordered_set<int> Vehicle;
-    vector<int> Order;
-
-    double UseCosts, TravelCosts, PenaltyCosts, OverlapCosts;
-    UseCosts = TravelCosts = PenaltyCosts = OverlapCosts = 0.0;
-
-    for(int i=0; i<N; i++){
-
-        accPTime[ S.M[0][i] ] += P[ i ];
-        
-        JobPath[i] = S.M[0][i];
-
-    }
-    for(int i=0; i<N; i++){
-
-        Schedule[ JobPath[ S.M[1][i]] ].push_back( S.M[1][i] );
-
-        if(Vehicle.find(S.M[0][i]) == Vehicle.end()){
-            Order.push_back( S.M[0][i] );
-            Vehicle.insert( S.M[0][i] );
-        }
-    }
-
-    for(int i=1; i < Order.size(); i++){
-        accPTime[ Order[i] ] += accPTime[ Order[i-1] ];
-    }
-
-    for(int &idV: Order){
-
-        UseCosts += F[ idV ];      
-        
-        int jobsNb = Schedule[idV].size();
-
-        int SizeSum = 0; 
-        int RouteTime = 0;
-        RouteTime += t[0][ Schedule[idV][0]+1 ]; // Origin to First
-
-        for(int i=0; i<jobsNb; i++){
-            
-            int JobId = Schedule[idV][i];
-
-            SizeSum += s[ JobId ];
-
-            int Delivery = accPTime[idV] + RouteTime;
-
-            if(Delivery > d[ JobId ])
-                PenaltyCosts += (Delivery - d[ JobId ]) * w[ JobId ];
-
-            if(i < jobsNb-1)
-                RouteTime += t[ JobId+1 ][ Schedule[idV][i+1]+1 ]; // time: JobId -> NextJob
-        }
-
-        if(SizeSum > Q[ idV ])
-            OverlapCosts += SizeSum - Q[ idV ];
-        
-        RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
-        TravelCosts += RouteTime;
-    }
-
-    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
-    
-    return {UseCosts + TravelCosts + PenaltyCosts, OverlapCosts};
-}
-
-void randomSolution(Solution &S, int N, int K)
-{
-    vector<int> permutation(N);
-    for(int i=0; i<N; i++) permutation[i] = i; // * 0-indexed
-
-    random_shuffle(permutation.begin(), permutation.end());
-    
-    for(int i=0; i<N; i++){
-        S.M[1][i] = permutation[i];
-        S.M[0][i] = rand()%K;
-    }
-}
-
 // Complexity: O(max(N, K))
 pair<vector<int>, int> getOverloadStatus(Solution &S, int N, int K, const vector<int> &s, const vector<int> &Q){
     
@@ -517,7 +359,7 @@ Solution Mutation( Solution &S, int N, int K, const vector<int> &P, const vector
     
 }
 
-Solution GA_Version_1 (int N, int K, int itNumber, int popSize,
+Solution GA_Tam_1 (int N, int K, int itNumber, int popSize,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
               const vector<vector<int>> &t)
@@ -582,7 +424,7 @@ Solution GA_Version_1 (int N, int K, int itNumber, int popSize,
     return S_best;
 }
 
-Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
+Solution GA_Tam_2 (int N, int K, int itNumber, int popSize,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
               const vector<vector<int>> &t)
@@ -657,7 +499,7 @@ Solution GA_Version_2 (int N, int K, int itNumber, int popSize,
 }
 
 // Complexity: O( itNumber * ( 2*popSize + O(N*K) ) )
-Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutateProb,
+Solution GA2_Repr1 (int N, int K, int itNumber, int popSize, double mutateProb,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
               const vector<vector<int>> &t)
@@ -789,7 +631,7 @@ Solution New_GA_Version_2 (int N, int K, int itNumber, int popSize, double mutat
 }
 
 // Implementing ...
-Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mutateProb,
+Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb,
               const vector<int> &P, const vector<int> &d, const vector<int> &s,
               const vector<double> &w, const vector<int> &Q, const vector<int> &F,
               const vector<vector<int>> &t)
@@ -829,8 +671,25 @@ Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mu
         
         contS++;
 
-        if( !isFeasible(S, N, K, s, Q) )
+        if( !isFeasible(S, N, K, s, Q) ){
+
             makeFeasible(S, N, K, P, d, s, w, Q, F, t);
+
+            if( !isFeasible(S, N, K, s, Q) ){
+                
+                cout << "Not OK after makeFeasible(). Generating random. \n";
+
+                do{
+
+                    randomSolution(S, N, K);
+
+                }while(!isFeasible(S, N, K, s, Q));
+               
+            }
+        }
+
+        //Call Fast local search.
+        S = fastLS(S, N, K, P, d, s, w, Q, F, t);
 
         if(S_best.Value > S.Value)
             S_best = S;
@@ -873,18 +732,29 @@ Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mu
 
             if( !feasibleOFF1 || !feasibleOFF2 ){
 
-                int B = rand()%2; // * 0 or 1
+                // cout << "Let's fix OFFspring. \n";
+                if(!feasibleOFF1)
+                    makeFeasible(OFF1, N, K, P, d, s, w, Q, F, t);
+                
+                if(!feasibleOFF2)
+                    makeFeasible(OFF2, N, K, P, d, s, w, Q, F, t);
 
-                // * if(B == 0) penalize obj functions: Ok.
+                if(!isFeasible(OFF1, N, K, s, Q)){
+                    do{
 
-                if(B == 1){
+                    randomSolution(OFF1, N, K);
 
-                    if(!feasibleOFF1)
-                        makeFeasible(OFF1, N, K, P, d, s, w, Q, F, t);
-                    
-                    if(!feasibleOFF2)
-                        makeFeasible(OFF2, N, K, P, d, s, w, Q, F, t);
+                    }while(!isFeasible(OFF1, N, K, s, Q));
                 }
+
+                if(!isFeasible(OFF2, N, K, s, Q)){
+                    do{
+
+                    randomSolution(OFF2, N, K);
+
+                    }while(!isFeasible(OFF2, N, K, s, Q));
+                }
+                
             }
             P_New.push_back( OFF1 );
             P_New.push_back( OFF2 );
@@ -903,8 +773,14 @@ Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mu
             // cont = 0; // ! Fixed iterations...
             
         }
+        
+        // ! Apply LS in Psize/2 best solutions.
+        sort(P_New.begin(), P_New.end(), compareSolution); 
+        
+        for(int i=0; i<popSize/2; i++)
+            P_New[i] = fastLS(P_New[i], N, K, P, d, s, w, Q, F, t);
 
-        // ! Adding size(P) solutions to P' and then sorting it
+        // ! Adding to P': Psize solutions from P and then sorting it.
         for(int i=0; i<PP.size(); i++)
             P_New.push_back( PP[i] );
 
@@ -919,4 +795,5 @@ Solution New_GA_Version_2_LS (int N, int K, int itNumber, int popSize, double mu
 
     return S_best;
 }
+
 #endif

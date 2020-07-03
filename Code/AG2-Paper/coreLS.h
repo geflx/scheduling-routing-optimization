@@ -193,42 +193,61 @@
     bool validConfig(const vector<data> &config, const vector<int> &capacities, const vector<int> &jobSize, int njobs, int ncars){
 
     int walk = 0;
-    bool valid = true;
 
     unordered_set<int> jobsIn;
     unordered_set<int> carIn;
 
     for(int i=0; i<config.size(); i++){
 
-        // ID == -1.
-    	if( config[i].id == -1)
+    	if( config[i].id == -1){
+
+            cout << "Invalid ID (-1).\n";
     		return false;
+
+        }
         
     	if( config[i].job ){
 
-    		if(jobsIn.find(config[i].id) == jobsIn.end())
-    			jobsIn.insert(config[i].id);
-    		else
-    			return false; // Repeated Job.
+    		if(jobsIn.find(config[i].id) == jobsIn.end()){
 
-            // Job ID out of boundaries.
-    		if( config[i].id<0 || config[i].id >= njobs)
+    			jobsIn.insert(config[i].id);
+
+            }else{
+
+                cout << "Repeated job. \n";
     			return false;
+
+            }
+            // Job ID out of boundaries.
+    		if( config[i].id<0 || config[i].id >= njobs){
+
+                cout << "Job doesn't exist. \n";
+    			return false;
+            }
 
     	}else{
 
-    		if(carIn.find(config[i].id ) == carIn.end())
+    		if(carIn.find(config[i].id ) == carIn.end()){
+
     			carIn.insert( config[i].id );
-            else
+
+            }else{
+                cout << "Repeated vehicle. \n";
     			return false; // Repeated vehicle.
 
+            }
+
             // Vehicle ID out of boundaries.
-    		if( config[i].id<0 || config[i].id >= ncars)
+    		if( config[i].id<0 || config[i].id >= ncars){
+
+                cout << "Vehicle doesn't exist. \n";
     			return false;
+
+            }
     	}
     }
 
-    while(walk < config.size() && valid){
+    while(walk < config.size()){
 
         int walkAhead = walk;
 
@@ -247,8 +266,12 @@
                 accCap += jobSize[ config[ walkAhead].id ];
 
                 // Vehicle overlaps its capacity.
-                if( accCap > carCapacity)
+                if( accCap > carCapacity){
+                    
+                    cout << "Overlapping vehicle capacity. \n";
                     return false;
+
+                }
                 
                 ++walkAhead;
             }
@@ -259,6 +282,34 @@
     return true;
 }
 
+    void checkS(const Solution &S){
+        
+        for(int i=0; i < (S.M[0].size()); i++){
+            cout << "V" << S.M[0][i] << " ";
+        }
+        cout << endl;
+
+        for(int i=0; i < (S.M[1].size()); i++){
+            cout << "J" << S.M[1][i] << " ";
+        }
+        cout << endl;
+    }
+
+    void checkD(const vector<data> &v){
+        
+        for(data i: v){
+
+            if(i.job)
+                cout << "J";
+            else
+                cout << "V";
+
+            cout << i.id << " ";
+        }
+        cout << endl;
+
+    }
+   
     // TODO check code
     vector<data> solution_to_data(const Solution &S, int N, int K){
 
@@ -322,6 +373,7 @@
                 counter++;
             }
         }
+
         return settings;
     }
 
@@ -329,6 +381,31 @@
 
         // Convert information from "Data" type to "Solution" type.
 
+        Solution S;
+        S.alocate(N);
 
+        // Counter and Vehicle ID.
+        int cDown = 0;
+        int k = -1;
+
+        for(data i: settings){
+
+            if( !i.job ){
+
+                k = i.id;
+
+            }else{
+
+                assert(cDown < N);
+
+                S.M[0][i.id] = k;
+                S.M[1][cDown] = i.id;
+
+                cDown++;                
+            }
+        }
+        assert(S.M.size() == 2);
+        return S;
     }
+
 #endif
