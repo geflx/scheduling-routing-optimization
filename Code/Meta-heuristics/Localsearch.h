@@ -1,5 +1,5 @@
-#ifndef NBHOODS_H
-#define NBHOODS_H
+#ifndef LOCALSEARCH_H
+#define LOCALSEARCH_H
 
     using namespace std;
     
@@ -1096,17 +1096,6 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int N, int K, const vector<do
 				break;
 			}
 
-			//Caution: it is needed to recalculate vehicleOrder? I guess not.
-			#ifdef PRINT_RVND_IMPROVE
-				vector<int> newstartVehicleTime(K, 0);//Calculating Delivery time(D) and Starting time(Sk)
-	    		vector<int> newdeliveryTime = calculatingDeliveryTime(initialConfig,newstartVehicleTime,t,P,vehicleOrder,N);
-	    		vector<int> newjobTardiness = calculatingJobTardiness(newdeliveryTime,N,d);//Generating Job Tardiness (T) of each job (O(N))
-
-	    		double newObj= objFunction(vehicleOrder,initialConfig,K,N,t,w,newjobTardiness,F);
-	    		cout<< newObj - bestObj;
-	    		bestObj = newObj;
-    		#endif
-
 			bestConfig = initialConfig;
 			it = 0;
 			random_shuffle( interRoute.begin(), interRoute.end());
@@ -1145,11 +1134,6 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int N, int K, const vector<do
 
         double iniObj= objFunction(vehicleOrder,initialConfig,K,N,t,w,jobTardiness,F);
 
-
-        #ifdef PRINT_RVND_IMPROVE
-        cout<<"\n Started RVND at obj: "<<iniObj<<"\n\n";
-        #endif
-
         vector<int> neighbors = {1,2,3,4,5,6,7};
 
 
@@ -1158,8 +1142,6 @@ pair<double, vector<data>> RVND_Custom(bool reuse, int N, int K, const vector<do
         int it = 0;
 
         while( it < 7 ){
-
-            //1 corrigida, 2 e 3 parecem tb. Analisar a 4
 
             int whichNeighbor = neighbors[ it ];
 
