@@ -1,2 +1,1 @@
        Instance   Obj_Value     Obj_1     Obj_2      OBj_3  RelativeGap%      Status     CPUtime	Processing_Order    Vehicle_Routes
-  5_6_3_2.0_2.5      6127.5      1586      3300     1241.5             0     Optimal     1.49982	3-5-6-2-1-4    | 5-3 | 6-2 | 1-4 |

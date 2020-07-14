@@ -25,6 +25,9 @@ int main(){
 
     getVariables(fileName, input, gaVersion, runNb, itNumber, popSize);
     
+    int a, b, c;
+    a = b = c = 0;
+
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
@@ -34,23 +37,37 @@ int main(){
             time_t iniTime, endTime;
             time(&iniTime);
 
-            Solution S3 = New_GA_Version_2_LS(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
-
+            // Solution S3 = GA2_Repr1(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
+            
             time(&endTime);
             double timeSpent = difftime(endTime, iniTime);
 
-            pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
+            time_t iniTime2, endTime2;
+            time(&iniTime2);
+
+            cout << "here\n";
+            Solution S4 = GA2_Rep1_BL(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
+
+            time(&endTime2);
+            double timeSpent2 = difftime(endTime2, iniTime2);
+
+
+            //pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
+            pair<double, double> Ans4 = tempObj(S4, N, K, P, d, s, w, Q, F, t);
             
             double multiplier = getMultiplier(N);
 
-            double value, overlap;
-            value = (Ans3.first + multiplier * Ans3.second);
-            overlap = (Ans3.second);
+            double value, overlap, value2, overlap2;
+            value = (Ans4.first + multiplier * Ans4.second);
+            overlap = (Ans4.second);    
 
-            cout << value << " " << overlap << " " << timeSpent << "\n";
+            // value2 = (Ans3.first + multiplier * Ans3.second);
+            // overlap2 = (Ans3.second);   
 
-            
+            cout << "GA2_Rep1_BL: " <<value << " " << overlap << " " << timeSpent2;
+            //cout << " GA2_Repr1: " << value2 << " " << overlap2 << " " << timeSpent << "\n";           
         }
+
     }
     input.close();
 }

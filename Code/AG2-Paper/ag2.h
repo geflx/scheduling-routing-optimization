@@ -677,7 +677,7 @@ Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb
 
             if( !isFeasible(S, N, K, s, Q) ){
                 
-                cout << "Not OK after makeFeasible(). Generating random. \n";
+                // cout << "Not OK after makeFeasible(). Generating random. \n";
 
                 do{
 
@@ -777,8 +777,11 @@ Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb
         // ! Apply LS in Psize/2 best solutions.
         sort(P_New.begin(), P_New.end(), compareSolution); 
         
-        for(int i=0; i<popSize/2; i++)
+        for(int i=0; i<popSize/2; i++){
+            
             P_New[i] = fastLS(P_New[i], N, K, P, d, s, w, Q, F, t);
+        }
+        
 
         // ! Adding to P': Psize solutions from P and then sorting it.
         for(int i=0; i<PP.size(); i++)

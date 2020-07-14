@@ -14,8 +14,8 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-DIL_STD" />
-					<Add directory="../../../Documents/cplex_instalation/cplex/include" />
-					<Add directory="../../../Documents/cplex_instalation/concert/include" />
+					<Add directory="../../../../Documents/cplex_instalation/cplex/include" />
+					<Add directory="../../../../Documents/cplex_instalation/concert/include" />
 				</Compiler>
 				<Linker>
 					<Add library="ilocplex" />
@@ -24,8 +24,8 @@
 					<Add library="m" />
 					<Add library="pthread" />
 					<Add library="dl" />
-					<Add directory="../../../Documents/cplex_instalation/cplex/lib/x86-64_linux/static_pic" />
-					<Add directory="../../../Documents/cplex_instalation/concert/lib/x86-64_linux/static_pic" />
+					<Add directory="../../../../Documents/cplex_instalation/cplex/lib/x86-64_linux/static_pic" />
+					<Add directory="../../../../Documents/cplex_instalation/concert/lib/x86-64_linux/static_pic" />
 				</Linker>
 			</Target>
 			<Target title="Release">

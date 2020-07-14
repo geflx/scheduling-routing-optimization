@@ -1,8 +1,6 @@
 #ifndef NBHOODS_H
 #define NBHOODS_H
 
-#define GRAVACAO 1
-
     using namespace std;
     
     /*  Neighborhood 1: Swap sequential jobs inside a vehicle */
@@ -1050,31 +1048,37 @@
         double objF = S.Value;
         vector<data> newRep = solution_to_data(S, N, K);
 
-        // // ! In analysis
-        // checkD(newRep);
-        // checkS(S);
-        // assert( validConfig(newRep, Q, s, N, K) == true );
-
         vector<vehicleLoaded> vehiOrder = generateVehicleOrder(newRep, K);//Generating info about vehicle transportation
 
-        x:{}
-        if(nbhood1('B', newRep, vehiOrder, N, K, w, P, t, F, d))
-            goto x;
-        if(nbhood2('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s))
-            goto x;
+        vector<int> neighbors = {1, 2, 3, 4, 5, 6, 7};
+        random_shuffle(neighbors.begin(), neighbors.end());
 
-        if(nbhood3('B', newRep, vehiOrder, N, K, w, P, t, F, d))
-            goto x;
+        int i = 0;
 
-        if(nbhood4('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s))
-            goto x;
+        while( i < 7 ){
 
-        if(nbhood5('B', newRep, vehiOrder, N, K, w, P, t, F, d))
-            goto x;
+            int nghbor = neighbors[i];
 
-        if(nbhood6('B', newRep, vehiOrder, N, K, w, P, t, F, d))
-            goto x;
+            bool improved = false;
 
+            if( nghbor == 1){
+                improved = nbhood1('B', newRep, vehiOrder, N, K, w, P, t, F, d);
+            }else if( nghbor == 2){
+                improved = nbhood2('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s);
+            }else if( nghbor == 3){
+                improved = nbhood3('B', newRep, vehiOrder, N, K, w, P, t, F, d);
+            }else if(nghbor ==4){
+                improved = nbhood4('B', newRep, vehiOrder, N, K, w, P, t, F, d ,Q, s);
+            }else if(nghbor == 5){
+                improved = nbhood5('B', newRep, vehiOrder, N, K, w, P, t, F, d);
+            }else if(nghbor == 6){
+                improved = nbhood6('B', newRep, vehiOrder, N, K, w, P, t, F, d);
+            }else if(nghbor == 7){
+                improved = nbhood7('B', newRep, vehiOrder, N, K, w, P, t, F, d, Q, s);
+            }
+
+            i++;
+        }
 
         // Calculate new OBJ Function.
         vehiOrder = generateVehicleOrder(newRep, K);
@@ -1086,10 +1090,6 @@
         STemp.Value = calculateObj(STemp, N, K, P, d, s, w, Q, F, t);
 
         if(STemp.Value < objF){
-
-            if(GRAVACAO == 1)
-                cout << "Melhorei " << objF-STemp.Value <<" .... pois fui de " << objF << " para " << STemp.Value << "\n";
-
             return STemp;
         }else{
             return S;
