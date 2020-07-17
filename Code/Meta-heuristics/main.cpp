@@ -1,6 +1,6 @@
 #include "Core.h"
-#include "Localsearch.h"
-#include "Heuristics.h"
+#include "LocalSearch.h"
+#include "Metaheuristics.h"
 
 Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d,
@@ -14,9 +14,9 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     pair<double, vector<data> > auxiliar;
 
     if (metaheuristic == 1)
-        auxiliar = ils_rvnd(N, K, w, P, t, F, d, Q, s, parameter1, parameter2);
+        auxiliar = ils_rvnd(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else if (metaheuristic == 2)
-        auxiliar = ils_rvnd_custom(N, K, w, P, t, F, d, Q, s, parameter1, parameter2);
+        auxiliar = ils_rvnd_custom(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else
         auxiliar = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
 
@@ -57,7 +57,7 @@ int main()
 
         //Execute meta-heuristic and print solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
-        printConfig(answer, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
+        printConfig(answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
     }
 
     input.close();

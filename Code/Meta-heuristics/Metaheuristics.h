@@ -181,13 +181,12 @@ vector<data> mutation(vector<data>& solution, const vector<int>& capacities, con
     return solution;
 }
 
-vector<data> perturb(vector<data>& solution, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
+vector<data> perturb(vector<data>& solution, const vector<int>& capacities, const vector<int>& jobSize, int N, int K, int sizePerturb)
 {
 
     int mode[3] = { 1, 2 };
     double intensity[11] = { 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5 };
 
-    double sizePerturb = K * intensity[rand() % 11];
 
     //rand()%3
     int whichMode = mode[rand() % 2];
@@ -411,7 +410,7 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
 }
 
 pair<double, vector<data> > ils_rvnd(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
-    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls)
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
     int nbValidSolutions = 0;
@@ -483,7 +482,7 @@ pair<double, vector<data> > ils_rvnd(int N, int K, const vector<double>& w, cons
 
                 b = 0; //Reseting ILS!!
             }
-            solution = perturb(solution, Q, s, N, K);
+            solution = perturb(solution, Q, s, N, K, perturbSize);
         }
     }
     if (validConfig(bestSolution, Q, s, N, K))
@@ -493,7 +492,7 @@ pair<double, vector<data> > ils_rvnd(int N, int K, const vector<double>& w, cons
 }
 
 pair<double, vector<data> > ils_rvnd_custom(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
-    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls)
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int sizePerturb)
 {
 
     int nbValidSolutions = 0;
@@ -562,7 +561,7 @@ pair<double, vector<data> > ils_rvnd_custom(int N, int K, const vector<double>& 
 
                 b = 0; //Reseting ILS!!
             }
-            solution = perturb(solution, Q, s, N, K);
+            solution = perturb(solution, Q, s, N, K, sizePerturb);
         }
     }
 

@@ -55,7 +55,6 @@ struct Execution {
     vector<data> vec;
 };
 
-
 // * Ident OK
 double objFunction(const vector<vehicleLoaded>& vehicleOrder,
     const vector<data>& configuration, int K, int N,
@@ -539,10 +538,10 @@ vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
     return solution;
 }
 
-void printConfig(const Execution& S, const vector<int>& carCap,
+void printConfig(const Execution& S, double time, const vector<int>& carCap,
     const vector<int>& jobSize, int N, int K,
     const vector<int>& processTime,
-    const vector<vector<int> >& time, const vector<int>& dueDate,
+    const vector<vector<int> >& t, const vector<int>& dueDate,
     const vector<double>& weight, const vector<int>& carPrices,
     int instNumber, double mi, double delta)
 {
@@ -552,10 +551,6 @@ void printConfig(const Execution& S, const vector<int>& carCap,
     cout << instanceId << " ";
 
     vector<vehicleLoaded> vehicleOrder = getVOrder(S.vec, K);
-    vector<int> startVehicleTime(K, 0);
-    vector<int> deliveryTime = calculatingDeliveryTime(
-        S.vec, startVehicleTime, time, processTime, vehicleOrder, N);
-    vector<int> T = calculatingJobTardiness(deliveryTime, N, dueDate);
 
     int numJobsFixo = jobSize.size();
 
@@ -566,7 +561,7 @@ void printConfig(const Execution& S, const vector<int>& carCap,
     else if (numJobsFixo == 8)
         numJobsFixo += 2;
 
-    cout << setw(13) << "Answer";
+    cout << setw(13) << "Time " << time << "    ";
     cout << setw(13) << S.value << "    ";
 
     int numJobs = jobSize.size();
