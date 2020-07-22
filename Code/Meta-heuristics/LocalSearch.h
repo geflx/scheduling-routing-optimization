@@ -977,6 +977,7 @@ bool nbhood7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
             return false;
         }
     }
+    return false;
 }
 
 //pair< ValueObjFunction, validSolution>

@@ -3,16 +3,13 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include <unordered_set>
 #include <sstream>
 #include <string>
 
-
-/*
-    @author:    'Gabriel Felix'
-*/
-
 using namespace std;
-#define INF 987654321
+
+#include "MipStart.h"
 
 typedef IloArray<IloIntArray> IntMatriz;
 typedef IloArray<IloNumArray> FloatMatriz;
@@ -20,121 +17,19 @@ typedef IloArray<IloArray<IloNumVarArray> > Matriz3D;
 typedef IloArray<IloNumVarArray> NumVarMatrix;
 typedef IloArray<NumVarMatrix> NumVar3Matrix;
 
-struct data {
-    bool job; // True: Job, False: Vehicle.
-    int id; // ID.
-
-    data()
-    {
-        job = true; // Default: Is job.
-        id = -1;
-    }
-};
-
-struct vehicleLoaded {
-    int id, initialPos, finalPos;
-};
-
-vector<vehicleLoaded> getVOrder(const vector<data>& config, int K)
-{
-
-    vector<vehicleLoaded> vehicleList;
-
-    for (int i = 0; i < config.size(); i++) {
-
-        if (!config[i].job) {
-
-            vehicleLoaded temp;
-            temp.id = config[i].id;
-
-            int count = i + 1;
-            temp.initialPos = count;
-
-            while (count < config.size() && config[count].job)
-                count++;
-
-            temp.finalPos = count - 1;
-
-            // Ignore if vehicle is empty.
-            if (!(count == (i + 1)))
-                vehicleList.push_back(temp);
-
-            i = count - 1;
-        }
-    }
-
-    return vehicleList;
-}
-
-
-void loadMipStart (string &str_S, int mip_N, int mip_K, vector<int> &mip_Y, vector<int> &mip_S,
-					vector<int> &mip_T, vector<int> &mip_D, vector<vector<int>> &mip_A,
-					vector<int> &mip_Ct, vector<vector<vector<int>>> &mip_X,
-					vector<int> &mip_P, vector<vector<int>> &mip_t,
-					vector<int> &mip_Q, vector<int> &mip_F, vector<int> &mip_d, vector<double> &mip_w)
-{
-
-	vector<data> S ; //= toSolution(str_S);
-
-
-
-    double travelC, useC, weightC, accPtime;
-    travelC = useC = weightC = accPtime = 0.0;
-
-    vector<vehicleLoaded> vehicleOrder = getVOrder(S, mip_K);
-
-    for (int i = 0; i < vehicleOrder.size(); i++) {
-
-        int iniJobPos = vehicleOrder[i].initialPos;
-        int endJobPos = vehicleOrder[i].finalPos;
-
-        for (int j = iniJobPos; j <= endJobPos; j++)
-            accPtime += mip_P[S[j].id];
-
-        double localTravelC = mip_t[0][S[iniJobPos].id + 1];
-
-        for (int j = iniJobPos; j < endJobPos; j++) {
-
-            // Calculate Job Tardiness and following the Penalty weight cost.
-            double T = (accPtime + localTravelC) - mip_d[S[j].id];
-            if (T > 0.001)
-                weightC += T * mip_w[S[j].id];
-
-            localTravelC += mip_t[S[j].id + 1][S[j + 1].id + 1];
-        }
-
-        double T = (accPtime + localTravelC) - mip_d[S[endJobPos].id];
-        if (T > 0.001)
-            weightC += T * mip_w[S[endJobPos].id];
-
-        localTravelC += mip_t[0][S[endJobPos].id + 1]; // Last job to origin.
-
-        useC += mip_F[vehicleOrder[i].id];
-        travelC += localTravelC;
-
-    }
-
-    // return travelC + weightC + useC;
-
-}
-
-
 int main()
 {
+
+	// MIPStart Checkup.
 
 	cout << "Use MipStart in Executions (Y/N)? ";
 	char charMip;
 	cin >> charMip;
 
-	vector<int> mip_Y, mip_S, mip_T, mip_D, mip_Ct,
-				mip_P, mip_F, mip_Q, mip_s, mip_d;
-	vector<vector<int>> mip_A, mip_t;
-	vector<vector<vector<int>>> mip_X;
-
 	ifstream mipIn;
 
 	bool useMip = false;
-	if(useMip == 'Y'){
+	if(charMip == 'Y'){
 		useMip = true;
 
 		string strMip;
@@ -144,16 +39,18 @@ int main()
 		mipIn.open(strMip);
 	}
 
-
+	// Input and Output files declaration.
 
     float VarValue;
+    char name[50];
+
     string fileName;
-    char name[10];
+    cout << "Insert Instance File: ";
+    cin >> fileName;
 
-    ifstream in("8jobs.txt");
-    ofstream myfile;
+    ifstream in(fileName);
 
-    myfile.open("CPLEX_Output.txt");
+    ofstream myfile("CPLEX_Output.txt");
 
     float mi, delta;
     int instance_number;
@@ -208,12 +105,13 @@ int main()
         vector<int> mip_P(mip_N+1, 0), mip_d(mip_N+1, 0),
                     mip_s(mip_N+1, 0);
 
-        vector<double> mip_w(mip_N+1, 0);
+        vector<double> mip_w(mip_N+1, 0.0);
 
         // MipStart decision variables declaration.
 
         vector<int> mip_Y(mip_K, 0), mip_S(mip_K, 0), mip_Ct(mip_N+1, 0),
                     mip_D(mip_N+1, 0), mip_T(mip_N+1, 0);
+        vector<vector<int>> mip_A (mip_N+1, vector<int> (mip_N+1, 0));
         vector<vector<vector<int>>> mip_X (mip_N+1, vector<vector<int>> (mip_N+1, vector<int> (mip_K, 0)));
 
         // Initializing Origin(job_id: 0) variables.
@@ -319,19 +217,6 @@ int main()
                 }
             }
         }
-
-        // MipStart Procedure
-
-        if(useMip){
-
-    		string line;
-			getline(mipIn, line);
-
-			loadMipStart(line, mip_N, mip_K, mip_Y, mip_S, mip_T, mip_D, mip_A,
-                         mip_Ct, mip_X, mip_P, mip_t, mip_Q, mip_F, mip_d, mip_w);
-
-			//code here, implement values catching
-    	}
 
         // Declaring Objective Function.
 
@@ -550,6 +435,76 @@ int main()
         // Create model.
         IloCplex cplex1(modeloP);
 
+		// MipStart Procedure
+        if(useMip){
+
+    		string line;
+			getline(mipIn, line);
+			cout << "Line is\\"<<line<<"\n";
+
+			// Get variables' values of given solution S.
+
+			loadMipStart(line, mip_N, mip_K, mip_Y, mip_S, mip_T, mip_D, mip_A,
+                         mip_Ct, mip_X, mip_P, mip_t, mip_Q, mip_F, mip_d, mip_w);
+            cout << "Load MIP rodou.\n";
+			// Adding variables/values to MIPStart.
+
+       		IloNumVarArray mip_variables(cplex_env);
+       		IloNumArray mip_values(cplex_env);
+
+       		for(int i = 0; i <= N; i++){
+       			for(int j = 0; j <= N; j++){
+
+       				if(i == j)
+       					continue;
+
+       				mip_variables.add(A[i][j]);
+       				mip_values.add(mip_A[i][j]);
+
+       				for(int k = 0; k < mip_K; k++){
+
+       					mip_variables.add(X[i][j][k]);
+       					mip_values.add(mip_X[i][j][k]);
+
+       				}
+       			}
+
+                cout << "Teste aleatorio.\n";
+
+       			mip_variables.add(T[i]);
+   				mip_values.add(mip_T[i]);
+
+   				mip_variables.add(D[i]);
+   				mip_values.add(mip_D[i]);
+
+    			mip_variables.add(Ct[i]);
+   				mip_values.add(mip_Ct[i]);
+       		}
+
+            cout << "Teste aleatorio2.\n";
+
+       		for(int i = 0; i < mip_K; i++){
+
+			    mip_variables.add(Y[i]);
+   				mip_values.add(mip_Y[i]);
+
+   				mip_variables.add(S[i]);
+   				mip_values.add(mip_S[i]);
+
+       		}
+
+            cout << "Teste aleatorio3.\n";
+
+       		// Adding variables and values to MIPStart and closing them.
+       		cplex1.addMIPStart(mip_variables, mip_values);
+       		mip_variables.end();
+       		mip_values.end();
+
+       		cout << "MIPStart carregado com sucesso.\n";
+
+    	}
+
+
         //1: CPU time, 2: Wall-clock time
         cplex1.setParam(IloCplex::ClockType, 1);
 
@@ -560,7 +515,7 @@ int main()
         cplex1.exportModel("modelo.lp");
 
 
-        cplex1.setParam(IloCplex::TiLim, 3600);
+        cplex1.setParam(IloCplex::TiLim, 15);
         double runtime = 0.0;
         clock_t start, finish;
         start = clock();
@@ -590,12 +545,14 @@ int main()
         }
         else {
 
+            ofstream cplexOutput("cplex_Debug.txt");
+
             finish = clock();
             runtime = (double)(finish - start) / CLOCKS_PER_SEC;
 
             // Print objective function and it's separated parts.
 
-            cout << "OBJ_F: " << cplex1.getObjValue() << endl;
+            cplexOutput << "OBJ_F: " << cplex1.getObjValue() << endl;
 
             long long int first_term = 0, sec_term = 0, third_term = 0;
             for (int i = 0; i <= N; i++) {
@@ -607,30 +564,56 @@ int main()
                         first_term += (cplex1.getValue(X[i][j][k]) * t[i][j]);
                 }
             }
-            cout << "1_TERM: " << first_term << endl;
+            cplexOutput << "1_TERM: " << first_term << endl;
 
             for (int k = 0; k < K; k++)
                 sec_term += F[k] * cplex1.getValue(Y[k]);
-            cout << "2_TERM: " << sec_term << endl;
+            cplexOutput << "2_TERM: " << sec_term << endl;
 
             for (int i = 1; i <= N; i++)
                 third_term += w[i] * cplex1.getValue(T[i]);
-            cout << "3_TERM: " << third_term << "\n\n\n";
+            cplexOutput << "3_TERM: " << third_term << "\n\n\n";
 
             // Print decision variables' values.
 
+            cplexOutput << "Ci\n";
             for (IloInt i = 1; i <= N; i++)
-                cout << "C[" << i << "] = " << cplex1.getValue(Ct[i]) << endl;
+                cplexOutput << cplex1.getValue(Ct[i]) << " ";
+            cplexOutput << "\n";
 
+            cplexOutput << "Sk\n";
             for (IloInt k = 0; k < K; k++)
-                cout << "S[" << k << "] = " << cplex1.getValue(S[k]) << endl;
+                cplexOutput << cplex1.getValue(S[k]) << " ";
+            cplexOutput << "\n";
 
+            cplexOutput << "Yk\n";
+            for (IloInt k = 0; k < K; k++)
+                cplexOutput << cplex1.getValue(Y[k]) << " ";
+            cplexOutput << "\n";
+
+            cplexOutput << "Di\n";
             for (IloInt i = 1; i <= N; i++)
-                cout << "D[" << i << "] = " << cplex1.getValue(D[i]) << endl;
+                cplexOutput << cplex1.getValue(D[i]) << " ";
+            cplexOutput << "\n";
 
+            cplexOutput << "Ti\n";
             for (IloInt i = 1; i <= N; i++)
-                cout << "T[" << i << "] = " << cplex1.getValue(T[i]) << endl;
+                cplexOutput << cplex1.getValue(T[i]) << " ";
+            cplexOutput << "\n";
 
+            cplexOutput << "Aij\n";
+            for (IloInt i = 0; i <= N; i++){
+                for (IloInt j = 0; j <= N; j++){
+                    if(i == j)
+                        cout << -1 << " ";
+                    else
+                    	cplexOutput << cplex1.getValue(A[i][j]) << " ";
+                }
+                cplexOutput << "\n";
+            }
+            cplexOutput << "\n";
+
+            cplexOutput.close();
 
             myfile << setw(15) << instance;
             myfile << setw(12) << cplex1.getObjValue();
@@ -685,12 +668,14 @@ int main()
             }
             sort(delivery.begin(), delivery.end());
 
+            int visited = 0;
+
             for (int i = 0; i < delivery.size(); i++) {
 
                 int whichCar = delivery[i].second;
 
-                if (i == 0)
-                    myfile << "| ";
+                //if (i == 0)
+                    myfile << " [" << whichCar << "] ";
 
                 int whichIndex = 0;
                 for (int b = 0; b <= N; b++) {
@@ -698,7 +683,12 @@ int main()
                         continue;
 
                     if (cplex1.getValue(X[whichIndex][b][whichCar]) >= 0.9 && cplex1.getValue(X[whichIndex][b][whichCar]) <= 1.1) {
-                        myfile << b << "-";
+                        myfile << b;
+                        ++visited;
+
+                        if(visited < N)
+                            myfile << "-";
+
                         whichIndex = b;
                         break;
                     }
@@ -708,21 +698,24 @@ int main()
                         if (cplex1.getValue(X[whichIndex][b][whichCar]) >= 0.9 && cplex1.getValue(X[whichIndex][b][whichCar]) <= 1.1) {
 
                             myfile << b;
+                            visited++;
                             whichIndex = b;
 
-                            if ((cplex1.getValue(X[whichIndex][0][whichCar]) <= 0.1))
+                            if ((cplex1.getValue(X[whichIndex][0][whichCar]) <= 0.1) && visited < N)
                                 myfile << "-";
 
                             break;
                         }
                     }
                 }
+                /*
                 if (i != delivery.size() - 1)
-                    myfile << " | ";
+                    myfile << " [" << whichCar << "] ";
                 else
-                    myfile << " |" << endl;
+                    myfile << endl; */
 
             }
+            myfile << endl;
             cplex_env.end();
         }
     }

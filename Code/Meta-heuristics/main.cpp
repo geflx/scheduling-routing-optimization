@@ -51,6 +51,11 @@ int main()
     int metaheuristic, parameter1, parameter2;
     getVariables(fileName, input, metaheuristic, parameter1, parameter2);
 
+    // MIPStart Output.
+    char strOf[50];
+    sprintf(strOf, "MIPStart_Output.txt");
+    ofstream mipOut(strOf);
+
     while (input >> instNumber) {
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
@@ -58,7 +63,22 @@ int main()
         //Execute meta-heuristic and print solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
+
+        // MIPStart Output
+        mipOut << setw(15) << answer.value << setw(5);
+        for(data i : answer.vec){
+            if(i.job)
+                mipOut << "J";
+            else
+                mipOut << "V";
+            mipOut << i.id << " ";
+        }
+        mipOut << "\n";
     }
+
+    sprintf(strOf, "MIPStart_%djobs.txt", N);
+    rename("MIPStart_Output.txt", strOf);
+    mipOut.close();
 
     input.close();
 }
