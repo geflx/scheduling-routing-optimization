@@ -1,7 +1,8 @@
 #include "core.h"
-#include "coreLS.h"
 
+#include "coreLS.h"
 #include "nbhoods.h"
+
 #include "ag2.h"
 
 int main(){

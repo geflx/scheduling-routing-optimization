@@ -14,9 +14,9 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     pair<double, vector<data> > auxiliar;
 
     if (metaheuristic == 1)
-        auxiliar = ils_rvnd(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        auxiliar = ils_rvnd_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else if (metaheuristic == 2)
-        auxiliar = ils_rvnd_custom(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        auxiliar = ils_rvnd_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else
         auxiliar = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
 
@@ -29,7 +29,7 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     return answer;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 
     srand(time(NULL));
@@ -49,23 +49,42 @@ int main()
 
     // Running parameters.
     int metaheuristic, parameter1, parameter2;
-    getVariables(fileName, input, metaheuristic, parameter1, parameter2);
+
+    if(argc != 5 && argc != 4){
+    	getVariables(fileName, input, metaheuristic, parameter1, parameter2);
+    }else{
+    	fileName = argv[1];
+    	input.open(fileName);
+
+    	metaheuristic = atoi(argv[2]);
+    	parameter1 = atoi(argv[3]);
+
+    	if(argc == 5) //ILS
+    		parameter2 = atoi(argv[4]);
+    	else // GA-LS
+    		parameter2 = -1;
+    }
 
     // MIPStart Output.
     char strOf[50];
     sprintf(strOf, "MIPStart_Output.txt");
     ofstream mipOut(strOf);
 
+    // Mheuristic Output.
+    char strOut[50];
+    sprintf(strOut, "ANS_Output.txt");
+    ofstream outFile(strOut);
+
     while (input >> instNumber) {
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
 
-        //Execute meta-heuristic and print solution.
+        //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
-        printConfig(answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
+        printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
 
-        // MIPStart Output
-        mipOut << setw(15) << answer.value << setw(5);
+        // MIPStart Output.
+        mipOut << setw(4) << answer.time << setw(15) << answer.value << setw(5);
         for(data i : answer.vec){
             if(i.job)
                 mipOut << "J";
@@ -76,9 +95,13 @@ int main()
         mipOut << "\n";
     }
 
-    sprintf(strOf, "MIPStart_%djobs.txt", N);
+    sprintf(strOf, "MIP_%djobs.txt", N);
     rename("MIPStart_Output.txt", strOf);
     mipOut.close();
+
+    sprintf(strOut, "ANS_%djobs.txt", N);
+    rename("ANS_Output.txt", strOut);
+    outFile.close();
 
     input.close();
 }

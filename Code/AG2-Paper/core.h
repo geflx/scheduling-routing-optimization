@@ -292,8 +292,6 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
         RouteTime += t[ Schedule[idV][ jobsNb-1 ]+1 ][ 0 ]; // Last to Origin
         TravelCosts += RouteTime;
     }
-
-    //cout << "Travel C. " << TravelCosts << "/ Use C. " << UseCosts << "/ Penalty C. " << PenaltyCosts << "/ Overlap C. " << OverlapCosts << "\n";
     
     return UseCosts + TravelCosts + PenaltyCosts;
 }

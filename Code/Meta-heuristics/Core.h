@@ -538,7 +538,7 @@ vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
     return solution;
 }
 
-void printConfig(const Execution& S, double time, const vector<int>& carCap,
+void printConfig(ofstream &outFile, const Execution& S, double time, const vector<int>& carCap,
     const vector<int>& jobSize, int N, int K,
     const vector<int>& processTime,
     const vector<vector<int> >& t, const vector<int>& dueDate,
@@ -548,7 +548,7 @@ void printConfig(const Execution& S, double time, const vector<int>& carCap,
 
     char instanceId[50];
     sprintf(instanceId, "%d_%d_%d_%.1lf_%.1lf", instNumber, N, K, mi, delta);
-    cout << instanceId << " ";
+    outFile << instanceId << " ";
 
     vector<vehicleLoaded> vehicleOrder = getVOrder(S.vec, K);
 
@@ -561,8 +561,8 @@ void printConfig(const Execution& S, double time, const vector<int>& carCap,
     else if (numJobsFixo == 8)
         numJobsFixo += 2;
 
-    cout << setw(13) << "Time " << time << "    ";
-    cout << setw(13) << S.value << "    ";
+    outFile << setw(13) << "Time " << time << "    ";
+    outFile << setw(13) << S.value << "    ";
 
     int numJobs = jobSize.size();
 
@@ -577,7 +577,7 @@ void printConfig(const Execution& S, double time, const vector<int>& carCap,
             }
         }
     }
-    cout << setw(numJobsFixo * 3) << procOrder;
+    outFile << setw(numJobsFixo * 3) << procOrder;
     int j = 0;
 
     string deliveryOrder;
@@ -595,7 +595,7 @@ void printConfig(const Execution& S, double time, const vector<int>& carCap,
             deliveryOrder[i] = '-';
         }
     }
-    cout << setw(numJobsFixo * (5.5)) << deliveryOrder << "\n\n";
+    outFile << setw(numJobsFixo * (5.5)) << deliveryOrder << "\n\n";
 }
 
 vector<int> carryWeight(vector<data>& config, const vector<int>& jobSize,

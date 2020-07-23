@@ -409,7 +409,7 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
     return solution;
 }
 
-pair<double, vector<data> > ils_rvnd(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
@@ -491,7 +491,91 @@ pair<double, vector<data> > ils_rvnd(int N, int K, const vector<double>& w, cons
         return { -1, bestSolution };
 }
 
-pair<double, vector<data> > ils_rvnd_custom(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data> > ils_rvnd_1_updated(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
+{
+
+    int nbValidSolutions = 0;
+    vector<vector<data> > validSolutions;
+
+    // Generating initial greedy solutions
+    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+
+    // Verifying if they are really valid
+
+    if (validConfig(atcConfig, Q, s, N, K)) {
+        validSolutions.push_back(atcConfig);
+        nbValidSolutions++;
+    }
+
+    if (validConfig(wmddConfig, Q, s, N, K)) {
+
+        validSolutions.push_back(wmddConfig);
+        nbValidSolutions++;
+    }
+
+    if (validConfig(weddConfig, Q, s, N, K)) {
+
+        validSolutions.push_back(weddConfig);
+        nbValidSolutions++;
+    }
+
+    int contGetSolution = 0;
+
+    pair<double, vector<data>> SBest;
+    SBest.first = INF;
+
+    for (int a = 0; a < maxIter; a++) {
+
+        vector<data> solution;
+        pair<double, vector<data> > S;
+
+        //Getting the greedy solutions if there is one avaiable
+
+        bool justCalledRvnd = true;
+        if (contGetSolution < nbValidSolutions) {
+
+            solution = validSolutions[contGetSolution];
+
+            S = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
+
+            contGetSolution++;
+        }
+        else {
+            //Otherwise we generate a random one.
+            S = RVND(false, N, K, w, P, t, F, d, Q, s, solution);
+        }
+
+        for (int b = 0; b < maxIterIls; b++) {
+            
+            vector<data> S1 = perturb(solution, Q, s, N, K, perturbSize);
+
+
+            pair<double, vector<data>> S2 = RVND(true, N, K, w, P, t, F, d, Q, s, S1);
+           
+
+            if (S2.first < S.first) {
+
+                S.second = S1;
+                //S.first = objF ..
+                b = 0; //Reseting ILS iterations.
+            }
+        }
+        if(S.first < SBest.first){
+            SBest = S;
+        }
+
+
+    }
+    if (validConfig(SBest.second, Q, s, N, K))
+        return SBest;
+    else
+        exit(0);
+}
+
+pair<double, vector<data> > ils_rvnd_2(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int sizePerturb)
 {
 
