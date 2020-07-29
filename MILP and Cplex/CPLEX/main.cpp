@@ -469,7 +469,6 @@ int main()
        				}
        			}
 
-                cout << "Teste aleatorio.\n";
 
        			mip_variables.add(T[i]);
    				mip_values.add(mip_T[i]);
@@ -481,7 +480,6 @@ int main()
    				mip_values.add(mip_Ct[i]);
        		}
 
-            cout << "Teste aleatorio2.\n";
 
        		for(int i = 0; i < mip_K; i++){
 
@@ -493,14 +491,13 @@ int main()
 
        		}
 
-            cout << "Teste aleatorio3.\n";
 
        		// Adding variables and values to MIPStart and closing them.
        		cplex1.addMIPStart(mip_variables, mip_values);
        		mip_variables.end();
        		mip_values.end();
 
-       		cout << "MIPStart carregado com sucesso.\n";
+       		cout << "MIPStart load with success. \n";
 
     	}
 
@@ -515,7 +512,7 @@ int main()
         cplex1.exportModel("modelo.lp");
 
 
-        cplex1.setParam(IloCplex::TiLim, 15);
+        cplex1.setParam(IloCplex::TiLim, 3600);
         double runtime = 0.0;
         clock_t start, finish;
         start = clock();

@@ -500,10 +500,11 @@ Solution GA_Tam_2 (int N, int K, int itNumber, int popSize,
 
 // Complexity: O( itNumber * ( 2*popSize + O(N*K) ) )
 Solution GA2_Repr1 (int N, int K, int itNumber, int popSize, double mutateProb,
-              const vector<int> &P, const vector<int> &d, const vector<int> &s,
-              const vector<double> &w, const vector<int> &Q, const vector<int> &F,
-              const vector<vector<int>> &t)
+    const vector<int> &P, const vector<int> &d, const vector<int> &s,
+    const vector<double> &w, const vector<int> &Q, const vector<int> &F,
+    const vector<vector<int>> &t)
 {
+
     Solution S_best;
     S_best.alocate(N);
     S_best.Value = numeric_limits<double>::infinity();
@@ -611,7 +612,7 @@ Solution GA2_Repr1 (int N, int K, int itNumber, int popSize, double mutateProb,
 
             S_best = Local_S_best;
             // cont = 0; // ! Fixed iterations...
-            
+    
         }
 
         // ! Adding size(P) solutions to P' and then sorting it
@@ -677,8 +678,6 @@ Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb
 
             if( !isFeasible(S, N, K, s, Q) ){
                 
-                // cout << "Not OK after makeFeasible(). Generating random. \n";
-
                 do{
 
                     randomSolution(S, N, K);
@@ -732,27 +731,21 @@ Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb
 
             if( !feasibleOFF1 || !feasibleOFF2 ){
 
-                // cout << "Let's fix OFFspring. \n";
+                // Obligate offsprings to be feasible.
                 if(!feasibleOFF1)
                     makeFeasible(OFF1, N, K, P, d, s, w, Q, F, t);
                 
                 if(!feasibleOFF2)
                     makeFeasible(OFF2, N, K, P, d, s, w, Q, F, t);
 
-                if(!isFeasible(OFF1, N, K, s, Q)){
-                    do{
+                while(!isFeasible(OFF1, N, K, s, Q)){
 
                     randomSolution(OFF1, N, K);
-
-                    }while(!isFeasible(OFF1, N, K, s, Q));
                 }
 
-                if(!isFeasible(OFF2, N, K, s, Q)){
-                    do{
+                while(!isFeasible(OFF2, N, K, s, Q)){
 
                     randomSolution(OFF2, N, K);
-
-                    }while(!isFeasible(OFF2, N, K, s, Q));
                 }
                 
             }
@@ -777,9 +770,28 @@ Solution GA2_Rep1_BL (int N, int K, int itNumber, int popSize, double mutateProb
         // ! Apply LS in Psize/2 best solutions.
         sort(P_New.begin(), P_New.end(), compareSolution); 
         
-        for(int i=0; i<popSize/2; i++){
+        // Selecting which new solutions will be in Fast Local Search method.
+        fastLS(P_New[0], N, K, P, d, s, w, Q, F, t);
+
+        for(int i=1; i< ceil(popSize/2); i++){
             
-            P_New[i] = fastLS(P_New[i], N, K, P, d, s, w, Q, F, t);
+            // Checking if P[i].Value == P[i-1].Value.
+            if( fabs(P_New[i].Value - P_New[i-1].Value) < 0.0001 ){
+
+                Solution tmp = Mutation(P_New[i], N, K, P, d, s, w, Q, F, t);
+
+                // If is feasible, accept solution.
+                if(isFeasible(tmp, N, K, s, Q)){
+                	P_New[i] = fastLS(tmp, N, K, P, d, s, w, Q, F, t);
+                }
+
+
+            }else{
+
+            	P_New[i] = fastLS(P_New[i], N, K, P, d, s, w, Q, F, t);
+
+            }
+
         }
         
 

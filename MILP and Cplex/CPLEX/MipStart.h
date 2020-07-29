@@ -55,9 +55,11 @@ vector<data> toSolution (const string &str)
 
 	stringstream input(str);
 
+    int time;
+    input >> time;
+
     double objValue;
     input >> objValue;
-    cout << "Ok li obj function: "<< objValue << "\n";
 
 	char c;
 	while(input >> c){

@@ -120,11 +120,6 @@ bool nbhood2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
-
-    vector<int> startVehicleTime(K, 0);
-    vector<int> deliveryTime = calculatingDeliveryTime(solution, startVehicleTime, t, P, VOrder, N);
-    vector<int> T = calculatingJobTardiness(deliveryTime, N, d);
-
     double bestImprove = 0;
     bool improved = false;
     vector<data> bestConfig = solution;
@@ -992,8 +987,7 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
     random_shuffle(interRoute.begin(), interRoute.end());
     int it = 0;
 
-    vector<vehicleLoaded> VOrder;
-    double bestObj = objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
+    vector<vehicleLoaded> VOrder = getVOrder(initialConfig, K);
 
     bool generalImprove = false;
 
@@ -1049,6 +1043,77 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
 }
 
 //pair< ValueObjFunction, validSolution>
+pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
+{
+
+    if (!reuse)
+        initialConfig = generateValidRandomConfig(N, K, Q, s);
+    
+    vector<int> intraRoute = { 1, 3, 7 };
+    vector<int> interRoute = { 2, 4, 5, 6 };
+    random_shuffle(interRoute.begin(), interRoute.end());
+    int it = 0;
+
+    vector<vehicleLoaded> VOrder = getVOrder(initialConfig, K);
+
+    bool generalImprove = false;
+
+    while (it < 4) {
+
+        int neighbor = interRoute[it];
+        bool improved = false;
+
+        switch (neighbor) {
+        case 2:
+            improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+        case 4:
+            improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+        case 5:
+            improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+        case 6:
+            improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+        }
+
+        if (improved) {
+            generalImprove = true;
+
+            random_shuffle(intraRoute.begin(), intraRoute.end());
+
+            for(int i = 0; i < intraRoute.size(); i++){
+
+                bool localImprove = false;
+
+                if(intraRoute[i] == 1 && nbhood1('B', initialConfig, VOrder, N, K, w, P, t, F, d))
+                    
+                    localImprove = true;
+
+                else if(intraRoute[i] == 3 && nbhood3('B', initialConfig, VOrder, N, K, w, P, t, F, d))
+                    
+                    localImprove = true;
+
+                else if(intraRoute[i] == 7 && nbhood7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s))
+                    
+                    localImprove = true;
+
+                if(localImprove)
+                    i = -1; // Reset Intra Route local search (i++). 
+            }
+
+            it = 0;
+            random_shuffle(interRoute.begin(), interRoute.end());
+        }
+        else {
+            it++;
+        }
+    }
+
+    double result = objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
+
+    return make_pair(result, initialConfig);
+}
+
+//pair< ValueObjFunction, validSolution>
 pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
 {
@@ -1059,12 +1124,6 @@ pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>&
     }
 
     vector<vehicleLoaded> VOrder = getVOrder(initialConfig, K); //Generating info about vehicle transportation
-    vector<int> startVehicleTime(K, 0); //Calculating Delivery time(D) and Starting time(Sk)
-    vector<int> deliveryTime = calculatingDeliveryTime(initialConfig, startVehicleTime, t, P, VOrder, N);
-    vector<int> jobTardiness = calculatingJobTardiness(deliveryTime, N, d); //Generating Job Tardiness (T) of each job (O(N))
-
-    double iniObj = objFunction(VOrder, initialConfig, K, N, t, w, jobTardiness, F);
-    assert( iniObj - objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1) < 0.001);
 
     vector<int> neighbors = { 1, 2, 3, 4, 5, 6, 7 };
 
@@ -1078,27 +1137,27 @@ pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>&
 
         bool improved = false;
 
-        if (whichNeighbor == 1) {
+        if (whichNeighbor == 1) 
             improved = nbhood1('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        }
-        else if (whichNeighbor == 2) {
+        
+        else if (whichNeighbor == 2) 
             improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        }
-        else if (whichNeighbor == 3) {
+        
+        else if (whichNeighbor == 3) 
             improved = nbhood3('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        }
-        else if (whichNeighbor == 4) {
+        
+        else if (whichNeighbor == 4) 
             improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        }
-        else if (whichNeighbor == 5) {
+        
+        else if (whichNeighbor == 5) 
             improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        }
-        else if (whichNeighbor == 6) {
+        
+        else if (whichNeighbor == 6) 
             improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        }
-        else if (whichNeighbor == 7) {
+        
+        else if (whichNeighbor == 7) 
             improved = nbhood7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        }
+        
 
         if (improved) {
             it = 0;

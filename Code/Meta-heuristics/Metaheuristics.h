@@ -491,35 +491,36 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
         return { -1, bestSolution };
 }
 
+// * Review 1
 pair<double, vector<data> > ils_rvnd_1_updated(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
-    int nbValidSolutions = 0;
-    vector<vector<data> > validSolutions;
+    int feasibleNb = 0;
+    vector<vector<data> > feasibleVec;
 
     // Generating initial greedy solutions
     vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
     vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
     vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
 
-    // Verifying if they are really valid
+    // Verifying if greedy solutions are feasible.
 
     if (validConfig(atcConfig, Q, s, N, K)) {
-        validSolutions.push_back(atcConfig);
-        nbValidSolutions++;
+        feasibleVec.push_back(atcConfig);
+        feasibleNb++;
     }
 
     if (validConfig(wmddConfig, Q, s, N, K)) {
 
-        validSolutions.push_back(wmddConfig);
-        nbValidSolutions++;
+        feasibleVec.push_back(wmddConfig);
+        feasibleNb++;
     }
 
     if (validConfig(weddConfig, Q, s, N, K)) {
 
-        validSolutions.push_back(weddConfig);
-        nbValidSolutions++;
+        feasibleVec.push_back(weddConfig);
+        feasibleNb++;
     }
 
     int contGetSolution = 0;
@@ -530,45 +531,120 @@ pair<double, vector<data> > ils_rvnd_1_updated(int N, int K, const vector<double
     for (int a = 0; a < maxIter; a++) {
 
         vector<data> solution;
-        pair<double, vector<data> > S;
+        pair<double, vector<data>> S;
 
-        //Getting the greedy solutions if there is one avaiable
+        //Get the greedy solutions if feasible.
 
         bool justCalledRvnd = true;
-        if (contGetSolution < nbValidSolutions) {
+        if (contGetSolution < feasibleNb) {
 
-            solution = validSolutions[contGetSolution];
+            solution = feasibleVec[contGetSolution];
 
             S = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
 
             contGetSolution++;
         }
         else {
-            //Otherwise we generate a random one.
+            //Otherwise generate a random one.
             S = RVND(false, N, K, w, P, t, F, d, Q, s, solution);
         }
 
         for (int b = 0; b < maxIterIls; b++) {
             
-            vector<data> S1 = perturb(solution, Q, s, N, K, perturbSize);
-
+            vector<data> S1 = perturb(S.second, Q, s, N, K, perturbSize);
 
             pair<double, vector<data>> S2 = RVND(true, N, K, w, P, t, F, d, Q, s, S1);
            
-
             if (S2.first < S.first) {
-
-                S.second = S1;
-                //S.first = objF ..
+                S = S2;
                 b = 0; //Reseting ILS iterations.
             }
         }
         if(S.first < SBest.first){
             SBest = S;
         }
-
-
     }
+
+    if (validConfig(SBest.second, Q, s, N, K))
+        return SBest;
+    else
+        exit(0);
+}
+
+// * Review 1
+pair<double, vector<data> > ils_rvnd_2_updated(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
+{
+
+    int feasibleNb = 0;
+    vector<vector<data> > feasibleVec;
+
+    // Generating initial greedy solutions
+    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+
+    // Verifying if greedy solutions are feasible.
+
+    if (validConfig(atcConfig, Q, s, N, K)) {
+        feasibleVec.push_back(atcConfig);
+        feasibleNb++;
+    }
+
+    if (validConfig(wmddConfig, Q, s, N, K)) {
+
+        feasibleVec.push_back(wmddConfig);
+        feasibleNb++;
+    }
+
+    if (validConfig(weddConfig, Q, s, N, K)) {
+
+        feasibleVec.push_back(weddConfig);
+        feasibleNb++;
+    }
+
+    int contGetSolution = 0;
+
+    pair<double, vector<data>> SBest;
+    SBest.first = INF;
+
+    for (int a = 0; a < maxIter; a++) {
+
+        vector<data> solution;
+        pair<double, vector<data>> S;
+
+        //Get the greedy solutions if feasible.
+
+        bool justCalledRvnd = true;
+        if (contGetSolution < feasibleNb) {
+
+            solution = feasibleVec[contGetSolution];
+
+            S = RVND_Custom_updated(true, N, K, w, P, t, F, d, Q, s, solution);
+
+            contGetSolution++;
+        }
+        else {
+            //Otherwise generate a random one.
+            S = RVND_Custom_updated(false, N, K, w, P, t, F, d, Q, s, solution);
+        }
+
+        for (int b = 0; b < maxIterIls; b++) {
+            
+            vector<data> S1 = perturb(S.second, Q, s, N, K, perturbSize);
+
+            pair<double, vector<data>> S2 = RVND_Custom_updated(true, N, K, w, P, t, F, d, Q, s, S1);
+           
+            if (S2.first < S.first) {
+                S = S2;
+                b = 0; //Reseting ILS iterations.
+            }
+        }
+        if(S.first < SBest.first){
+            SBest = S;
+        }
+    }
+
     if (validConfig(SBest.second, Q, s, N, K))
         return SBest;
     else

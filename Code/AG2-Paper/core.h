@@ -130,7 +130,7 @@ void printSolution(const Solution &S, int N){
     cout << "\n\n";
 }
 
-void getVariables(string &fileName, ifstream& input, int &gaVersion, int &runNb, int &itNumber, int &popSize){
+void getVariables(string &fileName, ifstream& input, int &gaVersion, int &itNumber, int &popSize){
 
     
     cout << "File name (with extension):  ";
@@ -140,9 +140,6 @@ void getVariables(string &fileName, ifstream& input, int &gaVersion, int &runNb,
 
     cout << "G.A. Version (1,2,3): ";
     cin >> gaVersion;
-
-    cout << "Run times: ";
-    cin >> runNb;
 
     cout << "Iterations: ";
     cin >> itNumber;
@@ -217,12 +214,14 @@ bool isFeasible(const Solution &S, int N, int K, const vector<int> &s, const vec
 
 int getMultiplier(int N){
     
-     if(N == 8 || N == 10)
-            return 100;
-        else if( N ==15 || N == 20)
-            return 500;
-        else if( N >= 50 && N <= 100)
-            return 1000;
+    if(N == 8 || N == 10)
+        return 100;
+    else if( N ==15 || N == 20)
+        return 500;
+    else if( N >= 50 && N <= 100)
+        return 1000;
+
+    return -1;
 }
 
 // Complexity: O( 2K + 2N ) = O(max(N, K)) = O( N )
