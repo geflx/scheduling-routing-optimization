@@ -17,8 +17,23 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
         auxiliar = ils_rvnd_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else if (metaheuristic == 2)
         auxiliar = ils_rvnd_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else
+    else if (metaheuristic == 3)
         auxiliar = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
+    else if (metaheuristic == 4)
+        auxiliar = ils_rvnd_1_updated(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+    else if (metaheuristic == 5)
+        auxiliar = ils_rvnd_2_updated(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+    else {
+    	cout << "Insert valid metaheuristic from [1,5]!\n";
+    	cout << "1: ils_rvnd_1\n";
+    	cout << "2: ils_rvnd_2\n";
+    	cout << "3: genAlgo1\n";
+    	cout << "4: ils_rvnd_1_updated\n";
+    	cout << "5: ils_rvnd_2_updated\n";
+    	exit(0);
+    }
+
+
 
     time(&endTime);
 

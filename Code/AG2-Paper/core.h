@@ -16,6 +16,7 @@
 #include <chrono>
 #include <random>
 #include <time.h>
+#include <iomanip> //setw
 
 //Select Method version
 #define CROSSOVER_OPTION 1
@@ -130,24 +131,56 @@ void printSolution(const Solution &S, int N){
     cout << "\n\n";
 }
 
-void getVariables(string &fileName, ifstream& input, int &gaVersion, int &itNumber, int &popSize){
+void getVariables(int argc, char **argv, string &fileName, ifstream& input, int &gaVersion, int &itNumber, int &popSize){
 
-    
-    cout << "File name (with extension):  ";
-    getline(cin, fileName);
+    // Input via ARGV.
+    if(argc == 5){
 
-    input.open(fileName);
+        fileName = argv[1];
+        input.open(fileName);
 
-    cout << "G.A. Version (1,2,3): ";
-    cin >> gaVersion;
-
-    cout << "Iterations: ";
-    cin >> itNumber;
-    
-    cout << "Pop. Size: ";
-    cin >> popSize;
+        gaVersion = atoi(argv[2]);
+        itNumber = atoi(argv[3]);
+        popSize = atoi(argv[4]);
 
 
+
+    }else{
+
+        // Manual Input.    
+        cout << "File name (with extension):  ";
+        getline(cin, fileName);
+
+        input.open(fileName);
+
+        cout << "G.A. Version (1,2,3): ";
+        cin >> gaVersion;
+
+        cout << "Iterations: ";
+        cin >> itNumber;
+        
+        cout << "Pop. Size: ";
+        cin >> popSize;
+    }
+
+    if(popSize == 1) {
+        cout << "PopSize needs to be >= 2. Killed.\n";
+        exit(0);
+    }
+    if(gaVersion <= 0 || gaVersion >= 3) {
+
+        cout << "Input valid Genetic Algorithm code:\n";
+        cout << "1: GA2_Repr1\n";
+        cout << "2: GA2_Repr1_BL\n";
+        cout << "Killed.\n";
+        exit(0);
+
+    }else if(!input.is_open()) {
+
+        cout << "Error opening file, please check directory or file content. Killed.\n";
+        exit(0);
+
+    }
 }
 
 bool compareSolution(const Solution &S1, const Solution &S2)
@@ -295,7 +328,8 @@ double calculateObj(Solution &S, int N, int K, const vector<int> &P, const vecto
     return UseCosts + TravelCosts + PenaltyCosts;
 }
 
-pair<double, double> tempObj(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
+// Returns {Obj_Function, Overlaps}.
+pair<double, double> calculateObjWithOverlap(Solution &S, int N, int K, const vector<int> &P, const vector<int> &d, const vector<int> &s,
                     const vector<double> &w, const vector<int> &Q, const vector<int> &F,
                     const vector<vector<int>> &t)
 {

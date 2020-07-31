@@ -21,60 +21,67 @@ int main(int argc, char* argv[]){
     string fileName;
     int gaVersion, itNumber, popSize;
 
-    // Input check-up: via ARGV or manually.
-    if(argc != 5){
-    	getVariables(fileName, input, gaVersion, itNumber, popSize);
-    }else{
-
-    	fileName = argv[1];
-    	input.open(fileName);
-
-    	gaVersion = atoi(argv[2]);
-    	itNumber = atoi(argv[3]);
-    	popSize = atoi(argv[4]);
-    }
+    getVariables(argc, argv, fileName, input, gaVersion, itNumber, popSize);
     
     int a, b, c;
     a = b = c = 0;
+
+    // Mheuristic Output.
+    char strOut[50];
+    sprintf(strOut, "ANS_Output.txt");
+    ofstream outFile(strOut);
+
+    int instance = 0;
 
     while(input >> instNumber){
 
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
 
-            
+        ++instance;
+
+        Solution answer;
+
+        // Run meta-heuristic and computates time spent.
         time_t iniTime, endTime;
         time(&iniTime);
 
-        // Solution S3 = GA2_Repr1(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
-        
+        if(gaVersion == 1) 
+            answer = GA2_Repr1(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
+        else if(gaVersion == 2)
+            answer = GA2_Rep1_BL(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
+ 
         time(&endTime);
         double timeSpent = difftime(endTime, iniTime);
 
-        time_t iniTime2, endTime2;
-        time(&iniTime2);
 
-        Solution S4 = GA2_Rep1_BL(N, K, itNumber, popSize, 0.5, P, d, s, w, Q, F, t);
-
-        time(&endTime2);
-        double timeSpent2 = difftime(endTime2, iniTime2);
-
-
-        //pair<double, double> Ans3 = tempObj(S3, N, K, P, d, s, w, Q, F, t);
-        pair<double, double> Ans4 = tempObj(S4, N, K, P, d, s, w, Q, F, t);
+        // Calculating Objective Function.
+        pair<double, double> answerOverlap = calculateObjWithOverlap(answer, N, K, P, d, s, w, Q, F, t);
         
-        double multiplier = getMultiplier(N);
+        double multiplier, overlap, value;
+        multiplier = getMultiplier(N);
 
-        double value, overlap, value2, overlap2;
-        value = (Ans4.first + multiplier * Ans4.second);
-        overlap = (Ans4.second);    
+        value = answerOverlap.first + multiplier * answerOverlap.second;
+        overlap = answerOverlap.second;    
 
-        // value2 = (Ans3.first + multiplier * Ans3.second);
-        // overlap2 = (Ans3.second);   
+        // Printing on screen the completion percentage when Cont%10 == 1.
+        if(instance % 20 == 1){
 
-        cout << "GA2_Rep1_BL: " <<value << " " << overlap << " " << timeSpent2 << "\n";
-        //cout << " GA2_Repr1: " << value2 << " " << overlap2 << " " << timeSpent << "\n";           
-    
+            double totalInstances = -1;
+            if(N > 20) 
+                totalInstances = 180;
+            else
+                totalInstances = 300;
 
+            printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
+        }
+
+        outFile << setw(3) << timeSpent << setw(15) << value << setw(3) << overlap << "\n";       
+             
     }
-    input.close();
+
+    sprintf(strOut, "ANS_%djobs.txt", N);
+    rename("ANS_Output.txt", strOut);
+    outFile.close();
+
+    input.close(); 
 }

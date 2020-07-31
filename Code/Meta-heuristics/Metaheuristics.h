@@ -1,5 +1,5 @@
 #ifndef HEURISTICS_H
-#define HEURISTICS_H
+#define HEURISTICS_Hk
 
 vector<data> greedyMethod(const string& which, const vector<int>& jobSize, int N, int K, const vector<double>& weight,
     const vector<int>& procTime, const vector<int>& dueDate, const vector<int>& carPrices, const vector<int>& carCap)
@@ -557,7 +557,7 @@ pair<double, vector<data> > ils_rvnd_1_updated(int N, int K, const vector<double
            
             if (S2.first < S.first) {
                 S = S2;
-                b = 0; //Reseting ILS iterations.
+                b = -1; //Reseting ILS iterations.
             }
         }
         if(S.first < SBest.first){
