@@ -1,6 +1,16 @@
 #include "Core.h"
+
+// GA-LS ANALYSIS
+long long int mutations = 0;
+long long int mutationTries = 0;
+
+// ILS ANALYSIS	
+long long int totalIterations = 0;
+
 #include "LocalSearch.h"
 #include "Metaheuristics.h"
+
+
 
 Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d,
@@ -20,16 +30,22 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     else if (metaheuristic == 3)
         auxiliar = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
     else if (metaheuristic == 4)
-        auxiliar = ils_rvnd_1_updated(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        auxiliar = ils_rvnd_1_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
     else if (metaheuristic == 5)
-        auxiliar = ils_rvnd_2_updated(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        auxiliar = ils_rvnd_2_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+    else if (metaheuristic == 6)
+        auxiliar = ils_rvnd_1_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+    else if (metaheuristic == 7)
+        auxiliar = GA_LS_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1);
     else {
-    	cout << "Insert valid metaheuristic from [1,5]!\n";
+    	cout << "Insert valid metaheuristic from [1,7]!\n";
     	cout << "1: ils_rvnd_1\n";
     	cout << "2: ils_rvnd_2\n";
     	cout << "3: genAlgo1\n";
-    	cout << "4: ils_rvnd_1_updated\n";
-    	cout << "5: ils_rvnd_2_updated\n";
+    	cout << "4: ils_rvnd_1_SBPO\n";
+    	cout << "5: ils_rvnd_2_SBPO\n";
+        cout << "6: ils_rvnd_1_UPDATED\n";
+        cout << "7: GA_LS_UPDATED\n";
     	exit(0);
     }
 
@@ -90,16 +106,37 @@ int main(int argc, char* argv[])
     sprintf(strOut, "ANS_Output.txt");
     ofstream outFile(strOut);
 
+    int instance = 0;
     while (input >> instNumber) {
 
-        readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t);
+        readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t); 
+        instance++;
+
+        // Delete this
+        totalIterations = 0;
 
         //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
 
+        // Printing on screen the completion percentage when Cont%10 == 1.
+        if(instance % 20 == 1){
+
+            double totalInstances = -1;
+            if(N > 20) 
+                totalInstances = 180;
+            else
+                totalInstances = 300;
+
+            printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
+        }
+
+        // Delete this;
+        mipOut << setw(10) << totalIterations;
+        
         // MIPStart Output.
         mipOut << setw(4) << answer.time << setw(15) << answer.value << setw(5);
+
         for(data i : answer.vec){
             if(i.job)
                 mipOut << "J";
@@ -109,6 +146,9 @@ int main(int argc, char* argv[])
         }
         mipOut << "\n";
     }
+
+    cout << "Total Mutations: " << mutations << endl;
+    cout << "Mutation tries: " << mutationTries << endl;
 
     sprintf(strOf, "MIP_%djobs.txt", N);
     rename("MIPStart_Output.txt", strOf);
