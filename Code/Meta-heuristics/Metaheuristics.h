@@ -475,8 +475,17 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
         	// Delete this
         	++totalIterations;
         	
-            if (!justCalledRvnd) {
+            if (!justCalledRvnd) {        	
+
+	            // Delete this
+	            time_t iniTime, endTime;
+	    		time(&iniTime);
+                
                 callRvnd = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
+	    		
+	    		// Delete this
+	    		time(&endTime);
+				timeRVND += difftime(endTime, iniTime);
             }
             else {
                 justCalledRvnd = false;
@@ -488,6 +497,9 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
                 bestSolution = callRvnd.second;
 
                 b = 0; //Reseting ILS!!
+                
+                // Delete this
+                totalRestarts++;
             }
             solution = perturb(solution, Q, s, N, K, perturbSize);
         }
@@ -614,8 +626,8 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
 
     for (int a = 0; a < maxIter; a++) {
 
-        vector<data> S;
-        pair<double, vector<data> > S_1;
+        vector<data> S, S_2;
+        pair<double, vector<data> > S_1, S_3;
 
         // Using Greedy Solutions when available in iterations [0,2].
         if (contGetSolution < feasible_size) {
@@ -631,26 +643,35 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
 
         // Updating best solution found.
         if (S_1.first < S_Best.first) 
-            S_Best = S_1;
-        
+            S_Best = S_1;        
 
         for (int b = 0; b < maxIterIls; b++) {
 
         	// Delete this
-        	++totalIterations;
+			++totalIterations;
 
-            vector<data> S_2 = perturb(S_1.second, Q, s, N, K, perturbSize);
-            pair<double, vector<data>> S_3 = RVND(true, N, K, w, P, t, F, d, Q, s, S_2);
-            
+            S_2 = perturb(S_1.second, Q, s, N, K, perturbSize);
+
+        	// Delete this
+            time_t iniTime, endTime;
+    		time(&iniTime);
+
+            S_3 = RVND(true, N, K, w, P, t, F, d, Q, s, S_2);
+    		
+    		// Delete this
+    		time(&endTime);
+			timeRVND += difftime(endTime, iniTime);
+
             // Accept S''' as new S' (solution to be perturbed later).
-            if (S_3.first < S_1.first) 
-                S_1 = S_3;
-        
+            if (S_3.first < S_1.first)
+                S_1 = S_3;       
 
             // Best solution found. Reseting ILS.
             if (S_1.first < S_Best.first) {
                 S_Best = S_1;
                 b = -1;
+                // Delete this
+                totalRestarts++;
             }
         }
     }

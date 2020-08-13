@@ -6,6 +6,7 @@ long long int mutationTries = 0;
 
 // ILS ANALYSIS	
 long long int totalIterations = 0;
+long long int totalRestarts = 0, acceptWorse = 0, timeRVND = 0;
 
 #include "LocalSearch.h"
 #include "Metaheuristics.h"
@@ -21,40 +22,47 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     time_t iniTime, endTime;
     time(&iniTime);
 
-    pair<double, vector<data> > auxiliar;
+    pair<double, vector<data> > tmp;
+    
+    switch(metaheuristic){
 
-    if (metaheuristic == 1)
-        auxiliar = ils_rvnd_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else if (metaheuristic == 2)
-        auxiliar = ils_rvnd_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else if (metaheuristic == 3)
-        auxiliar = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
-    else if (metaheuristic == 4)
-        auxiliar = ils_rvnd_1_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else if (metaheuristic == 5)
-        auxiliar = ils_rvnd_2_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else if (metaheuristic == 6)
-        auxiliar = ils_rvnd_1_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
-    else if (metaheuristic == 7)
-        auxiliar = GA_LS_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1);
-    else {
-    	cout << "Insert valid metaheuristic from [1,7]!\n";
-    	cout << "1: ils_rvnd_1\n";
-    	cout << "2: ils_rvnd_2\n";
-    	cout << "3: genAlgo1\n";
-    	cout << "4: ils_rvnd_1_SBPO\n";
-    	cout << "5: ils_rvnd_2_SBPO\n";
-        cout << "6: ils_rvnd_1_UPDATED\n";
-        cout << "7: GA_LS_UPDATED\n";
-    	exit(0);
+    	case 1:
+        	tmp = ils_rvnd_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+			break;
+
+    	case 2:
+        	tmp = ils_rvnd_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+ 			break;
+ 			       	
+    	case 3:
+        	tmp = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
+			break;
+
+    	case 4:
+        	tmp = ils_rvnd_1_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+			break;
+
+    	case 5:
+        	tmp = ils_rvnd_2_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+			break;
+
+    	case 6:
+        	tmp = ils_rvnd_1_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+			break;
+
+    	case 7:
+        	tmp = GA_LS_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1);
+			break;
+
+    	default:
+    		cout << "INVALID CODE.\n Aborting ... \n";
+    		exit(0);
     }
-
-
 
     time(&endTime);
 
-    answer.value = auxiliar.first;
-    answer.vec = auxiliar.second;
+    answer.value = tmp.first;
+    answer.vec = tmp.second;
     answer.time = difftime(endTime, iniTime);
 
     return answer;
@@ -113,14 +121,14 @@ int main(int argc, char* argv[])
         instance++;
 
         // Delete this
-        totalIterations = 0;
+        totalIterations = totalRestarts = acceptWorse = timeRVND = 0;
 
         //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
 
         // Printing on screen the completion percentage when Cont%10 == 1.
-        if(instance % 20 == 1){
+        if(instance % 50 == 1){
 
             double totalInstances = -1;
             if(N > 20) 
@@ -128,11 +136,11 @@ int main(int argc, char* argv[])
             else
                 totalInstances = 300;
 
-            printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
+            // printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
         }
 
         // Delete this;
-        mipOut << setw(10) << totalIterations;
+        cout << "Total_Iterations:" << setw(6) << totalIterations << " ILS_Restarts: " << setw(3) << totalRestarts << " Time_RVND: " << setw(3) << timeRVND << " Total_Time: " << setw(3) <<  answer.time << "\n";
         
         // MIPStart Output.
         mipOut << setw(4) << answer.time << setw(15) << answer.value << setw(5);
