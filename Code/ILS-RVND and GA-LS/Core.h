@@ -1,13 +1,11 @@
 #ifndef CORE_H
 #define CORE_H
 
-// Data Structures.
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
 #include <queue>
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -20,18 +18,11 @@
 #include <algorithm>
 #include <chrono>
 #include <random>
-
 #include <assert.h>
+using namespace std;
 
 #define EPS 1e-5
 #define INF 987654321
-
-using namespace std;
-
-// Greedy Constructive Rules IDs.
-const string atc = "atc";
-const string wmdd = "wmdd";
-const string wedd = "wedd";
 
 struct data {
     bool job; // True: Job, False: Vehicle.
@@ -49,65 +40,10 @@ struct vehicleLoaded {
 };
 
 struct Execution {
-    double value = -1;
-    double time = -1;
-
+    double value = -1, time = -1;
     vector<data> vec;
 };
 
-// * Ident OK
-double objFunction(const vector<vehicleLoaded>& vehicleOrder,
-    const vector<data>& configuration, int K, int N,
-    const vector<vector<int> >& time,
-    const vector<double>& weight,
-    const vector<int>& jobTardiness,
-    const vector<int>& carPrices)
-{
-
-    int travelCosts, vehicleCosts;
-    double penaltyCosts;
-
-    travelCosts = vehicleCosts = 0;
-    penaltyCosts = 0.0;
-
-    // Calculate travel costs.
-    for (int i = 0; i < vehicleOrder.size(); i++) {
-
-        int initialIndex = vehicleOrder[i].initialPos;
-        int whichJob = configuration[initialIndex].id;
-
-        travelCosts += time[0][whichJob + 1]; // Origin -> first job.
-
-        int finalIndex = vehicleOrder[i].finalPos;
-
-        for (int j = initialIndex; j < finalIndex; j++) {
-
-            int jobA = configuration[j].id;
-            int jobB = configuration[j + 1].id;
-
-            travelCosts += time[jobA + 1][jobB + 1];
-        }
-
-        whichJob = configuration[finalIndex].id;
-        travelCosts += time[whichJob + 1][0]; // Last job -> origin.
-    }
-
-    // Calculate vehicle's use prices.
-    for (int k = 0; k < vehicleOrder.size(); k++)
-        vehicleCosts += carPrices[vehicleOrder[k].id];
-
-    // Calculate penalty costs.
-    for (int i = 0; i < N; i++)
-        penaltyCosts += jobTardiness[i] * weight[i];
-
-    // cout <<"tc1 " << travelCosts << endl;
-    // cout <<"wc1 " << penaltyCosts << endl;
-    // cout <<"uc1 " << vehicleCosts << endl;
-
-    return (travelCosts + vehicleCosts + penaltyCosts);
-}
-
-// * Ident OK
 vector<vehicleLoaded> getVOrder(const vector<data>& config, int K)
 {
 
@@ -139,9 +75,7 @@ vector<vehicleLoaded> getVOrder(const vector<data>& config, int K)
     return vehicleList;
 }
 
-
-// * Ident OK
-double objFunction2(const vector<data>& S, vector<vehicleLoaded>& vehicleOrder,
+double ObjectiveFunction(const vector<data>& S, vector<vehicleLoaded>& vehicleOrder,
     bool refreshVOrder, int K, int N,
     const vector<vector<int> >& t, const vector<double>& w,
     const vector<int>& P, const vector<int>& d,
@@ -210,211 +144,6 @@ double objFunction2(const vector<data>& S, vector<vehicleLoaded>& vehicleOrder,
     return travelC + weightC + useC;
 }
 
-// * Ident OK
-double objFVehicle(int i, const vector<vehicleLoaded>& vehicleOrder,
-    const vector<data>& configuration, int K, int N,
-    const vector<vector<int> >& time,
-    const vector<double>& weight,
-    const vector<int>& jobTardiness,
-    const vector<int>& carPrices)
-{
-
-    // Caution : need to recalculate the deliveryTime and JobTardiness before
-    // call.
-
-    int travelCosts, vehicleCosts;
-    double penaltyCosts;
-
-    travelCosts = vehicleCosts = 0;
-    penaltyCosts = 0.0;
-
-    // Calculate Travel Costs.
-    int initialIndex = vehicleOrder[i].initialPos;
-    int whichJob = configuration[initialIndex].id;
-
-    travelCosts += time[0][whichJob + 1]; // Cost of Origin -> First Job.
-
-    int finalIndex = vehicleOrder[i].finalPos;
-
-    for (int j = initialIndex; j < finalIndex; j++) {
-
-        int jobA = configuration[j].id;
-        int jobB = configuration[j + 1].id;
-
-        travelCosts += time[jobA + 1][jobB + 1];
-    }
-
-    whichJob = configuration[finalIndex].id;
-    travelCosts += time[whichJob + 1][0]; // Cost of Last job -> origin.
-
-    // Calculate SINGLE vehicle use costs.
-    vehicleCosts += carPrices[vehicleOrder[i].id];
-
-    // Calculate Penalty Costs.
-    for (int j = initialIndex; j <= finalIndex; j++) {
-
-        int job = configuration[j].id;
-        penaltyCosts += jobTardiness[job] * weight[job];
-    }
-
-    return (travelCosts + vehicleCosts + penaltyCosts);
-}
-
-// * Ident OK
-vector<int> calculatingDeliveryTime(const vector<data>& config,
-    vector<int>& startVehicleTime,
-    const vector<vector<int> >& time,
-    const vector<int>& procTime,
-    const vector<vehicleLoaded>& vehicleOrder,
-    int N)
-{
-
-    vector<int> deliveryTime(N, 0);
-    int acumulatedProcessTime = 0;
-
-    // Calculate acumulate processing time.
-    for (int i = 0; i < vehicleOrder.size(); i++) {
-
-        int whichCar = vehicleOrder[i].id;
-
-        for (int j = vehicleOrder[i].initialPos; j <= vehicleOrder[i].finalPos;
-             j++) {
-
-            int whichJob = config[j].id;
-            acumulatedProcessTime += procTime[whichJob];
-        }
-        startVehicleTime[whichCar] = acumulatedProcessTime;
-
-        // Calculate travel distance between deliveries.
-        int acumulatedDeliveryTime = 0;
-        int lastJob;
-
-        acumulatedDeliveryTime = time[0][config[vehicleOrder[i].initialPos].id + 1];
-
-        for (int j = vehicleOrder[i].initialPos; j < vehicleOrder[i].finalPos;
-             j++) {
-
-            int whichJob = config[j].id;
-            int nextJob = config[j + 1].id;
-
-            deliveryTime[whichJob] = acumulatedDeliveryTime + acumulatedProcessTime;
-            acumulatedDeliveryTime += time[whichJob + 1][nextJob + 1];
-        }
-        deliveryTime[config[vehicleOrder[i].finalPos].id] = acumulatedProcessTime + acumulatedDeliveryTime;
-    }
-
-    return deliveryTime;
-}
-
-// * Ident OK
-vector<int> calculatingJobTardiness(const vector<int>& deliveryTime, int N,
-    const vector<int>& dueDate)
-{
-
-    vector<int> T(N);
-
-    for (int i = 0; i < N; i++) {
-
-        T[i] = deliveryTime[i] - dueDate[i];
-
-        if (T[i] < 0)
-            T[i] = 0;
-    }
-
-    return T;
-}
-
-vector<data> generateValidRandomConfig(int N, int K,
-    const vector<int>& vehicleCap,
-    const vector<int>& jobSizes)
-{
-
-    vector<data> configuration(N + (K));
-    bool IsFeasible = false;
-
-    while (!IsFeasible) {
-
-        IsFeasible = true;
-
-        int configSize = configuration.size();
-        vector<bool> visitedConfig(configSize, false);
-        vector<bool> visitedCar(K, false);
-
-        int insertedVehicles = 0;
-        // Generating vehicles random positions
-        while (insertedVehicles < K) {
-            int randomPos = rand() % configSize;
-            while (visitedConfig[randomPos]) {
-                randomPos = rand() % configSize;
-            }
-            if (!visitedConfig[0]) { // Putting in the config the first car to be used
-                // in position[0] of the vector.
-                randomPos = rand() % K;
-
-                configuration[0].job = false;
-                configuration[0].id = randomPos;
-                visitedConfig[0] = true;
-
-                visitedCar[randomPos] = true;
-                insertedVehicles++;
-            }
-            else {
-                int randomVeic = rand() % K;
-                while (visitedCar[randomVeic]) {
-                    randomVeic = rand() % K;
-                }
-                configuration[randomPos].job = false; // It is a vehicle, not a job.
-                configuration[randomPos].id = randomVeic; // Identification of vehicle.
-
-                visitedCar[randomVeic] = true;
-                visitedConfig[randomPos] = true;
-
-                insertedVehicles++;
-            }
-        }
-        // Generating random positions for jobs
-        for (int i = 0; i < N; i++) {
-
-            int randomPos = rand() % configSize;
-
-            while (visitedConfig[randomPos])
-                randomPos = rand() % configSize;
-
-            configuration[randomPos].job = true; // Yes, it is a job!
-            configuration[randomPos].id = i; // Identification of jobs.
-
-            visitedConfig[randomPos] = true;
-        }
-
-        // Checking if the generated solution is valid. Fastest way to code the
-        // check. (O (N+K))
-        for (int j = 0; j < configuration.size() - 1; j++) {
-
-            if (!configuration[j].job) { // Checking the car's content.
-
-                int jobSum = 0;
-                int contJob = j + 1;
-                while (contJob < configuration.size() && configuration[contJob].job) {
-
-                    jobSum += jobSizes[configuration[contJob].id];
-                    contJob++;
-                }
-                if ((jobSum > vehicleCap[configuration[j].id])) { // T Job size sum
-                    // inside the car isnt
-                    // valid.
-
-                    IsFeasible = false;
-                }
-
-                j = contJob - 1; // Refreshing the index of extern loop.
-            }
-        }
-    }
-
-    return configuration;
-}
-
-// * Ident OK
 bool IsFeasible(const vector<data>& config, const vector<int>& capacities,
     const vector<int>& jobSize, int N, int K)
 {
@@ -424,6 +153,10 @@ bool IsFeasible(const vector<data>& config, const vector<int>& capacities,
 
     unordered_set<int> jobsIn;
     unordered_set<int> carIn;
+
+    // Missing vehicle for first and possible more jobs.
+    if(config[0].job)
+        return false;
 
     for (int i = 0; i < config.size(); i++) {
 
@@ -486,8 +219,7 @@ bool IsFeasible(const vector<data>& config, const vector<int>& capacities,
     return true;
 }
 
-vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
-    const vector<int>& jobSizes)
+vector<data> RandomSolution(int N, int K, const vector<int>& vehicleCap, const vector<int>& jobSizes)
 {
 
     // Generate a random config based on assigning random jobs to random cars
@@ -495,7 +227,6 @@ vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
     bool feasible = false;
     vector<data> solution(N + K);
 
-    int cont_tries = 0;
     while (!feasible) {
 
         //[Random] Shuffled  Jobs and Shuffled Cars
@@ -598,7 +329,7 @@ void printConfig(ofstream &outFile, const Execution& S, double time, const vecto
     outFile << setw(numJobsFixo * (5.5)) << deliveryOrder << "\n\n";
 }
 
-vector<int> carryWeight(vector<data>& config, const vector<int>& jobSize,
+vector<int> getWeightByVehicle(vector<data>& config, const vector<int>& jobSize,
     int K)
 {
     // Danger: confirmar se funciona

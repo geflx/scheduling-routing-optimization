@@ -2,8 +2,6 @@
 #include "LocalSearch.h"
 #include "Metaheuristics.h"
 
-
-
 Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d,
     const vector<int>& Q, const vector<int>& s, int metaheuristic, int parameter1, int parameter2)
@@ -89,9 +87,9 @@ int main(int argc, char* argv[])
     	metaheuristic = atoi(argv[2]);
     	parameter1 = atoi(argv[3]);
 
-    	if(argc == 5) //ILS
+    	if(argc == 5) 
     		parameter2 = atoi(argv[4]);
-    	else // GA-LS
+    	else 
     		parameter2 = -1;
     }
 
@@ -111,6 +109,8 @@ int main(int argc, char* argv[])
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t); 
         instance++;
 
+        Test(N, K, w, P, t, F, d, Q, s);
+        /*
         //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
@@ -138,6 +138,7 @@ int main(int argc, char* argv[])
             mipOut << i.id << " ";
         }
         mipOut << "\n";
+        */
     }
 
     sprintf(strOf, "MIP_%djobs.txt", N);

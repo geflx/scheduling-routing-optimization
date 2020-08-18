@@ -269,13 +269,10 @@ void greedySolution(Solution &S, const string &ruleParam, const bool random, int
         }
     }  
     
-    // assert( isSolution(S, N, K) == true);
 
-    if( !isFeasible(S, N, K, s, Q)){
+    if( !isFeasible(S, N, K, s, Q))
         makeFeasible(S, N, K, P, d, s, w, Q, F, t);
-    }
-
-
+    
     S.Value =  calculateObj(S, N, K, P, d, s, w, Q, F, t);
 }
 

@@ -12,7 +12,7 @@ bool nbhood1(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
     bool improved = false;
     double biggestImprove = 0;
 
-    double initialVObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+    double initialVObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
     double bestObj = initialVObj;
 
@@ -30,7 +30,7 @@ bool nbhood1(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 
                 swap(solution[j], solution[k]);
 
-                double newObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+                double newObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
                 if (newObj < (bestObj - EPS)) {
 
@@ -71,7 +71,7 @@ bool nbhood2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
             currCap[whichVehicle] += s[solution[j].id];
     }
 
-    double bestObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+    double bestObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
     double iniObj = bestObj;
     bool improved = false;
@@ -89,7 +89,7 @@ bool nbhood2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 
                         swap(solution[j], solution[k]);
 
-                        double newDoubleConfig = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+                        double newDoubleConfig = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
                         if (newDoubleConfig < bestObj) {
 
@@ -124,14 +124,14 @@ bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
     bool improved = false;
     vector<data> bestConfig = solution;
 
-    double iniObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+    double iniObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
     for (int i = 0; i < VOrder.size(); i++) {
 
         if (VOrder[i].initialPos == VOrder[i].finalPos)
             continue;
 
-        double bestObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, i);
+        double bestObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, i);
 
         //Saving the original Jobs solution of vehicle
         vector<int> original;
@@ -174,7 +174,7 @@ bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
                     CC++;
                 }
 
-                double newObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, i);
+                double newObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, i);
 
                 if (newObj < bestObj && (newObj - bestObj) < bestImprove) {
 
@@ -230,7 +230,7 @@ bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
                     CC++;
                 }
 
-                double newObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, i);
+                double newObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, i);
 
                 if ((newObj < bestObj) && (newObj - bestObj) < bestImprove) {
 
@@ -275,7 +275,7 @@ bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
     vector<int> currCap(K, 0);
     vector<bool> carInUse(K, false);
 
-    double bestObj = objFunction2(solution, VOrder, false, K, N, t, w, P, d, F, -1);
+    double bestObj = ObjectiveFunction(solution, VOrder, false, K, N, t, w, P, d, F, -1);
 
     double iniObj = bestObj;
     double improved = false;
@@ -369,7 +369,7 @@ bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 
                         vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K); //Generating info about vehicle transportation
 
-                        double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+                        double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
 
                         if (newObj < bestObj && newObj != 0) {
 
@@ -467,7 +467,7 @@ bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 
                         vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K); //Generating info about vehicle transportation
 
-                        double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+                        double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
 
                         if (newObj < bestObj && newObj != 0) {
 
@@ -526,7 +526,7 @@ bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
                         //Checking if OBJ function improves with this change
                         vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K); //Generating info about vehicle transportation
 
-                        double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+                        double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
 
                         if (newObj < bestObj) {
 
@@ -566,7 +566,7 @@ bool nbhood5(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
 
-    double iniObj = objFunction2(config, VOrder, false, K, N, t, w, P, d, F, -1);
+    double iniObj = ObjectiveFunction(config, VOrder, false, K, N, t, w, P, d, F, -1);
     bool improvedBest = false;
 
     vector<data> bestConfig;
@@ -648,7 +648,7 @@ bool nbhood5(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
             // Catching new Obj Function value
             vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K);
 
-            double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+            double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
 
             if (newObj < iniObj) {
                 if (bestOrFirst == 'F') { // First Improvement
@@ -686,7 +686,7 @@ bool nbhood6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
 
-    double iniObj = objFunction2(config, VOrder, false, K, N, t, w, P, d, F, -1);
+    double iniObj = ObjectiveFunction(config, VOrder, false, K, N, t, w, P, d, F, -1);
     bool improvedBest = false;
 
     //Caution, data not initialized
@@ -762,7 +762,7 @@ bool nbhood6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
 
             //Checking new OBJ function value
             vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K);
-            double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+            double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
             
             if (newObj < iniObj) {
 
@@ -832,7 +832,7 @@ bool nbhood6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
 
             //Checking new config OBJ!
             vector<vehicleLoaded> new_VOrder = getVOrder(newSolution, K);
-            double newObj = objFunction2(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
+            double newObj = ObjectiveFunction(newSolution, new_VOrder, false, K, N, t, w, P, d, F, -1);
 
             if (newObj < iniObj) {
 
@@ -871,7 +871,7 @@ bool nbhood7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
 {
 
-    double initialObj = objFunction2(config, VOrder, false, K, N, t, w, P, d, F, -1);
+    double initialObj = ObjectiveFunction(config, VOrder, false, K, N, t, w, P, d, F, -1);
     double bestObj = initialObj;
     double biggestImprove = 0;
     vector<data> bestConfig;
@@ -940,7 +940,7 @@ bool nbhood7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
                 swap(config[jobPos[p2]], config[jobPos[p3]]);
 
                 // Checking new OBJ Function value.
-                double newObj = objFunction2(config, VOrder, false, K, N, t, w, P, d, F, -1);
+                double newObj = ObjectiveFunction(config, VOrder, false, K, N, t, w, P, d, F, -1);
 
                 if (newObj < bestObj) {
 
@@ -981,7 +981,7 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
 {
 
     if (!reuse)
-        initialConfig = generateValidRandomConfig(N, K, Q, s);
+        initialConfig = RandomSolution(N, K, Q, s);
     
     vector<int> interRoute = { 2, 4, 5, 6 };
     random_shuffle(interRoute.begin(), interRoute.end());
@@ -1044,7 +1044,7 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
     if (generalImprove)
         initialConfig = bestConfig;
 
-    double result = objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
+    double result = ObjectiveFunction(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
 
     return make_pair(result, initialConfig);
 }
@@ -1055,7 +1055,7 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
 {
 
     if (!reuse)
-        initialConfig = generateValidRandomConfig(N, K, Q, s);
+        initialConfig = RandomSolution(N, K, Q, s);
     
     vector<int> intraRoute = { 1, 3, 7 };
     vector<int> interRoute = { 2, 4, 5, 6 };
@@ -1119,7 +1119,7 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
         }
     }
 
-    double result = objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
+    double result = ObjectiveFunction(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
 
     return make_pair(result, initialConfig);
 }
@@ -1131,7 +1131,7 @@ pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>&
 
     //Checking if it is needed to generate a new one or if the current solution will be used
     if (!reuse) {
-        initialConfig = randomConfigSequential(N, K, Q, s);
+        initialConfig = RandomSolution(N, K, Q, s);
     }
 
     vector<vehicleLoaded> VOrder = getVOrder(initialConfig, K); //Generating info about vehicle transportation
@@ -1179,7 +1179,7 @@ pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>&
         }
     }
 
-    double finalObj = objFunction2(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
+    double finalObj = ObjectiveFunction(initialConfig, VOrder, true, K, N, t, w, P, d, F, -1);
 
     return make_pair(finalObj, initialConfig);
 }

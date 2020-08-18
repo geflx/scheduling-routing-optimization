@@ -1,111 +1,166 @@
 #ifndef HEURISTICS_H
 #define HEURISTICS_H
 
-vector<data> greedyMethod(const string& which, const vector<int>& jobSize, int N, int K, const vector<double>& weight,
-    const vector<int>& procTime, const vector<int>& dueDate, const vector<int>& carPrices, const vector<int>& carCap)
+// Reviews: 1
+// Tested: 
+vector<data> GreedySolution(bool constructiveGreedy, int ruleID, const vector<int>& S, int N, int K, const vector<double>& w,
+    const vector<int>& P, const vector<int>& d, const vector<int>& F, const vector<int>& Q)
 {
-    //Calculating processing time average
-    double procTimeAvg = 0;
-    bool success = true; // If we generate a valid configuration
+    // Processing time average.
+    double averageP = 0.0;
+    for (int i = 0; i < N; i++) 
+        averageP += P[i];
+    averageP /= N;
 
-    for (int i = 0; i < N; i++)
-        procTimeAvg += procTime[i];
-
-    procTimeAvg /= N;
-
-    //Variables to generate processing order of jobs:
-    vector<data> jobOrder(N);
+    // Greedy rule variables.
+    vector<int> jobOrder(N);
     vector<bool> visitedJob(N, false);
     int acumulatedD = 0;
 
-    // cout<<"numtrbs"<<N<<endl;
+    if(constructiveGreedy)
+        ruleID = rand() % 3;
+    
+
     for (int i = 0; i < N; i++) {
 
-        //Create priority queue of Dispatching Rule
-        priority_queue<pair<double, int> > pq;
+        // Rule PQueue.
+        priority_queue<pair<double, int>> PQ;
 
         for (int j = 0; j < N; j++) {
 
-            if (visitedJob[j])
-                continue;
+            if (visitedJob[j]) continue;
+            double ruleValue = 0.0;
 
-            double value = 0;
-
-            if (which == atc) {
-
-                value = (weight[j] / procTime[j]) * exp((-1) * (max(dueDate[j] - procTime[j] - acumulatedD, 0)) / procTimeAvg);
-                pq.push(make_pair(value, j));
+            if (ruleID == 0) { 
+                // 0: ATC Rule.
+                ruleValue = (w[j] / P[j]) * exp((-1) * (max(d[j] - P[j] - acumulatedD, 0)) / averageP);
+                PQ.push(make_pair(ruleValue, j));
             }
-            else if (which == wmdd) {
-
-                value = (1 / weight[j]) * max(procTime[j], dueDate[j] - acumulatedD);
-                pq.push(make_pair((-1) * value, j));
+            else if (ruleID == 1) { 
+                // 1: WMDD Rule.
+                ruleValue = (1 / w[j]) * max(P[j], d[j] - acumulatedD);
+                PQ.push(make_pair((-1) * ruleValue, j));
             }
-            else if (which == wedd) {
-
-                value = (dueDate[j] / weight[j]);
-                pq.push(make_pair((-1) * value, j));
+            else if (ruleID == 2) {
+                // 2: WEDD Rule.
+                ruleValue = (d[j] / w[j]);
+                PQ.push(make_pair((-1) * ruleValue, j));
             }
         }
 
-        jobOrder[i].id = (pq.top()).second;
-        int jobInserted = jobOrder[i].id;
-        // cout<<"inseri "<<jobInserted<<endl;
-
-        visitedJob[jobInserted] = true;
-
-        acumulatedD += procTime[jobInserted];
+        // Insert best job and sum its P time.
+        jobOrder[i] = (PQ.top()).second;
+        visitedJob[jobOrder[i]] = true;
+        acumulatedD += P[jobOrder[i]];
     }
 
-    // Puting in a greedy way the cars to carry the jobs, choosing the cheaper one.
-    vector<data> vehicleDispatching(K);
+    vector<data> answer(N + K);
+    
+    /* Constructive Greedy method:
+            1 - Select Dispatching Rule at random.
+            2 - Random shuffle vehicles.
+            3 - Insert jobs from ruleArray of positions rand() % min(ruleArray.size(), 0.2 * N) 
+    */
+    if(constructiveGreedy){
 
-    priority_queue<pair<int, int> > vehiclePrice; //We will select the cars in the cheapest order.
+        // Create random vehicle list.
+        vector<int> vList(K);
+        for(int i = 0; i < K; i++) 
+            vList[i] = i;
+        random_shuffle(vList.begin(), vList.end());
 
-    for (int i = 0; i < K; i++) {
-        vehiclePrice.push(make_pair((-1) * carPrices[i], i)); //Ascending order ( *(-1) )
+        // Special case: Selected job couldn't be inserted, then save it. <JobId, JobPosition>.
+        pair<int, int> jobCache = make_pair(-1, -1);
+
+        int contJob = 0, contVehi = 0, contAnswer = 0;
+
+        while(contVehi < K){
+
+            int vCap = Q[vList[contVehi]];
+
+            do{
+                answer[contAnswer].job = false;
+                answer[contAnswer].id = vList[contVehi];
+                contAnswer++;
+                contVehi++;
+
+            }while(contJob == N && contVehi < K);
+
+            // While vehicle isn't full, fulfill it with jobs.
+            while(contJob < N){
+                int randomJobPos = rand()% min((int)jobOrder.size(), (int)ceil(0.2 * N));
+                int randomJob = jobOrder[randomJobPos];
+
+                // Pending job to insert.
+                if(jobCache.first != -1){
+                    randomJob = jobCache.first;
+                    randomJobPos = jobCache.second;
+                }
+
+                if((vCap - S[randomJob]) >= 0){
+                    // Insert job in solution.
+                    vCap -= S[randomJob];
+                    jobCache = make_pair(-1, -1);
+
+                    answer[contAnswer].job = true;
+                    answer[contAnswer].id = randomJob;
+                    contAnswer++; 
+                    contJob++;
+
+                    // Removing selected job from jobOrder array.
+                    for(int i = randomJobPos; i < jobOrder.size() - 1; i++)
+                        jobOrder[i] = jobOrder[i+1];
+                    jobOrder.pop_back();
+
+                }else{
+                    // Vehicle can't handle selected job.
+                    jobCache = make_pair(randomJob, randomJobPos);
+                    break;
+                }
+            }
+        }
     }
+    else{
+        // Selecting cheapest vehicles first and then populating it.
+        vector<pair<int, int>> vList(K);
+        for(int i = 0; i < K; i++)
+            vList[i] = make_pair(F[i], i);
+        sort(vList.begin(), vList.end());
 
-    vector<int> carbyprice;
-    while (!vehiclePrice.empty()) {
-        carbyprice.push_back(vehiclePrice.top().second);
-        vehiclePrice.pop();
-    }
 
-    //Creating adj list of carried job ( sorted by car prices in vector below)
-    vector<vector<int> > adjcarry(K);
+        // Adj. list of vehicles x jobs.
+        vector<vector<int>> adjList(K);
 
-    int job = 0;
-    for (int i = 0; i < K; i++) {
-        int cap = carCap[carbyprice[i]]; //getting id and cap
+        int cont = 0;
+        for (int i = 0; i < K; i++) {
+            int accCap = 0;
+            while (cont < N && (accCap + S[jobOrder[cont]]) <= Q[vList[i].second]) {
+                adjList[i].push_back(jobOrder[cont]);
+                accCap += S[jobOrder[cont]];
+                cont++;
+            }
+        }
 
-        int accCap = 0;
-        while (job < N && (accCap + jobSize[jobOrder[job].id]) <= cap) {
-            adjcarry[i].push_back(jobOrder[job].id);
-            accCap += jobSize[jobOrder[job].id];
-            job++;
+        int insert = 0;
+        for (int i = 0; i < adjList.size(); i++) {
+            // Insert vehicle.
+            answer[insert].job = false;
+            answer[insert++].id = vList[i].second;
+
+            // Insert its jobs.
+            for (int j = 0; j < adjList[i].size(); j++) {
+                answer[insert].job = true;
+                answer[insert++].id = adjList[i][j];
+            }
         }
     }
 
-    vector<data> configuration(N + K);
-    int configSize = configuration.size();
-
-    int insert = 0;
-    for (int i = 0; i < adjcarry.size(); i++) {
-        configuration[insert].job = false;
-        configuration[insert++].id = carbyprice[i];
-        for (int j = 0; j < adjcarry[i].size(); j++) {
-            configuration[insert].job = true;
-            configuration[insert++].id = adjcarry[i][j];
-        }
-    }
-    return configuration;
+    return answer;
 }
-
 //Soft transformation: swap two jobs between different vehicles
 vector<data> mutation(vector<data>& solution, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
 {
-    vector<int> carrying = carryWeight(solution, jobSize, K);
+    vector<int> carrying = getWeightByVehicle(solution, jobSize, K);
 
     vector<int> jobPos(N, -1);
     for (int i = 0; i < solution.size(); i++)
@@ -190,7 +245,7 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
     //rand()%3
     int whichMode = mode[rand() % 2];
 
-    vector<int> carrying = carryWeight(solution, jobSize, K);
+    vector<int> carrying = getWeightByVehicle(solution, jobSize, K);
 
     vector<int> jobPos(N, -1);
     for (int i = 0; i < solution.size(); i++)
@@ -419,9 +474,9 @@ pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, con
     vector<vector<data> > validSolutions;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
 
     // Verifying if they are really valid
 
@@ -502,9 +557,9 @@ pair<double, vector<data>> ILS_RVND_1_SBPO(int N, int K, const vector<double>& w
     vector<vector<data> > feasibleVec;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
 
     // Verifying if greedy solutions are feasible.
 
@@ -581,21 +636,21 @@ pair<double, vector<data>> ILS_RVND_1_UPDATED(int N, int K, const vector<double>
     vector<vector<data> > feasible;
 
     // Generate ATC Rule solution and check its feasibility.
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
     if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasible.push_back(atcConfig);
         feasible_size++;
     }
 
     // Generate WMDD Rule solution and check its feasibility.
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
     if (IsFeasible(wmddConfig, Q, s, N, K)) {
         feasible.push_back(wmddConfig);
         feasible_size++;
     }
 
     // Generate WEDD Rule solution and check its feasibility.
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
     if (IsFeasible(weddConfig, Q, s, N, K)) {
         feasible.push_back(weddConfig);
         feasible_size++;
@@ -655,9 +710,9 @@ pair<double, vector<data>> ILS_RVND_2_SBPO(int N, int K, const vector<double>& w
     vector<vector<data> > feasibleVec;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
 
     // Verifying if greedy solutions are feasible.
 
@@ -734,9 +789,9 @@ pair<double, vector<data>> ILS_RVND_2(int N, int K, const vector<double>& w, con
     vector<vector<data> > validSolutions;
 
     // Generating initial greedy solutions
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
 
     //Danger: Verify ATC!!!
     // Verifying if they are really valid
@@ -806,25 +861,27 @@ pair<double, vector<data>> ILS_RVND_2(int N, int K, const vector<double>& w, con
         return { -1, bestSolution };
 }
 
-// Reviewed: I
+// Reviewed: I  (2 more)
 pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<data>& S2, const vector<int>& Q, const vector<int>& S, int N, int K)
 {
-    int cutSize = 0;
-    while(cutSize == 0)
+    int cutSize;
+    do{
         cutSize = rand() % (S1.size());
+    }
+    while (cutSize == (S1.size() - 1));
 
     // Remove cutSize first positions from S1.
     vector<data> answer = S1;
     unordered_set<int> cuttedJob, cuttedVehicle;
 
-    for(int i = 0; i < cutSize; i++)
+    for(int i = cutSize; i < S1.size(); i++)
         if(S1[i].job)
             cuttedJob.insert(S1[i].id);
         else
             cuttedVehicle.insert(S1[i].id);
 
     // Reinsert them following S2's order.
-    int reinsertPos = 0;
+    int reinsertPos = cutSize;
     for(int i = 0; i < S2.size(); i++){
         if(S2[i].job){
             if(cuttedJob.find(S2[i].id) != cuttedJob.end()){
@@ -839,6 +896,13 @@ pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<
             }
         }
     }
+
+    for(auto i: answer)
+        if(i.job)
+            cout << "J"<<i.id<<" ";
+        else
+            cout << "V"<<i.id<<" ";
+    cout << endl;
 
     // Checking feasibility.
     bool isFeasible = IsFeasible(answer, Q, S, N, K);
@@ -926,7 +990,7 @@ pair<double, vector<data>> FastLocalSearch(bool reuse, int N, int K, const vecto
     nbhood7('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d, Q, s);
 
     // Calculate new OBJ Function.
-    double finalObj = objFunction2(initialConfig, vehicleOrder, true, K, N, t, w, P, d, F, -1);
+    double finalObj = ObjectiveFunction(initialConfig, vehicleOrder, true, K, N, t, w, P, d, F, -1);
 
     return make_pair(finalObj, initialConfig);
 }
@@ -1001,10 +1065,10 @@ pair<double, vector<data>> GA_LS(int N, int K, const vector<double>& w, const ve
             if (son1.first && son2.first) {
 
                 vector<vehicleLoaded> vOrder1 =  getVOrder(son1.second, K);
-                double son1_Obj = objFunction2(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
+                double son1_Obj = ObjectiveFunction(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
 
                 vector<vehicleLoaded> vOrder2 =  getVOrder(son2.second, K);
-                double son2_Obj = objFunction2(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
+                double son2_Obj = ObjectiveFunction(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
 
                 if(son1_Obj <= son2_Obj)
                     newPop[newPopSize] = son1.second;
@@ -1064,21 +1128,21 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
     vector<vector<data>> feasible;
 
     // Generate ATC Rule solution and check its feasibility.
-    vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
     if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasible.push_back(atcConfig);
         feasible_size++;
     }
 
     // Generate WMDD Rule solution and check its feasibility.
-    vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
     if (IsFeasible(wmddConfig, Q, s, N, K)) {
         feasible.push_back(wmddConfig);
         feasible_size++;
     }
 
     // Generate WEDD Rule solution and check its feasibility.
-    vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
     if (IsFeasible(weddConfig, Q, s, N, K)) {
         feasible.push_back(weddConfig);
         feasible_size++;
@@ -1164,10 +1228,10 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
             if (son1.first && son2.first) {
 
                 vector<vehicleLoaded> vOrder1 =  getVOrder(son1.second, K);
-                double son1_Obj = objFunction2(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
+                double son1_Obj = ObjectiveFunction(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
 
                 vector<vehicleLoaded> vOrder2 =  getVOrder(son2.second, K);
-                double son2_Obj = objFunction2(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
+                double son2_Obj = ObjectiveFunction(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
 
                 if(son1_Obj <= son2_Obj)
                     newPop[newPopSize] = son1.second;
@@ -1212,7 +1276,7 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
             }else{
                 pop[i] = newPop[i];
                 vector<vehicleLoaded> vOrder =  getVOrder(pop[i], K);
-                popObj[i] = objFunction2(pop[i], vOrder, false, K, N, t, w, P, d, F, -1);
+                popObj[i] = ObjectiveFunction(pop[i], vOrder, false, K, N, t, w, P, d, F, -1);
             }
           
             if (popObj[i] < bestObj) {
@@ -1224,6 +1288,83 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
     }
 
     return { bestObj, bestConfig };
+}
+
+void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
+{
+    cout <<"Delete here\n";
+    // Generate Random Solutions.
+    for(int i = 0; i < 10; i++)
+    {
+        vector<data> Solution = RandomSolution(N, K, Q, s);
+        if(IsFeasible(Solution, Q, s, N, K)){
+            vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
+            cout << "Random Feasible. Obj. Function: " << ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1) << "\n";
+
+            cout << "SOL1: Before 1-point cross over: ";
+            for(data j: Solution)
+                if(j.job)
+                    cout << "J" << j.id << " ";
+                else
+                    cout << "V" << j.id << " ";
+            cout << "\n";
+
+            vector<data> Solution2 = RandomSolution(N, K, Q, s);
+            cout << "SOL2: Before 1-point cross over: ";
+            for(data j: Solution2)
+                if(j.job)
+                    cout << "J" << j.id << " ";
+                else
+                    cout << "V" << j.id << " ";
+            cout << "\n";
+            
+            pair<bool, vector<data>> Offspring = CROSSOVER_1_POINT(Solution, Solution2, Q, s, N, K);
+
+            if(!Offspring.first){
+                cout <<  "Infeasible CrossOver.\n";
+            }else{
+
+               assert(Offspring.second.size() == (N + K));
+               cout <<"OBJ.F. After cross: " << ObjectiveFunction(Offspring.second, vOrder, true, K, N, t, w, P, d, F, -1) << "\n";
+                cout << "OFFSPRING: After 1-point cross over: ";
+                for(data j: Offspring.second)
+                    if(j.job)
+                        cout << "J" << j.id << " ";
+                    else
+                        cout << "V" << j.id << " "; 
+            }
+            
+            cout << "\n\n\n\n";
+            
+        }else{
+            cout << "Aborted.\n";
+            exit(0);
+        }
+    }
+
+    cout << "-----------------------------------\n";
+    // Generate Constructive Greedy Solutions
+
+    for(int i = 0; i < 10; i++)
+    {
+        vector<data> Solution = GreedySolution(true, 1000, s, N, K, w, P, d, F, Q);
+        if(IsFeasible(Solution, Q, s, N, K)){
+
+            vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
+            cout << "CONSTRUCTIVE. Obj. Function: " << ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1) << "\n";
+
+            for(data j: Solution)
+                if(j.job)
+                    cout << "J" << j.id << " ";
+                else
+                    cout << "V" << j.id << " ";
+            cout << "\n";
+        }else{
+            cout <<"CONSTRUCTIVE INFEASIBLE!!\n";
+        }
+    }
+
 }
 
 #endif
