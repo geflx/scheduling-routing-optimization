@@ -330,11 +330,11 @@ vector<data> generateValidRandomConfig(int N, int K,
 {
 
     vector<data> configuration(N + (K));
-    bool validConfig = false;
+    bool IsFeasible = false;
 
-    while (!validConfig) {
+    while (!IsFeasible) {
 
-        validConfig = true;
+        IsFeasible = true;
 
         int configSize = configuration.size();
         vector<bool> visitedConfig(configSize, false);
@@ -403,7 +403,7 @@ vector<data> generateValidRandomConfig(int N, int K,
                     // inside the car isnt
                     // valid.
 
-                    validConfig = false;
+                    IsFeasible = false;
                 }
 
                 j = contJob - 1; // Refreshing the index of extern loop.
@@ -415,7 +415,7 @@ vector<data> generateValidRandomConfig(int N, int K,
 }
 
 // * Ident OK
-bool validConfig(const vector<data>& config, const vector<int>& capacities,
+bool IsFeasible(const vector<data>& config, const vector<int>& capacities,
     const vector<int>& jobSize, int N, int K)
 {
 
@@ -492,11 +492,11 @@ vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
 
     // Generate a random config based on assigning random jobs to random cars
     // until the last ones are full.
-    bool valid = false;
+    bool feasible = false;
     vector<data> solution(N + K);
 
     int cont_tries = 0;
-    while (!valid) {
+    while (!feasible) {
 
         //[Random] Shuffled  Jobs and Shuffled Cars
         vector<int> s_jobs(N);
@@ -533,7 +533,7 @@ vector<data> randomConfigSequential(int N, int K, const vector<int>& vehicleCap,
             }
         }
 
-        valid = validConfig(solution, vehicleCap, jobSizes, N, K);
+        feasible = IsFeasible(solution, vehicleCap, jobSizes, N, K);
     }
     return solution;
 }

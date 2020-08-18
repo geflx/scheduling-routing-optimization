@@ -1,13 +1,4 @@
 #include "Core.h"
-
-// GA-LS ANALYSIS
-long long int mutations = 0;
-long long int mutationTries = 0;
-
-// ILS ANALYSIS	
-long long int totalIterations = 0;
-long long int totalRestarts = 0, acceptWorse = 0, timeRVND = 0;
-
 #include "LocalSearch.h"
 #include "Metaheuristics.h"
 
@@ -27,27 +18,27 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
     switch(metaheuristic){
 
     	case 1:
-        	tmp = ils_rvnd_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        	tmp = ILS_RVND_1(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
 			break;
 
     	case 2:
-        	tmp = ils_rvnd_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        	tmp = ILS_RVND_2(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
  			break;
  			       	
     	case 3:
-        	tmp = genAlgo1(N, K, w, P, t, F, d, Q, s, parameter1);
+        	tmp = GA_LS(N, K, w, P, t, F, d, Q, s, parameter1);
 			break;
 
     	case 4:
-        	tmp = ils_rvnd_1_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        	tmp = ILS_RVND_1_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
 			break;
 
     	case 5:
-        	tmp = ils_rvnd_2_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        	tmp = ILS_RVND_2_SBPO(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
 			break;
 
     	case 6:
-        	tmp = ils_rvnd_1_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+        	tmp = ILS_RVND_1_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
 			break;
 
     	case 7:
@@ -55,7 +46,7 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
 			break;
 
     	default:
-    		cout << "INVALID CODE.\n Aborting ... \n";
+    		cout << "Invalid metaheuristic code.\n Aborting ... \n";
     		exit(0);
     }
 
@@ -120,9 +111,6 @@ int main(int argc, char* argv[])
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t); 
         instance++;
 
-        // Delete this
-        totalIterations = totalRestarts = acceptWorse = timeRVND = 0;
-
         //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
@@ -136,12 +124,9 @@ int main(int argc, char* argv[])
             else
                 totalInstances = 300;
 
-            // printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
+            printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
         }
 
-        // Delete this;
-        cout << "Total_Iterations:" << setw(6) << totalIterations << " ILS_Restarts: " << setw(3) << totalRestarts << " Time_RVND: " << setw(3) << timeRVND << " Total_Time: " << setw(3) <<  answer.time << "\n";
-        
         // MIPStart Output.
         mipOut << setw(4) << answer.time << setw(15) << answer.value << setw(5);
 
@@ -154,9 +139,6 @@ int main(int argc, char* argv[])
         }
         mipOut << "\n";
     }
-
-    cout << "Total Mutations: " << mutations << endl;
-    cout << "Mutation tries: " << mutationTries << endl;
 
     sprintf(strOf, "MIP_%djobs.txt", N);
     rename("MIPStart_Output.txt", strOf);

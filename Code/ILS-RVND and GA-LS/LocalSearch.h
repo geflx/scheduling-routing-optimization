@@ -999,15 +999,22 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
         int neighbor = interRoute[it];
         bool improved = false;
 
-        switch (neighbor) {
-        case 2:
-            improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        case 4:
-            improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        case 5:
-            improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        case 6:
-            improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+        switch (neighbor) { 
+            case 2:
+                improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                break;
+
+            case 4:
+                improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                break;
+
+            case 5:
+                improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                break;
+
+            case 6:
+                improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                break;
         }
 
         if (improved) {
@@ -1065,14 +1072,18 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
         bool improved = false;
 
         switch (neighbor) {
-        case 2:
-            improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        case 4:
-            improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
-        case 5:
-            improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
-        case 6:
-            improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+            case 2:
+                improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                break;
+            case 4:
+                improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                break;
+            case 5:
+                improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                break;
+            case 6:
+                improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                break;
         }
 
         if (improved) {

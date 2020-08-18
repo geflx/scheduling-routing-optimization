@@ -105,9 +105,6 @@ vector<data> greedyMethod(const string& which, const vector<int>& jobSize, int N
 //Soft transformation: swap two jobs between different vehicles
 vector<data> mutation(vector<data>& solution, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
 {
-    //GA_LS ANALYSIS
-    mutations++;
-
     vector<int> carrying = carryWeight(solution, jobSize, K);
 
     vector<int> jobPos(N, -1);
@@ -140,8 +137,6 @@ vector<data> mutation(vector<data>& solution, const vector<int>& capacities, con
     int randomTries = 0;
 
     while (true) {
-
-        mutationTries++;
 
         if (randomTries > 2 * N) {
             // cout<<"Caution - Force break!! Tried N*2 times to swap between cars and get invalid move. \n";
@@ -280,6 +275,9 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
             }
         }
 
+        // Caution. Remove this if necessary.
+        break;
+
     case 2:
 
         /* Perturbation mode 2: Insert Jobs in other vehicles */
@@ -407,13 +405,13 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
             }
         }
 
-        // case 3:
+        break;
     }
 
     return solution;
 }
 
-pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
@@ -427,18 +425,18 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
 
     // Verifying if they are really valid
 
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         validSolutions.push_back(atcConfig);
         nbValidSolutions++;
     }
 
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
 
         validSolutions.push_back(wmddConfig);
         nbValidSolutions++;
     }
 
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
 
         validSolutions.push_back(weddConfig);
         nbValidSolutions++;
@@ -472,20 +470,9 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
 
         for (int b = 0; b < maxIterIls; b++) {
 
-        	// Delete this
-        	++totalIterations;
-        	
             if (!justCalledRvnd) {        	
-
-	            // Delete this
-	            time_t iniTime, endTime;
-	    		time(&iniTime);
                 
                 callRvnd = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
-	    		
-	    		// Delete this
-	    		time(&endTime);
-				timeRVND += difftime(endTime, iniTime);
             }
             else {
                 justCalledRvnd = false;
@@ -497,21 +484,17 @@ pair<double, vector<data> > ils_rvnd_1(int N, int K, const vector<double>& w, co
                 bestSolution = callRvnd.second;
 
                 b = 0; //Reseting ILS!!
-                
-                // Delete this
-                totalRestarts++;
             }
             solution = perturb(solution, Q, s, N, K, perturbSize);
         }
     }
-    if (validConfig(bestSolution, Q, s, N, K))
+    if (IsFeasible(bestSolution, Q, s, N, K))
         return { bestResult, bestSolution };
     else
         return { -1, bestSolution };
 }
 
-// * Review 1
-pair<double, vector<data> > ils_rvnd_1_SBPO(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> ILS_RVND_1_SBPO(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
@@ -525,18 +508,18 @@ pair<double, vector<data> > ils_rvnd_1_SBPO(int N, int K, const vector<double>& 
 
     // Verifying if greedy solutions are feasible.
 
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasibleVec.push_back(atcConfig);
         feasibleNb++;
     }
 
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
 
         feasibleVec.push_back(wmddConfig);
         feasibleNb++;
     }
 
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
 
         feasibleVec.push_back(weddConfig);
         feasibleNb++;
@@ -584,14 +567,13 @@ pair<double, vector<data> > ils_rvnd_1_SBPO(int N, int K, const vector<double>& 
         }
     }
 
-    if (validConfig(SBest.second, Q, s, N, K))
+    if (IsFeasible(SBest.second, Q, s, N, K))
         return SBest;
     else
         exit(0);
 }
 
-// * Review 2
-pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> ILS_RVND_1_UPDATED(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
@@ -600,21 +582,21 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
 
     // Generate ATC Rule solution and check its feasibility.
     vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasible.push_back(atcConfig);
         feasible_size++;
     }
 
     // Generate WMDD Rule solution and check its feasibility.
     vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
         feasible.push_back(wmddConfig);
         feasible_size++;
     }
 
     // Generate WEDD Rule solution and check its feasibility.
     vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
         feasible.push_back(weddConfig);
         feasible_size++;
     }
@@ -647,20 +629,8 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
 
         for (int b = 0; b < maxIterIls; b++) {
 
-        	// Delete this
-			++totalIterations;
-
             S_2 = perturb(S_1.second, Q, s, N, K, perturbSize);
-
-        	// Delete this
-            time_t iniTime, endTime;
-    		time(&iniTime);
-
             S_3 = RVND(true, N, K, w, P, t, F, d, Q, s, S_2);
-    		
-    		// Delete this
-    		time(&endTime);
-			timeRVND += difftime(endTime, iniTime);
 
             // Accept S''' as new S' (solution to be perturbed later).
             if (S_3.first < S_1.first)
@@ -670,8 +640,6 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
             if (S_1.first < S_Best.first) {
                 S_Best = S_1;
                 b = -1;
-                // Delete this
-                totalRestarts++;
             }
         }
     }
@@ -679,8 +647,7 @@ pair<double, vector<data> > ils_rvnd_1_UPDATED(int N, int K, const vector<double
     return S_Best;
 }
 
-// * Review 1
-pair<double, vector<data> > ils_rvnd_2_SBPO(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> ILS_RVND_2_SBPO(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
 
@@ -694,18 +661,18 @@ pair<double, vector<data> > ils_rvnd_2_SBPO(int N, int K, const vector<double>& 
 
     // Verifying if greedy solutions are feasible.
 
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasibleVec.push_back(atcConfig);
         feasibleNb++;
     }
 
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
 
         feasibleVec.push_back(wmddConfig);
         feasibleNb++;
     }
 
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
 
         feasibleVec.push_back(weddConfig);
         feasibleNb++;
@@ -753,13 +720,13 @@ pair<double, vector<data> > ils_rvnd_2_SBPO(int N, int K, const vector<double>& 
         }
     }
 
-    if (validConfig(SBest.second, Q, s, N, K))
+    if (IsFeasible(SBest.second, Q, s, N, K))
         return SBest;
     else
         exit(0);
 }
 
-pair<double, vector<data> > ils_rvnd_2(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> ILS_RVND_2(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int sizePerturb)
 {
 
@@ -773,15 +740,15 @@ pair<double, vector<data> > ils_rvnd_2(int N, int K, const vector<double>& w, co
 
     //Danger: Verify ATC!!!
     // Verifying if they are really valid
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         validSolutions.push_back(atcConfig);
         nbValidSolutions++;
     }
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
         validSolutions.push_back(wmddConfig);
         nbValidSolutions++;
     }
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
         validSolutions.push_back(weddConfig);
         nbValidSolutions++;
     }
@@ -833,14 +800,52 @@ pair<double, vector<data> > ils_rvnd_2(int N, int K, const vector<double>& w, co
         }
     }
 
-    if (validConfig(bestSolution, Q, s, N, K))
+    if (IsFeasible(bestSolution, Q, s, N, K))
         return { bestResult, bestSolution };
     else
         return { -1, bestSolution };
 }
 
-//pair< BOOL, solution > indicating if it is valid
-pair<bool, vector<data> > crossOver(const vector<data>& f1, const vector<data>& f2, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
+// Reviewed: I
+pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<data>& S2, const vector<int>& Q, const vector<int>& S, int N, int K)
+{
+    int cutSize = 0;
+    while(cutSize == 0)
+        cutSize = rand() % (S1.size());
+
+    // Remove cutSize first positions from S1.
+    vector<data> answer = S1;
+    unordered_set<int> cuttedJob, cuttedVehicle;
+
+    for(int i = 0; i < cutSize; i++)
+        if(S1[i].job)
+            cuttedJob.insert(S1[i].id);
+        else
+            cuttedVehicle.insert(S1[i].id);
+
+    // Reinsert them following S2's order.
+    int reinsertPos = 0;
+    for(int i = 0; i < S2.size(); i++){
+        if(S2[i].job){
+            if(cuttedJob.find(S2[i].id) != cuttedJob.end()){
+                answer[reinsertPos] = S2[i];
+                reinsertPos++;
+            }
+        }
+        else{
+            if(cuttedVehicle.find(S2[i].id) != cuttedVehicle.end()){
+                answer[reinsertPos] = S2[i];
+                reinsertPos++;
+            }
+        }
+    }
+
+    // Checking feasibility.
+    bool isFeasible = IsFeasible(answer, Q, S, N, K);
+    return make_pair(isFeasible, answer);
+}
+
+pair<bool, vector<data>> CROSSOVER_2_POINT(const vector<data>& f1, const vector<data>& f2, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
 {
 
     //generating random interval to 2-point crossOver
@@ -900,14 +905,13 @@ pair<bool, vector<data> > crossOver(const vector<data>& f1, const vector<data>& 
         insert++;
     }
 
-    bool isvalid = validConfig(son, capacities, jobSize, N, K);
+    bool isFeasible = IsFeasible(son, capacities, jobSize, N, K);
 
-    return { isvalid, son };
+    return make_pair(isFeasible, son);
 }
 
-// * Ident OK
-// GA-LS's local search method.
-pair<double, vector<data> > fastLocalSearch(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+
+pair<double, vector<data>> FastLocalSearch(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
 {
 
@@ -927,7 +931,7 @@ pair<double, vector<data> > fastLocalSearch(bool reuse, int N, int K, const vect
     return make_pair(finalObj, initialConfig);
 }
 
-pair<double, vector<data> > genAlgo1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> GA_LS(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int popSize)
 {
 
@@ -990,64 +994,55 @@ pair<double, vector<data> > genAlgo1(int N, int K, const vector<double>& w, cons
                 }
             }
 
-            pair<bool, vector<data> > son1 = crossOver(pop[father1], pop[father2], Q, s, N, K);
-            pair<bool, vector<data> > son2 = crossOver(pop[father1], pop[father2], Q, s, N, K);
+            pair<bool, vector<data> > son1 = CROSSOVER_2_POINT(pop[father1], pop[father2], Q, s, N, K);
+            pair<bool, vector<data> > son2 = CROSSOVER_2_POINT(pop[father1], pop[father2], Q, s, N, K);
 
-            //new person to be inserted in new population
-            vector<data> newPerson;
-// ! CAUTION
-            //IF Both sons are feasible
+            // Both feasible: Binary Tournament.
             if (son1.first && son2.first) {
-                newPop[newPopSize] = son1.second;
-                newPop[newPopSize] = son2.second;
 
+                vector<vehicleLoaded> vOrder1 =  getVOrder(son1.second, K);
+                double son1_Obj = objFunction2(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
+
+                vector<vehicleLoaded> vOrder2 =  getVOrder(son2.second, K);
+                double son2_Obj = objFunction2(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
+
+                if(son1_Obj <= son2_Obj)
+                    newPop[newPopSize] = son1.second;
+                else
+                    newPop[newPopSize] = son2.second;
             }
-            //Only one offspring is feasible
             else if (son1.first) {
-
                 newPop[newPopSize] = son1.second;
             }
             else if (son2.first) {
-
                 newPop[newPopSize] = son2.second;
             }
-            else { //both sons are infeasible
-
-                //pick one father at random
+            else { 
+                // Both offsprings infeasible, pick one father randomly.
                 int randomPickFather = rand() % 2;
 
-                if (randomPickFather == 0) {
+                if (randomPickFather == 0)
                     newPop[newPopSize] = pop[father1];
-                }
-                else { // == 1
+                else
                     newPop[newPopSize] = pop[father2];
-                }
-
+                
+                // Apply mutation.
                 vector<data> afterMutation = mutation(newPop[newPopSize], Q, s, N, K);
-                //Do mutation in father picked
-
                 newPop[newPopSize] = afterMutation;
             }
-
-            newPopSize++;
+            ++newPopSize;
         }
 
         //Putting in the last position the best solution
         newPop[newPopSize] = bestConfig;
         newPopObj[newPopSize] = bestObj;
 
-        //Fast Local Search in new population
-        // AND calculating object function!!
-
         for (int i = 0; i < popSize; i++) {
             
-            //pair<double, vector<data> > callFastLocalSearch = fastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
-            //pop[i] = callFastLocalSearch.second;
-            //popObj[i] = callFastLocalSearch.first;
-
-            // UNDO!
-            vector<vehicleLoaded> vOrder;
-            popObj[i] = objFunction2(pop[i], vOrder, true, K, N, t, w, P, d, F, -1);
+            // Apply fast local search.
+            pair<double, vector<data>> newS = FastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
+            pop[i] = newS.second;
+            popObj[i] = newS.first;
 
             if (popObj[i] < bestObj) {
                 bestObj = popObj[i];
@@ -1057,10 +1052,10 @@ pair<double, vector<data> > genAlgo1(int N, int K, const vector<double>& w, cons
         
     }
 
-    return { bestObj, bestConfig };
+    return make_pair(bestObj, bestConfig);
 }
 
-pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int popSize)
 {
 
@@ -1070,21 +1065,21 @@ pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w,
 
     // Generate ATC Rule solution and check its feasibility.
     vector<data> atcConfig = greedyMethod(atc, s, N, K, w, P, d, F, Q);
-    if (validConfig(atcConfig, Q, s, N, K)) {
+    if (IsFeasible(atcConfig, Q, s, N, K)) {
         feasible.push_back(atcConfig);
         feasible_size++;
     }
 
     // Generate WMDD Rule solution and check its feasibility.
     vector<data> wmddConfig = greedyMethod(wmdd, s, N, K, w, P, d, F, Q);
-    if (validConfig(wmddConfig, Q, s, N, K)) {
+    if (IsFeasible(wmddConfig, Q, s, N, K)) {
         feasible.push_back(wmddConfig);
         feasible_size++;
     }
 
     // Generate WEDD Rule solution and check its feasibility.
     vector<data> weddConfig = greedyMethod(wedd, s, N, K, w, P, d, F, Q);
-    if (validConfig(weddConfig, Q, s, N, K)) {
+    if (IsFeasible(weddConfig, Q, s, N, K)) {
         feasible.push_back(weddConfig);
         feasible_size++;
     }
@@ -1104,16 +1099,12 @@ pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w,
         pair<double, vector<data>> S;
 
         if(feasible_size > 0){
-
             S = RVND(true, N, K, w, P, t, F, d, Q, s, feasible[getGreedy]);
             getGreedy++;
             feasible_size--;
-
         }
         else{
-
             S = RVND(false, N, K, w, P, t, F, d, Q, s, empty);
-
         }
 
         pop[i] = S.second;
@@ -1154,7 +1145,6 @@ pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w,
                 else 
                     father1 = fatherLeft2;
                 
-
                 int fatherRight1 = rand() % popSize;
                 int fatherRight2 = rand() % popSize;
                 while (fatherRight1 == fatherRight2) //Need to be DIF
@@ -1167,46 +1157,43 @@ pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w,
                 
             }
 
-            pair<bool, vector<data> > son1 = crossOver(pop[father1], pop[father2], Q, s, N, K);
-            pair<bool, vector<data> > son2 = crossOver(pop[father1], pop[father2], Q, s, N, K);
+            pair<bool, vector<data> > son1 = CROSSOVER_2_POINT(pop[father1], pop[father2], Q, s, N, K);
+            pair<bool, vector<data> > son2 = CROSSOVER_2_POINT(pop[father1], pop[father2], Q, s, N, K);
 
-            //new person to be inserted in new population
-            vector<data> newPerson;
-// ! CAUTION
-            //IF Both sons are feasible
+            // Both feasible: Binary Tournament.
             if (son1.first && son2.first) {
-                newPop[newPopSize] = son1.second;
-                newPop[newPopSize] = son2.second;
 
+                vector<vehicleLoaded> vOrder1 =  getVOrder(son1.second, K);
+                double son1_Obj = objFunction2(son1.second, vOrder1, false, K, N, t, w, P, d, F, -1);
+
+                vector<vehicleLoaded> vOrder2 =  getVOrder(son2.second, K);
+                double son2_Obj = objFunction2(son2.second, vOrder2, false, K, N, t, w, P, d, F, -1);
+
+                if(son1_Obj <= son2_Obj)
+                    newPop[newPopSize] = son1.second;
+                else
+                    newPop[newPopSize] = son2.second;
             }
-            //Only one offspring is feasible
             else if (son1.first) {
-
                 newPop[newPopSize] = son1.second;
             }
             else if (son2.first) {
-
                 newPop[newPopSize] = son2.second;
             }
-            else { //both sons are infeasible
-
-                //pick one father at random
+            else { 
+                // Both offsprings infeasible, pick one father randomly.
                 int randomPickFather = rand() % 2;
 
-                if (randomPickFather == 0) {
+                if (randomPickFather == 0)
                     newPop[newPopSize] = pop[father1];
-                }
-                else { // == 1
+                else
                     newPop[newPopSize] = pop[father2];
-                }
-
+                
+                // Apply mutation.
                 vector<data> afterMutation = mutation(newPop[newPopSize], Q, s, N, K);
-                //Do mutation in father picked
-
                 newPop[newPopSize] = afterMutation;
             }
-
-            newPopSize++;
+            ++newPopSize;
         }
 
         //Putting in the last position the best solution
@@ -1217,10 +1204,17 @@ pair<double, vector<data> > GA_LS_UPDATED(int N, int K, const vector<double>& w,
         // AND calculating object function!!
 
         for (int i = 0; i < popSize; i++) {
-            pair<double, vector<data> > callFastLocalSearch = fastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
-            pop[i] = callFastLocalSearch.second;
-            popObj[i] = callFastLocalSearch.first;
 
+            if(i < popSize/3){
+                pair<double, vector<data> > newS = FastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
+                pop[i] = newS.second;
+                popObj[i] = newS.first;
+            }else{
+                pop[i] = newPop[i];
+                vector<vehicleLoaded> vOrder =  getVOrder(pop[i], K);
+                popObj[i] = objFunction2(pop[i], vOrder, false, K, N, t, w, P, d, F, -1);
+            }
+          
             if (popObj[i] < bestObj) {
                 bestObj = popObj[i];
                 bestConfig = pop[i];
