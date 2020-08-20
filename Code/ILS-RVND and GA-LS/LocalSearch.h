@@ -4,7 +4,7 @@
 using namespace std;
 
 /*  Neighborhood 1: Swap sequential jobs inside a vehicle */
-bool nbhood1(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_1(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
 
@@ -57,7 +57,7 @@ bool nbhood1(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 }
 
 /*  Neighborhood 2: Swap jobs between vehicles */
-bool nbhood2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
 {
 
@@ -117,7 +117,7 @@ bool nbhood2(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 }
 
 /*  Neighborhood 3: Inserting jobs in positions inside a vehicle */
-bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
     double bestImprove = 0;
@@ -267,7 +267,7 @@ bool nbhood3(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 }
 
 /*  Neighborhood 4: Inserting jobs in positions inside OTHERS vehicles */
-bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
 {
 
@@ -562,7 +562,7 @@ bool nbhood4(char bestOrFirst, vector<data>& solution, vector<vehicleLoaded>& VO
 }
 
 /*  Neighborhood 5: Swap entire vehicle (with all its jobs) with another ones */
-bool nbhood5(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_5(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
 
@@ -682,7 +682,7 @@ bool nbhood5(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
 }
 
 /*  Neighborhood 6: Insert entire vehicle (with all its jobs) in  another positions, except for the immediately before */
-bool nbhood6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d)
 {
 
@@ -867,7 +867,7 @@ bool nbhood6(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
 }
 
 /*  Neighborhood 7: 2-OPT */
-bool nbhood7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
+bool Neighborhood_7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrder, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
 {
 
@@ -975,8 +975,7 @@ bool nbhood7(char bestOrFirst, vector<data>& config, vector<vehicleLoaded>& VOrd
     return false;
 }
 
-//pair< ValueObjFunction, validSolution>
-pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> RVND_Custom(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
 {
 
@@ -1001,32 +1000,32 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
 
         switch (neighbor) { 
             case 2:
-                improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                improved = Neighborhood_2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
                 break;
 
             case 4:
-                improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                improved = Neighborhood_4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
                 break;
 
             case 5:
-                improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                improved = Neighborhood_5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
                 break;
 
             case 6:
-                improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                improved = Neighborhood_6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
                 break;
         }
 
         if (improved) {
             generalImprove = true;
             while (true) { //intra route
-                if (nbhood1('B', initialConfig, VOrder, N, K, w, P, t, F, d)) {
+                if (Neighborhood_1('B', initialConfig, VOrder, N, K, w, P, t, F, d)) {
                     continue;
                 }
-                if (nbhood3('B', initialConfig, VOrder, N, K, w, P, t, F, d)) {
+                if (Neighborhood_3('B', initialConfig, VOrder, N, K, w, P, t, F, d)) {
                     continue;
                 }
-                if (nbhood7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s)) {
+                if (Neighborhood_7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s)) {
                     continue;
                 }
                 break;
@@ -1049,7 +1048,6 @@ pair<double, vector<data> > RVND_Custom(bool reuse, int N, int K, const vector<d
     return make_pair(result, initialConfig);
 }
 
-//pair< ValueObjFunction, validSolution>
 pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
 {
@@ -1073,16 +1071,16 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
 
         switch (neighbor) {
             case 2:
-                improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                improved = Neighborhood_2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
                 break;
             case 4:
-                improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+                improved = Neighborhood_4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
                 break;
             case 5:
-                improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                improved = Neighborhood_5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
                 break;
             case 6:
-                improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+                improved = Neighborhood_6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
                 break;
         }
 
@@ -1095,15 +1093,15 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
 
                 bool localImprove = false;
 
-                if(intraRoute[i] == 1 && nbhood1('B', initialConfig, VOrder, N, K, w, P, t, F, d))
+                if(intraRoute[i] == 1 && Neighborhood_1('B', initialConfig, VOrder, N, K, w, P, t, F, d))
                     
                     localImprove = true;
 
-                else if(intraRoute[i] == 3 && nbhood3('B', initialConfig, VOrder, N, K, w, P, t, F, d))
+                else if(intraRoute[i] == 3 && Neighborhood_3('B', initialConfig, VOrder, N, K, w, P, t, F, d))
                     
                     localImprove = true;
 
-                else if(intraRoute[i] == 7 && nbhood7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s))
+                else if(intraRoute[i] == 7 && Neighborhood_7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s))
                     
                     localImprove = true;
 
@@ -1124,7 +1122,6 @@ pair<double, vector<data> > RVND_Custom_updated(bool reuse, int N, int K, const 
     return make_pair(result, initialConfig);
 }
 
-//pair< ValueObjFunction, validSolution>
 pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
 {
@@ -1149,25 +1146,25 @@ pair<double, vector<data> > RVND(bool reuse, int N, int K, const vector<double>&
         bool improved = false;
 
         if (whichNeighbor == 1) 
-            improved = nbhood1('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+            improved = Neighborhood_1('B', initialConfig, VOrder, N, K, w, P, t, F, d);
         
         else if (whichNeighbor == 2) 
-            improved = nbhood2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+            improved = Neighborhood_2('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
         
         else if (whichNeighbor == 3) 
-            improved = nbhood3('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+            improved = Neighborhood_3('B', initialConfig, VOrder, N, K, w, P, t, F, d);
         
         else if (whichNeighbor == 4) 
-            improved = nbhood4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+            improved = Neighborhood_4('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
         
         else if (whichNeighbor == 5) 
-            improved = nbhood5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+            improved = Neighborhood_5('B', initialConfig, VOrder, N, K, w, P, t, F, d);
         
         else if (whichNeighbor == 6) 
-            improved = nbhood6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
+            improved = Neighborhood_6('B', initialConfig, VOrder, N, K, w, P, t, F, d);
         
         else if (whichNeighbor == 7) 
-            improved = nbhood7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
+            improved = Neighborhood_7('B', initialConfig, VOrder, N, K, w, P, t, F, d, Q, s);
         
 
         if (improved) {

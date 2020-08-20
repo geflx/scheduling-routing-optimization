@@ -1,8 +1,7 @@
 #ifndef HEURISTICS_H
 #define HEURISTICS_H
 
-// Reviews: 1
-// Tested: 
+// Reviews: 2
 vector<data> GreedySolution(bool constructiveGreedy, int ruleID, const vector<int>& S, int N, int K, const vector<double>& w,
     const vector<int>& P, const vector<int>& d, const vector<int>& F, const vector<int>& Q)
 {
@@ -466,6 +465,47 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
     return solution;
 }
 
+bool IteratedGreedy(vector<data> &S, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, double removePercentual)
+{
+    pair<bool, double> answer;
+    int removeSz = ceil(removePercentual * N);
+    
+    // Insert positions from [1, N + K) in an array and shuffle it.
+    vector<int> removePos (N + K - 1);
+    for(int i = 1; i < (N + K); i++)
+        removePos[i - 1] = i;
+    random_shuffle(removePos.begin(), removePos.end());
+
+    // Copy data from removed positions.
+    vector<data> reinsert; 
+    reinsert.reserve(removeSz);
+    unordered_set<int> setRemove;
+    for(int i = 0, j = 0; j < removeSz && i < removePos.size(); i++, j++){
+        reinsert.push_back(S[removePos[i]]);
+        setRemove.insert(removePos[i]);
+    }
+
+    // Remove data from original array and move them to S_New.
+    vector<data> S_New;
+    S_New.reserve(N + K - removeSz);
+    for(int i = 0; i < S.size(); i++)
+        if(setRemove.find(i) == setRemove.end())
+            S_New.push_back(S[i]);
+
+    for(int i = 0; i < removeSz; i++)
+        // if(!IG_InsertData(reinsert[i], S_New, N, K, w, P, t, F, d, Q, s))
+            // break;
+
+
+    if(IsFeasible(S_New, Q, s, N, K)){
+        S = S_New;
+        return true;
+    }
+
+    return false;
+}
+
 pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
@@ -861,7 +901,7 @@ pair<double, vector<data>> ILS_RVND_2(int N, int K, const vector<double>& w, con
         return { -1, bestSolution };
 }
 
-// Reviewed: I  (2 more)
+// Reviews: II
 pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<data>& S2, const vector<int>& Q, const vector<int>& S, int N, int K)
 {
     int cutSize;
@@ -871,31 +911,32 @@ pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<
     while (cutSize == (S1.size() - 1));
 
     // Remove cutSize first positions from S1.
-    vector<data> answer = S1;
+    vector<data> answer;
+    answer.reserve(N + K);
     unordered_set<int> cuttedJob, cuttedVehicle;
-
+  
     for(int i = cutSize; i < S1.size(); i++)
         if(S1[i].job)
             cuttedJob.insert(S1[i].id);
         else
             cuttedVehicle.insert(S1[i].id);
 
+    for(int i = 0; i < cutSize; i++)
+        answer.push_back(S1[i]);
+
     // Reinsert them following S2's order.
-    int reinsertPos = cutSize;
     for(int i = 0; i < S2.size(); i++){
         if(S2[i].job){
-            if(cuttedJob.find(S2[i].id) != cuttedJob.end()){
-                answer[reinsertPos] = S2[i];
-                reinsertPos++;
-            }
+            if(cuttedJob.find(S2[i].id) != cuttedJob.end())
+                answer.push_back(S2[i]);
         }
         else{
-            if(cuttedVehicle.find(S2[i].id) != cuttedVehicle.end()){
-                answer[reinsertPos] = S2[i];
-                reinsertPos++;
-            }
+            if(cuttedVehicle.find(S2[i].id) != cuttedVehicle.end())
+                answer.push_back(S2[i]);            
         }
     }
+
+    assert(answer.size() == S1.size());
 
     for(auto i: answer)
         if(i.job)
@@ -976,23 +1017,23 @@ pair<bool, vector<data>> CROSSOVER_2_POINT(const vector<data>& f1, const vector<
 
 
 pair<double, vector<data>> FastLocalSearch(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
-    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& initialConfig)
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& S)
 {
 
-    vector<vehicleLoaded> vehicleOrder = getVOrder(initialConfig, K); //Generating info about vehicle transportation
+    vector<vehicleLoaded> vOrder = getVOrder(S, K); //Generating info about vehicle transportation
 
-    nbhood1('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d);
-    nbhood2('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d, Q, s);
-    nbhood3('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d);
-    nbhood4('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d, Q, s);
-    nbhood5('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d);
-    nbhood6('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d);
-    nbhood7('B', initialConfig, vehicleOrder, N, K, w, P, t, F, d, Q, s);
+    Neighborhood_1('B', S, vOrder, N, K, w, P, t, F, d);
+    Neighborhood_2('B', S, vOrder, N, K, w, P, t, F, d, Q, s);
+    Neighborhood_3('B', S, vOrder, N, K, w, P, t, F, d);
+    Neighborhood_4('B', S, vOrder, N, K, w, P, t, F, d, Q, s);
+    Neighborhood_5('B', S, vOrder, N, K, w, P, t, F, d);
+    Neighborhood_6('B', S, vOrder, N, K, w, P, t, F, d);
+    Neighborhood_7('B', S, vOrder, N, K, w, P, t, F, d, Q, s);
 
     // Calculate new OBJ Function.
-    double finalObj = ObjectiveFunction(initialConfig, vehicleOrder, true, K, N, t, w, P, d, F, -1);
+    double finalObj = ObjectiveFunction(S, vOrder, true, K, N, t, w, P, d, F, -1);
 
-    return make_pair(finalObj, initialConfig);
+    return make_pair(finalObj, S);
 }
 
 pair<double, vector<data>> GA_LS(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
@@ -1293,6 +1334,12 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
 void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
 {
+    for(int i = 0; i < 10; i++)
+    {
+        vector<data> Solution = RandomSolution(N, K, Q, s);
+        IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.3);
+    }
+    /*
     cout <<"Delete here\n";
     // Generate Random Solutions.
     for(int i = 0; i < 10; i++)
@@ -1363,7 +1410,7 @@ void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vec
         }else{
             cout <<"CONSTRUCTIVE INFEASIBLE!!\n";
         }
-    }
+    } */
 
 }
 

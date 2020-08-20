@@ -9,12 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <cmath>
-#include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include <algorithm>
 #include <chrono>
 #include <random>
@@ -81,10 +76,7 @@ double ObjectiveFunction(const vector<data>& S, vector<vehicleLoaded>& vehicleOr
     const vector<int>& P, const vector<int>& d,
     const vector<int>& F, int v)
 {
-
-    double travelC, useC, weightC, accPtime;
-    travelC = useC = weightC = accPtime = 0.0;
-
+    double travelC = 0.0, useC = 0.0, weightC = 0.0, accPtime = 0.0;
     int vOrderSize = vehicleOrder.size();
 
     if (v != -1)
@@ -144,76 +136,64 @@ double ObjectiveFunction(const vector<data>& S, vector<vehicleLoaded>& vehicleOr
     return travelC + weightC + useC;
 }
 
-bool IsFeasible(const vector<data>& config, const vector<int>& capacities,
-    const vector<int>& jobSize, int N, int K)
+bool IsFeasible(const vector<data>& config, const vector<int>& capacities, const vector<int>& jobSize, int N, int K)
 {
+    unordered_set<int> jobsIn, carIn;
 
-    int walk = 0;
-    bool valid = true;
-
-    unordered_set<int> jobsIn;
-    unordered_set<int> carIn;
-
-    // Missing vehicle for first and possible more jobs.
-    if(config[0].job)
+    // Missing first vehicle or incorrect size.
+    if(config[0].job || config.size() != (N + K))
         return false;
 
     for (int i = 0; i < config.size(); i++) {
 
         // ID == -1.
-        if (config[i].id == -1)
-            return false;
+        if (config[i].id == -1) return false;
 
         if (config[i].job) {
 
+            // Check if job repeats.
             if (jobsIn.find(config[i].id) == jobsIn.end())
                 jobsIn.insert(config[i].id);
             else
-                return false; // Repeated Job.
-
-            // Job ID out of boundaries.
-            if (config[i].id < 0 || config[i].id >= N)
                 return false;
+
+            // Job's ID out of boundaries.
+            if (config[i].id < 0 || config[i].id >= N) return false;
         }
         else {
 
+            // Check if vehicle repeats.
             if (carIn.find(config[i].id) == carIn.end())
                 carIn.insert(config[i].id);
             else
-                return false; // Repeated vehicle.
+                return false; 
 
             // Vehicle ID out of boundaries.
-            if (config[i].id < 0 || config[i].id >= K)
-                return false;
+            if (config[i].id < 0 || config[i].id >= K) return false;
         }
     }
 
-    while (walk < config.size() && valid) {
+    // Check vehicle integrity (capacity).
+    int i = 0;
+    while (i < config.size()) {
 
-        int walkAhead = walk;
+        int j = i;
+        if (config[i].job == false) {
 
-        if (config[walk].job == false) {
-
-            walkAhead = walk + 1;
-
-            if (walkAhead >= config.size())
+            j = i + 1;
+            if (j >= config.size()) 
                 break;
 
-            int carCapacity = capacities[config[walk].id];
-            int accCap = 0;
+            int accCap = 0, carCapacity = capacities[config[i].id];
 
-            while (walkAhead < config.size() && config[walkAhead].job) {
-
-                accCap += jobSize[config[walkAhead].id];
-
-                // Vehicle overlaps its capacity.
-                if (accCap > carCapacity)
+            while (j < config.size() && config[j].job) {
+                accCap += jobSize[config[j].id];
+                if (accCap > carCapacity) 
                     return false;
-
-                ++walkAhead;
+                ++j;
             }
         }
-        walk = walkAhead;
+        i = j;
     }
 
     return true;
