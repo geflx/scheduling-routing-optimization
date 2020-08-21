@@ -465,11 +465,54 @@ vector<data> perturb(vector<data>& solution, const vector<int>& capacities, cons
     return solution;
 }
 
-bool IteratedGreedy(vector<data> &S, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+
+// Reviews: III
+double IG_InsertPos(bool simulate, int pos, const data &Data, vector<data> &S, int N, int K, const vector<double>& w, 
+    const vector<int>& P, const vector<vector<int> >& t, const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s) 
+{
+    vector<data> S_Temp = S;
+
+    // Swapping positions backwards = inserting in position.
+    for(int i = S.size() - 2, j = S.size() - 1; i >= 1 && i >= pos; i--, j--)
+        swap(S_Temp[i], S_Temp[j]);
+
+    // Evaluate solution.
+    vector<vehicleLoaded> vOrder = getVOrder(S_Temp, K);
+    double ObjF = ObjectiveFunction(S_Temp, vOrder, false, K, N, t, w, P, d, F, -1);
+
+    if(!simulate)
+        S = S_Temp;
+
+    return ObjF;
+}
+
+// Reviews: I
+void IG_AlocateData(const data &Data, vector<data> &S, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
+{
+    S.push_back(Data);
+
+    // Inserting at every position from [1, N + K] and calculating total cost.
+    priority_queue<pair<double, int>> status;
+    for(int i = 1; i < S.size(); i++)
+    {
+        double ObjF = IG_InsertPos(true, i, Data, S, N, K, w, P, t, F, d, Q, s);
+        status.push(make_pair(-1.0 * ObjF, i));        
+    }
+
+    // Insert in best position available.
+    IG_InsertPos(false, status.top().second, Data, S, N, K, w, P, t, F, d, Q, s);
+}
+
+// Remove assert.
+// Reviews: II
+pair<bool, double> IteratedGreedy(vector<data> &S, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, double removePercentual)
 {
     pair<bool, double> answer;
     int removeSz = ceil(removePercentual * N);
+
+    assert(S.size() == (N + K));
     
     // Insert positions from [1, N + K) in an array and shuffle it.
     vector<int> removePos (N + K - 1);
@@ -481,29 +524,37 @@ bool IteratedGreedy(vector<data> &S, int N, int K, const vector<double>& w, cons
     vector<data> reinsert; 
     reinsert.reserve(removeSz);
     unordered_set<int> setRemove;
-    for(int i = 0, j = 0; j < removeSz && i < removePos.size(); i++, j++){
+    for(int i = 0, j = 0; j < removeSz && i < removePos.size(); i++, j++)
+    {
         reinsert.push_back(S[removePos[i]]);
         setRemove.insert(removePos[i]);
     }
 
-    // Remove data from original array and move them to S_New.
+    // Copy new array to S_New.
     vector<data> S_New;
     S_New.reserve(N + K - removeSz);
-    for(int i = 0; i < S.size(); i++)
+    for(int i = 0; i < S.size() && S_New.size() < (S.size() - removeSz); i++)
         if(setRemove.find(i) == setRemove.end())
             S_New.push_back(S[i]);
 
-    for(int i = 0; i < removeSz; i++)
-        // if(!IG_InsertData(reinsert[i], S_New, N, K, w, P, t, F, d, Q, s))
-            // break;
+    assert(S_New.size() == (N + K - removeSz));
+    assert(removeSz == reinsert.size());
+    // Try to reinsert each removed data.
+    for(int i = 0; i < reinsert.size(); i++)
+        IG_AlocateData(reinsert[i], S_New, N, K, w, P, t, F, d, Q, s);
 
-
-    if(IsFeasible(S_New, Q, s, N, K)){
+    // If feasible: accept and evaluate.
+    if(IsFeasible(S_New, Q, s, N, K))
+    {
+        assert(S_New.size() == (N + K));
         S = S_New;
-        return true;
+        vector<vehicleLoaded> vOrder = getVOrder(S, K);
+        double ObjF = ObjectiveFunction(S, vOrder, false, K, N, t, w, P, d, F, -1);
+
+        return make_pair(true, ObjF);
     }
 
-    return false;
+    return make_pair(false, INF);
 }
 
 pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
@@ -1015,7 +1066,6 @@ pair<bool, vector<data>> CROSSOVER_2_POINT(const vector<data>& f1, const vector<
     return make_pair(isFeasible, son);
 }
 
-
 pair<double, vector<data>> FastLocalSearch(bool reuse, int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, vector<data>& S)
 {
@@ -1337,8 +1387,24 @@ void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vec
     for(int i = 0; i < 10; i++)
     {
         vector<data> Solution = RandomSolution(N, K, Q, s);
-        IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.3);
+        vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
+        double ObjF = ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1);
+
+        auto begin = chrono::high_resolution_clock::now();  
+        int tries = 0;
+        auto ans = IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.1);
+        while(!ans.first)
+        {
+            ans = IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.1);
+            tries++;
+        }
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
+        cout << i <<": From"<< setw(13) << ObjF << setw(6) << " to " << setw(13) << ans.second << setw(12) << "tries: " << setw(3) << tries 
+             << " in " << setw(6) << duration << "ms. " << setw(5) << "Got" << setw(4) << (int) (100 - ((ans.second * 100)/ObjF)) <<" (%) better.\n";
     }
+    cout << "\n";
     /*
     cout <<"Delete here\n";
     // Generate Random Solutions.
@@ -1411,7 +1477,6 @@ void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vec
             cout <<"CONSTRUCTIVE INFEASIBLE!!\n";
         }
     } */
-
 }
 
 #endif
