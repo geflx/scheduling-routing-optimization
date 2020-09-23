@@ -557,6 +557,25 @@ pair<bool, double> IteratedGreedy(vector<data> &S, int N, int K, const vector<do
     return make_pair(false, INF);
 }
 
+vector<vector<data>> getGreedyRuleSolutions(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
+{
+
+    // Generate greedy solutions with rules their feasibility.
+	vector<vector<data>> feasible;
+
+    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
+    if (IsFeasible(atcConfig, Q, s, N, K)) feasible.push_back(atcConfig);
+
+    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
+    if (IsFeasible(wmddConfig, Q, s, N, K)) feasible.push_back(wmddConfig);
+
+    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
+    if (IsFeasible(weddConfig, Q, s, N, K)) feasible.push_back(weddConfig);
+
+    return feasible;
+}
+
 pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
@@ -1210,37 +1229,12 @@ pair<double, vector<data>> GA_LS(int N, int K, const vector<double>& w, const ve
     return make_pair(bestObj, bestConfig);
 }
 
-pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int popSize)
 {
 
     // Generating greedy rule's solutions.
-    int feasible_size = 0;
-    vector<vector<data>> feasible;
-
-    // Generate ATC Rule solution and check its feasibility.
-    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(atcConfig, Q, s, N, K)) {
-        feasible.push_back(atcConfig);
-        feasible_size++;
-    }
-
-    // Generate WMDD Rule solution and check its feasibility.
-    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(wmddConfig, Q, s, N, K)) {
-        feasible.push_back(wmddConfig);
-        feasible_size++;
-    }
-
-    // Generate WEDD Rule solution and check its feasibility.
-    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(weddConfig, Q, s, N, K)) {
-        feasible.push_back(weddConfig);
-        feasible_size++;
-    }
-
-    int getGreedy = 0;
-
+    vector<vector<data>> feasibleSolutions = getGreedyRuleSolutions(N, K, w, P, t, F, d, Q, s);
 
     vector<double> popObj(popSize, -1);
     vector<vector<data> > pop(popSize);
@@ -1253,14 +1247,13 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
         vector<data> empty;
         pair<double, vector<data>> S;
 
-        if(feasible_size > 0){
-            S = RVND(true, N, K, w, P, t, F, d, Q, s, feasible[getGreedy]);
-            getGreedy++;
-            feasible_size--;
-        }
+        if(i < feasibleSolutions.size())
+            S = RVND(true, N, K, w, P, t, F, d, Q, s, feasibleSolutions[i]);
         else{
-            S = RVND(false, N, K, w, P, t, F, d, Q, s, empty);
+            vector<data> greedyConstructiveSol = GreedySolution(true, -1, s, N, K, w, P, d, F, Q);
+        	S = RVND(true, N, K, w, P, t, F, d, Q, s, greedyConstructiveSol);
         }
+        
 
         pop[i] = S.second;
         popObj[i] = S.first;
@@ -1344,9 +1337,13 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
                 else
                     newPop[newPopSize] = pop[father2];
                 
-                // Apply mutation.
-                vector<data> afterMutation = mutation(newPop[newPopSize], Q, s, N, K);
-                newPop[newPopSize] = afterMutation;
+                // 03/09/2020 - Apply IG in parent.
+                pair<bool, double> IG_Ans;
+                do{
+              		ig_used++;
+                	IG_Ans = IteratedGreedy(newPop[newPopSize], N, K, w, P, t, F, d, Q, s, 0.1);
+
+                }while(IG_Ans.first == false); // !feasible
             }
             ++newPopSize;
         }
@@ -1358,7 +1355,7 @@ pair<double, vector<data>> GA_LS_UPDATED(int N, int K, const vector<double>& w, 
         //Fast Local Search in new population
         // AND calculating object function!!
 
-        for (int i = 0; i < popSize; i++) {
+        for (int i = 0; i < newPop.size(); i++) {
 
             if(i < popSize/3){
                 pair<double, vector<data> > newS = FastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);

@@ -1,3 +1,5 @@
+int ig_used = 0;
+
 #include "Core.h"
 #include "LocalSearch.h"
 #include "Metaheuristics.h"
@@ -40,7 +42,7 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
 			break;
 
     	case 7:
-        	tmp = GA_LS_UPDATED(N, K, w, P, t, F, d, Q, s, parameter1);
+        	tmp = GA_LS_IG(N, K, w, P, t, F, d, Q, s, parameter1);
 			break;
 
     	default:
@@ -109,12 +111,12 @@ int main(int argc, char* argv[])
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t); 
         instance++;
 
-        Test(N, K, w, P, t, F, d, Q, s);
-        /*
+        //Test(N, K, w, P, t, F, d, Q, s);
+        ig_used = 0;
         //Execute meta-heuristic and print Mheuristic solution.
         Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
         printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
-
+        cout << "IG_Used: " << ig_used << "\n";
         // Printing on screen the completion percentage when Cont%10 == 1.
         if(instance % 50 == 1){
 
@@ -138,7 +140,7 @@ int main(int argc, char* argv[])
             mipOut << i.id << " ";
         }
         mipOut << "\n";
-        */
+        
     }
 
     sprintf(strOf, "MIP_%djobs.txt", N);
