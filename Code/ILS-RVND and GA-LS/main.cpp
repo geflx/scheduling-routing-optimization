@@ -1,4 +1,4 @@
-int ig_used = 0;
+double probIG;
 
 #include "Core.h"
 #include "LocalSearch.h"
@@ -45,6 +45,10 @@ Execution execute(int N, int K, const vector<double>& w, const vector<int>& P,
         	tmp = GA_LS_IG(N, K, w, P, t, F, d, Q, s, parameter1);
 			break;
 
+		case 8:
+        	tmp = ILS_RVND_3(N, K, w, P, t, F, d, Q, s, parameter1, parameter2, 5);
+			break;
+			
     	default:
     		cout << "Invalid metaheuristic code.\n Aborting ... \n";
     		exit(0);
@@ -111,15 +115,7 @@ int main(int argc, char* argv[])
         readInstance(input, mi, delta, N, K, P, d, s, w, Q, F, t); 
         instance++;
 
-        //Test(N, K, w, P, t, F, d, Q, s);
-        ig_used = 0;
-        //Execute meta-heuristic and print Mheuristic solution.
-        Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
-        printConfig(outFile, answer, answer.time, Q, s, N, K, P, t, d, w, F, instNumber, mi, delta);
-        cout << "IG_Used: " << ig_used << "\n";
-        // Printing on screen the completion percentage when Cont%10 == 1.
-        if(instance % 50 == 1){
-
+		if(instance % 50 == 1){
             double totalInstances = -1;
             if(N > 20) 
                 totalInstances = 180;
@@ -129,6 +125,9 @@ int main(int argc, char* argv[])
             printf("%.1lf percent complete. \n",  (instance * 100 / totalInstances));
         }
 
+        Execution answer = execute(N, K, w, P, t, F, d, Q, s, metaheuristic, parameter1, parameter2);
+        // Printing on screen the completion percentage.
+        
         // MIPStart Output.
         mipOut << setw(4) << answer.time << setw(15) << answer.value << setw(5);
 
@@ -153,3 +152,4 @@ int main(int argc, char* argv[])
 
     input.close();
 }
+

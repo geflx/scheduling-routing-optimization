@@ -565,13 +565,16 @@ vector<vector<data>> getGreedyRuleSolutions(int N, int K, const vector<double>& 
 	vector<vector<data>> feasible;
 
     vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(atcConfig, Q, s, N, K)) feasible.push_back(atcConfig);
+    if (IsFeasible(atcConfig, Q, s, N, K)) 
+    	feasible.push_back(atcConfig);
 
     vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(wmddConfig, Q, s, N, K)) feasible.push_back(wmddConfig);
+    if (IsFeasible(wmddConfig, Q, s, N, K)) 
+    	feasible.push_back(wmddConfig);
 
     vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
-    if (IsFeasible(weddConfig, Q, s, N, K)) feasible.push_back(weddConfig);
+    if (IsFeasible(weddConfig, Q, s, N, K)) 
+    	feasible.push_back(weddConfig);
 
     return feasible;
 }
@@ -579,84 +582,47 @@ vector<vector<data>> getGreedyRuleSolutions(int N, int K, const vector<double>& 
 pair<double, vector<data>> ILS_RVND_1(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
     const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
 {
-
-    int nbValidSolutions = 0;
-    vector<vector<data> > validSolutions;
-
-    // Generating initial greedy solutions
-    vector<data> atcConfig = GreedySolution(false, 0, s, N, K, w, P, d, F, Q);
-    vector<data> wmddConfig = GreedySolution(false, 1, s, N, K, w, P, d, F, Q);
-    vector<data> weddConfig = GreedySolution(false, 2, s, N, K, w, P, d, F, Q);
-
-    // Verifying if they are really valid
-
-    if (IsFeasible(atcConfig, Q, s, N, K)) {
-        validSolutions.push_back(atcConfig);
-        nbValidSolutions++;
-    }
-
-    if (IsFeasible(wmddConfig, Q, s, N, K)) {
-
-        validSolutions.push_back(wmddConfig);
-        nbValidSolutions++;
-    }
-
-    if (IsFeasible(weddConfig, Q, s, N, K)) {
-
-        validSolutions.push_back(weddConfig);
-        nbValidSolutions++;
-    }
-
-    int contGetSolution = 0;
+	// Get greedy rule solutions.
+    vector<vector<data>> feasibleSolutions = getGreedyRuleSolutions(N, K, w, P, t, F, d, Q, s);
 
     double bestResult = INF;
     vector<data> bestSolution;
 
-    for (int a = 0; a < maxIter; a++) {
+    for (int i = 0; i < maxIter; i++) {
 
-        vector<data> solution;
-        pair<double, vector<data> > callRvnd;
+        vector<data> S;
+        pair<double, vector<data> > S_1;
 
-        //Getting the greedy solutions if there is one avaiable
+        if(i < feasibleSolutions.size()){
 
-        bool justCalledRvnd = true;
-        if (contGetSolution < nbValidSolutions) {
+        	S = feasibleSolutions[i];
+            S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
 
-            solution = validSolutions[contGetSolution];
-
-            callRvnd = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
-
-            contGetSolution++;
-        }
-        else {
+        }else {
             //Otherwise we generate a random one
-            callRvnd = RVND(false, N, K, w, P, t, F, d, Q, s, solution);
+            S_1 = RVND(false, N, K, w, P, t, F, d, Q, s, S);
         }
 
-        for (int b = 0; b < maxIterIls; b++) {
+        for (int j = 0; j < maxIterIls; j++) {
 
-            if (!justCalledRvnd) {        	
-                
-                callRvnd = RVND(true, N, K, w, P, t, F, d, Q, s, solution);
+        	// Apply local search.
+            if (j != 0)        	
+                S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
+
+            if (S_1.first < bestResult) {
+
+                bestResult = S_1.first;
+                bestSolution = S_1.second;
+
+                j = 0; //Reseting ILS.
             }
-            else {
-                justCalledRvnd = false;
-            }
-
-            if (callRvnd.first < bestResult) {
-
-                bestResult = callRvnd.first;
-                bestSolution = callRvnd.second;
-
-                b = 0; //Reseting ILS!!
-            }
-            solution = perturb(solution, Q, s, N, K, perturbSize);
+            S = perturb(S, Q, s, N, K, perturbSize);
         }
     }
     if (IsFeasible(bestSolution, Q, s, N, K))
-        return { bestResult, bestSolution };
+        return make_pair(bestResult, bestSolution);
     else
-        return { -1, bestSolution };
+        return make_pair(-1, bestSolution);
 }
 
 pair<double, vector<data>> ILS_RVND_1_SBPO(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
@@ -969,6 +935,60 @@ pair<double, vector<data>> ILS_RVND_2(int N, int K, const vector<double>& w, con
         return { bestResult, bestSolution };
     else
         return { -1, bestSolution };
+}
+
+pair<double, vector<data>> ILS_RVND_3(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int maxIter, int maxIterIls, int perturbSize)
+{
+	// Get greedy rule solutions.
+    vector<vector<data>> feasibleSolutions = getGreedyRuleSolutions(N, K, w, P, t, F, d, Q, s);
+
+    double bestResult = INF;
+    vector<data> bestSolution;
+
+    for (int i = 0; i < maxIter; i++) {
+
+        vector<data> S;
+        pair<double, vector<data>> S_1;
+
+        if(i < feasibleSolutions.size()){
+
+        	S = feasibleSolutions[i];
+            S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
+
+        }else {
+            // Generate random solution.
+            S_1 = RVND(false, N, K, w, P, t, F, d, Q, s, S);
+        }
+
+        for (int j = 0; j < maxIterIls; j++) {
+
+        	// Apply local search.
+            if (j != 0)        	
+                S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
+            if (S_1.first < bestResult) {
+
+                bestResult = S_1.first;
+                bestSolution = S_1.second;
+
+                j = 0; //Reseting ILS.
+            }
+
+            assert(perturbSize == global_sizePerturb);
+            S = perturb(S_1.second, Q, s, N, K, perturbSize);
+
+            // Apply Iterated Greedy
+	        pair<bool, double> IG_Ans;
+	        do{
+            	IG_Ans = IteratedGreedy(S, N, K, w, P, t, F, d, Q, s, global_probIG);
+	        }while(IG_Ans.first == false); // !feasible
+
+        }
+    }
+    if (IsFeasible(bestSolution, Q, s, N, K))
+        return make_pair(bestResult, bestSolution);
+    else
+        return make_pair(-1, bestSolution);
 }
 
 // Reviews: II
@@ -1340,7 +1360,6 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
                 // 03/09/2020 - Apply IG in parent.
                 pair<bool, double> IG_Ans;
                 do{
-              		ig_used++;
                 	IG_Ans = IteratedGreedy(newPop[newPopSize], N, K, w, P, t, F, d, Q, s, 0.1);
 
                 }while(IG_Ans.first == false); // !feasible
@@ -1376,104 +1395,6 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
     }
 
     return { bestObj, bestConfig };
-}
-
-void Test(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
-    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s)
-{
-    for(int i = 0; i < 10; i++)
-    {
-        vector<data> Solution = RandomSolution(N, K, Q, s);
-        vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
-        double ObjF = ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1);
-
-        auto begin = chrono::high_resolution_clock::now();  
-        int tries = 0;
-        auto ans = IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.1);
-        while(!ans.first)
-        {
-            ans = IteratedGreedy(Solution, N, K, w, P, t, F, d, Q, s, 0.1);
-            tries++;
-        }
-        auto end = chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-
-        cout << i <<": From"<< setw(13) << ObjF << setw(6) << " to " << setw(13) << ans.second << setw(12) << "tries: " << setw(3) << tries 
-             << " in " << setw(6) << duration << "ms. " << setw(5) << "Got" << setw(4) << (int) (100 - ((ans.second * 100)/ObjF)) <<" (%) better.\n";
-    }
-    cout << "\n";
-    /*
-    cout <<"Delete here\n";
-    // Generate Random Solutions.
-    for(int i = 0; i < 10; i++)
-    {
-        vector<data> Solution = RandomSolution(N, K, Q, s);
-        if(IsFeasible(Solution, Q, s, N, K)){
-            vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
-            cout << "Random Feasible. Obj. Function: " << ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1) << "\n";
-
-            cout << "SOL1: Before 1-point cross over: ";
-            for(data j: Solution)
-                if(j.job)
-                    cout << "J" << j.id << " ";
-                else
-                    cout << "V" << j.id << " ";
-            cout << "\n";
-
-            vector<data> Solution2 = RandomSolution(N, K, Q, s);
-            cout << "SOL2: Before 1-point cross over: ";
-            for(data j: Solution2)
-                if(j.job)
-                    cout << "J" << j.id << " ";
-                else
-                    cout << "V" << j.id << " ";
-            cout << "\n";
-            
-            pair<bool, vector<data>> Offspring = CROSSOVER_1_POINT(Solution, Solution2, Q, s, N, K);
-
-            if(!Offspring.first){
-                cout <<  "Infeasible CrossOver.\n";
-            }else{
-
-               assert(Offspring.second.size() == (N + K));
-               cout <<"OBJ.F. After cross: " << ObjectiveFunction(Offspring.second, vOrder, true, K, N, t, w, P, d, F, -1) << "\n";
-                cout << "OFFSPRING: After 1-point cross over: ";
-                for(data j: Offspring.second)
-                    if(j.job)
-                        cout << "J" << j.id << " ";
-                    else
-                        cout << "V" << j.id << " "; 
-            }
-            
-            cout << "\n\n\n\n";
-            
-        }else{
-            cout << "Aborted.\n";
-            exit(0);
-        }
-    }
-
-    cout << "-----------------------------------\n";
-    // Generate Constructive Greedy Solutions
-
-    for(int i = 0; i < 10; i++)
-    {
-        vector<data> Solution = GreedySolution(true, 1000, s, N, K, w, P, d, F, Q);
-        if(IsFeasible(Solution, Q, s, N, K)){
-
-            vector<vehicleLoaded> vOrder = getVOrder(Solution, K);
-            cout << "CONSTRUCTIVE. Obj. Function: " << ObjectiveFunction(Solution, vOrder, false, K, N, t, w, P, d, F, -1) << "\n";
-
-            for(data j: Solution)
-                if(j.job)
-                    cout << "J" << j.id << " ";
-                else
-                    cout << "V" << j.id << " ";
-            cout << "\n";
-        }else{
-            cout <<"CONSTRUCTIVE INFEASIBLE!!\n";
-        }
-    } */
 }
 
 #endif

@@ -394,7 +394,7 @@ void getVariables(string& fileName, ifstream& input, int& metaheuristic,
     cout << "Select ILS_RVND(1), ILS_RVND_2(2), GA_LS(3): ";
     cin >> metaheuristic;
 
-    if ( (metaheuristic >= 1 && metaheuristic <= 2) || (metaheuristic >= 4 && metaheuristic <= 6)) {
+    if ( (metaheuristic >= 1 && metaheuristic <= 2) || (metaheuristic >= 4 && metaheuristic <= 6) || (metaheuristic == 8)) {
 
         cout << "Input restart times (maxIter): ";
         cin >> parameter1;
