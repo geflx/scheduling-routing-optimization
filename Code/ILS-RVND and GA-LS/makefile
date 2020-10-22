@@ -1,6 +1,5 @@
 default:
-	reset
-	g++ main.cpp -O3
+	g++ main.cpp -O3 -fopenmp
 
 test:
 	reset

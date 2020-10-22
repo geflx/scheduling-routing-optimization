@@ -14,6 +14,9 @@
 #include <chrono>
 #include <random>
 #include <assert.h>
+
+#include <omp.h>
+
 using namespace std;
 
 #define EPS 1e-5
@@ -382,30 +385,48 @@ void readInstance(ifstream& input, double& mi, double& delta, int& N, int& K,
             input >> t[i][j];
 }
 
-void getVariables(string& fileName, ifstream& input, int& metaheuristic,
-    int& parameter1, int& parameter2)
+void getVariables(int option, string& fileName, ifstream& input, int& metaheuristic,
+    int& parameter1, int& parameter2, double &parameter3)
 {
 
-    cout << "Input file name: ";
+    cin.ignore();
+
+    cout << "\nInsert file directory: ";
     getline(cin, fileName);
 
     input.open(fileName);
 
-    cout << "Select ILS_RVND(1), ILS_RVND_2(2), GA_LS(3): ";
+    cout << "\nMetaheuristic options: \n";
+    cout << "1 - ILS_RVND_1\n";
+    cout << "2 - ILS_RVND_2\n";
+    cout << "3 - GA_LS\n";
+    cout << "4 - ILS_RVND_IG\n";
+    cout << "5 - GA_LS_IG\n\n";
+
+    cout << "Insert option here: ";
     cin >> metaheuristic;
 
-    if ( (metaheuristic >= 1 && metaheuristic <= 2) || (metaheuristic >= 4 && metaheuristic <= 6) || (metaheuristic == 8)) {
+    if ( metaheuristic == 1 || metaheuristic == 2 || metaheuristic == 4) {
 
         cout << "Input restart times (maxIter): ";
         cin >> parameter1;
 
         cout << "Input max. iterations (maxIterIls): ";
         cin >> parameter2;
+
     }
-    else if (metaheuristic == 3 || metaheuristic == 7) {
+    else if (metaheuristic == 3 || metaheuristic == 5) {
 
         cout << "Input Population Size (psize): ";
         cin >> parameter1;
+    }else{
+        cout << "Undefined option.";
+        exit(0);
+    }
+
+    if(metaheuristic == 4 || metaheuristic == 5){
+        cout << "Input IG percentage: ";
+        cin >> parameter3;
     }
 }
 
