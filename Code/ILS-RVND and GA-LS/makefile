@@ -9,4 +9,5 @@ test:
 clear:
 	rm -f *.out
 	rm -f *.txt
+	rm -f *.csv
 

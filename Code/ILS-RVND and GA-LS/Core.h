@@ -385,7 +385,7 @@ void readInstance(ifstream& input, double& mi, double& delta, int& N, int& K,
             input >> t[i][j];
 }
 
-void getVariables(int option, string& fileName, ifstream& input, int& metaheuristic,
+void getVariables(int option, string& fileName, int& metaheuristic,
     int& parameter1, int& parameter2, double &parameter3)
 {
 
@@ -394,17 +394,26 @@ void getVariables(int option, string& fileName, ifstream& input, int& metaheuris
     cout << "\nInsert file directory: ";
     getline(cin, fileName);
 
-    input.open(fileName);
-
     cout << "\nMetaheuristic options: \n";
-    cout << "1 - ILS_RVND_1\n";
-    cout << "2 - ILS_RVND_2\n";
-    cout << "3 - GA_LS\n";
-    cout << "4 - ILS_RVND_IG\n";
-    cout << "5 - GA_LS_IG\n\n";
 
-    cout << "Insert option here: ";
+    if(option == 1){
+        // Execute.
+        cout << "1 - ILS_RVND_1\n";
+        cout << "2 - ILS_RVND_2\n";
+        cout << "3 - GA_LS\n";
+        cout << "4 - ILS_RVND_IG\n";
+        cout << "5 - GA_LS_IG Time-Based\n\n";
+    }else if(option == 2){
+        // Calibrate.
+        cout << "1 - ILS_RVND_IG Time-Based\n";
+        cout << "2 - GA_LS_IG Time-Based\n\n";
+    }
+
+    cout << "Insert option: ";
     cin >> metaheuristic;
+
+    if(option == 2) // Calibrating algorithm, ignore rest of parameters.
+        return;
 
     if ( metaheuristic == 1 || metaheuristic == 2 || metaheuristic == 4) {
 

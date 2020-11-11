@@ -758,6 +758,83 @@ pair<double, vector<data>> ILS_RVND_IG(int N, int K, const vector<double>& w, co
         return make_pair(-1, bestSolution);
 }
 
+pair<double, vector<data>> ILS_RVND_IG_Time_Based(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int perturbSize, double igPercentage, int &contRestarts, int &contIt)
+{
+    // Get greedy solutions.
+    vector<vector<data>> feasibleSolutions = getGreedyRuleSolutions(N, K, w, P, t, F, d, Q, s);
+
+    double bestResult = INF;
+    vector<data> bestSolution;
+
+    time_t iniTotalTime; 
+    time(&iniTotalTime);
+
+    contRestarts = 0, contIt = 0;
+
+    while(true){
+
+        time_t endTotalTime;
+        time(&endTotalTime);
+        if(difftime(endTotalTime, iniTotalTime) >= ceil(1.5 * N))
+            break;
+
+        contRestarts++;
+
+        vector<data> S;
+        pair<double, vector<data>> S_1;
+        bool firstSol = true;
+
+        if(contRestarts < feasibleSolutions.size()){
+
+            S = feasibleSolutions[contRestarts];
+            S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
+
+        }else {
+            // Generate random solution.
+            S_1 = RVND(false, N, K, w, P, t, F, d, Q, s, S);
+        }
+
+        time_t iniLocalTime;
+        time(&iniLocalTime);
+
+        while(true){
+
+            time_t endLocalTime;
+            time(&endLocalTime);
+            if(difftime(endLocalTime, iniLocalTime) >= ceil(0.15 * N))
+                break;
+
+            contIt++;
+
+            // Apply local search.
+            if (!firstSol)         
+                S_1 = RVND(true, N, K, w, P, t, F, d, Q, s, S);
+
+            firstSol = false;
+
+            // Check/save improvements.
+            if (S_1.first < bestResult) {
+                bestResult = S_1.first;
+                bestSolution = S_1.second;
+            }
+
+            S = perturb(S_1.second, Q, s, N, K, perturbSize);
+
+            // Apply Iterated Greedy, must return a feasible solution.
+            pair<bool, double> IG_Ans;
+            do{
+                IG_Ans = IteratedGreedy(S, N, K, w, P, t, F, d, Q, s, igPercentage);
+            }while(IG_Ans.first == false);
+
+        }
+    }
+    if (IsFeasible(bestSolution, Q, s, N, K))
+        return make_pair(bestResult, bestSolution);
+    else
+        return make_pair(-1, bestSolution);
+}
+
 // Reviews: II
 pair<bool, vector<data>> CROSSOVER_1_POINT(const vector<data>& S1, const vector<data>& S2, const vector<int>& Q, const vector<int>& S, int N, int K)
 {
@@ -1017,9 +1094,8 @@ pair<double, vector<data>> GA_LS(int N, int K, const vector<double>& w, const ve
 }
 
 pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const vector<int>& P, const vector<vector<int> >& t,
-    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int popSize, double igPercentage)
+    const vector<int>& F, const vector<int>& d, const vector<int>& Q, const vector<int>& s, int popSize, double igPercentage, int &countSolutions)
 {
-
     // Generating greedy rule's solutions.
     vector<vector<data>> feasibleSolutions = getGreedyRuleSolutions(N, K, w, P, t, F, d, Q, s);
 
@@ -1029,18 +1105,20 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
     vector<data> bestConfig;
     double bestObj = std::numeric_limits<double>::infinity();
 
-    // #pragma omp parallel for
     for (int i = 0; i < popSize; i++) {
 
         vector<data> empty;
         pair<double, vector<data>> S;
 
         if(i < feasibleSolutions.size())
-            S = RVND(true, N, K, w, P, t, F, d, Q, s, feasibleSolutions[i]);
+            // S = RVND(true, N, K, w, P, t, F, d, Q, s, feasibleSolutions[i]);
+            S.second = feasibleSolutions[i];
         else{
-            vector<data> greedyConstructiveSol = GreedySolution(true, -1, s, N, K, w, P, d, F, Q);
-        	S = RVND(true, N, K, w, P, t, F, d, Q, s, greedyConstructiveSol);
+            S.second = GreedySolution(true, -1, s, N, K, w, P, d, F, Q);
+        	// S = RVND(true, N, K, w, P, t, F, d, Q, s, greedyConstructiveSol);
         }
+        vector<vehicleLoaded> vOrder =  getVOrder(S.second, K);
+		S.first = ObjectiveFunction(S.second, vOrder, false, K, N, t, w, P, d, F, -1);
         
 
         pop[i] = S.second;
@@ -1052,17 +1130,24 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
         }
     }
 
-    int maxIter = 8 * (N + K);
-    int contIter = 0;
+    countSolutions = popSize;
 
-    while (contIter++ < maxIter) {
+    time_t iniTotalTime;
+    time(&iniTotalTime);
+
+    while (true) {
+
+        time_t endTotalTime;
+        time(&endTotalTime);
+
+        if(difftime(endTotalTime, iniTotalTime) >= ceil(1.5 * N))
+            break;
 
         int newPopSize = 0;
         vector<vector<data> > newPop(popSize);
         vector<double> newPopObj(popSize, -1);
 
-        // PSIZE-1 solutions due to last solution will get best solution found.
-
+        // Are generated PSIZE-1 solutions because last solution will get best solution found.
        
         // #pragma omp parallel for
         for(int j = 0; j < popSize - 1; j++){
@@ -1136,33 +1221,29 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
                 }while(IG_Ans.first == false); // !feasible
             }
         }
-        
+
         //Putting in the last position the best solution
         newPop[popSize - 1] = bestConfig;
         newPopObj[popSize - 1] = bestObj;
 
-        //Fast Local Search in new population
-        // AND calculating object function!!
-
-        // #pragma omp parallel for reduction(max : bestObj)
+        // Apply Fast Local Search in population and calculate obj. function.
         for (int i = 0; i < newPop.size(); i++) {
 
-            if(i < popSize/3){
-                pair<double, vector<data> > newS = FastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
-                pop[i] = newS.second;
-                popObj[i] = newS.first;
-            }else{
-                pop[i] = newPop[i];
-                vector<vehicleLoaded> vOrder =  getVOrder(pop[i], K);
-                popObj[i] = ObjectiveFunction(pop[i], vOrder, false, K, N, t, w, P, d, F, -1);
-            }
+            time(&endTotalTime);
+            if(difftime(endTotalTime, iniTotalTime) >= ceil(1.5 * N))
+                break;
+
+            countSolutions++;
+
+            pair<double, vector<data> > newS = FastLocalSearch(true, N, K, w, P, t, F, d, Q, s, newPop[i]);
+            pop[i] = newS.second;
+            popObj[i] = newS.first;
           
             if (popObj[i] < bestObj) {
                 bestObj = popObj[i];
                 bestConfig = pop[i];
             }
-        }
-        
+        } 
     }
 
     return { bestObj, bestConfig };
