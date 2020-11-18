@@ -1213,12 +1213,13 @@ pair<double, vector<data>> GA_LS_IG(int N, int K, const vector<double>& w, const
                 else
                     newPop[j] = pop[father2];
                 
-                // 03/09/2020 - Apply IG in parent.
-                pair<bool, double> IG_Ans;
-                do{
-                	IG_Ans = IteratedGreedy(newPop[j], N, K, w, P, t, F, d, Q, s, igPercentage);
+                newPop[j] = mutation(newPop[j], Q, s, N, K);
+                // // 03/09/2020 - Apply IG in parent.
+                // pair<bool, double> IG_Ans;
+                // do{
+                // 	IG_Ans = IteratedGreedy(newPop[j], N, K, w, P, t, F, d, Q, s, igPercentage);
 
-                }while(IG_Ans.first == false); // !feasible
+                // }while(IG_Ans.first == false); // !feasible
             }
         }
 
