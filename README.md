@@ -35,8 +35,16 @@ The model was implemented in C++ using the **CPLEX Concert** library. It is also
 _ to start in a \"checkpoint\".
 Find more information at _CPLEX Model folder_. 
 
-## Publications :newspaper:
-
 ## Results :bar_chart:
-(continue)
 
+In small scale instances, all three metaheuristics outperformed CPLEX Solver, being ILS-RVND-1 and GA-LS statistically equivalent:
+
+<p align="center">
+<img src="Results/Minitab and Graphics/Small - White Background/general_avg_rpd_int.png" width=540 height=450>
+</p>
+
+In large scale instances, the best metaheuristic was ILS-RVND-1, obtaining better results than others and executing in less time:
+
+<p align="center">
+<img src="Results/Minitab and Graphics/Large - White Background/avg_rpd_all_algos.png" width=540 height=450>
+</p>
